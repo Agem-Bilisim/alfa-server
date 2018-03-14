@@ -3,9 +3,10 @@ package tr.com.agem.alfa.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,16 +15,20 @@ public class Platform extends BaseModel {
 
 	private static final long serialVersionUID = 4952577557714888266L;
 
+	@Column(name = "RELEASE", nullable = false)
 	private String release;
 
+	@Column(name = "VERSION", nullable = false)
 	private String version;
 
+	@Column(name = "SYSTEM", nullable = false)
 	private String system;
 
+	@Column(name = "MACHINE", nullable = false)
 	private String machine;
 
-	@ManyToMany(cascade = { CascadeType.ALL })
-	private Set<Agent> agents = new HashSet<Agent>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "platform")
+	private Set<Agent> agents = new HashSet<Agent>(0);
 
 	public String getRelease() {
 		return release;
@@ -55,6 +60,14 @@ public class Platform extends BaseModel {
 
 	public void setMachine(String machine) {
 		this.machine = machine;
+	}
+
+	public Set<Agent> getAgents() {
+		return agents;
+	}
+
+	public void setAgents(Set<Agent> agents) {
+		this.agents = agents;
 	}
 
 }

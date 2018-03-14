@@ -1,0 +1,546 @@
+{
+	"disk": {
+		"disk_partitions": [
+			["/dev/mapper/mint--vg-root", "/", "ext4", "rw,relatime,errors=remount-ro,data=ordered"],
+			["/dev/sda2", "/boot", "ext2", "rw,relatime,block_validity,barrier,user_xattr,acl"]
+		],
+		"devices": [{
+			"vendor": "Generic",
+			"id": "disk",
+			"physid": "0.0.0",
+			"handle": "SCSI:01:00:00:00",
+			"class": "disk",
+			"capabilities": {
+				"removable": "support is removable"
+			},
+			"description": "SCSI Disk",
+			"configuration": {
+				"sectorsize": "512",
+				"logicalsectorsize": "512"
+			},
+			"businfo": "scsi@1:0.0.0",
+			"children": [{
+				"id": "medium",
+				"physid": "0",
+				"logicalname": "/dev/sdb",
+				"dev": "8:16",
+				"class": "disk",
+				"claimed": true
+			}],
+			"version": "0272",
+			"logicalname": "/dev/sdb",
+			"dev": "8:16",
+			"product": "STORAGE DEVICE",
+			"claimed": true
+		}, {
+			"size": 120034123776,
+			"id": "disk",
+			"physid": "0.0.0",
+			"handle": "GUID:42b8938c-7b19-4b3e-9b42-db37a68484f6",
+			"class": "disk",
+			"capabilities": {
+				"partitioned:gpt": "GUID partition table",
+				"gpt-1.00": "GUID Partition Table version 1.00",
+				"partitioned": "Partitioned disk"
+			},
+			"description": "ATA Disk",
+			"configuration": {
+				"ansiversion": "5",
+				"sectorsize": "512",
+				"guid": "42b8938c-7b19-4b3e-9b42-db37a68484f6",
+				"logicalsectorsize": "512"
+			},
+			"businfo": "scsi@0:0.0.0",
+			"children": [],
+			"product": "KINGSTON SV300S3",
+			"logicalname": "/dev/sda",
+			"dev": "8:0",
+			"serial": "50026B774106392A",
+			"units": "bytes",
+			"version": "BBF0",
+			"claimed": true
+		}],
+		"disk_usage": {
+			"total": 105142083584,
+			"used": 67352989696,
+			"percent": 67.5,
+			"free": 32424579072
+		}
+	},
+	"network": {
+		"mac_addresses": ["00:00:00:00:00:00", "74:d4:35:0c:71:15", "00:16:3e:00:00:00", "02:42:61:40:97:96"],
+		"devices": [{
+			"vendor": "Realtek Semiconductor Co., Ltd.",
+			"size": 100000000,
+			"id": "network",
+			"capacity": 1000000000,
+			"physid": "0",
+			"handle": "PCI:0000:01:00.0",
+			"clock": 33000000,
+			"width": 64,
+			"class": "network",
+			"capabilities": {
+				"msix": "MSI-X",
+				"ethernet": true,
+				"physical": "Physical interface",
+				"cap_list": "PCI capabilities listing",
+				"10bt-fd": "10Mbit/s (full duplex)",
+				"100bt-fd": "100Mbit/s (full duplex)",
+				"pm": "Power Management",
+				"10bt": "10Mbit/s",
+				"1000bt-fd": "1Gbit/s (full duplex)",
+				"mii": "Media Independent Interface",
+				"tp": "twisted pair",
+				"1000bt": "1Gbit/s",
+				"vpd": "Vital Product Data",
+				"100bt": "100Mbit/s",
+				"pciexpress": "PCI Express",
+				"bus_master": "bus mastering",
+				"msi": "Message Signalled Interrupts",
+				"autonegotiation": "Auto-negotiation"
+			},
+			"description": "Ethernet interface",
+			"configuration": {
+				"driverversion": "2.3LK-NAPI",
+				"firmware": "rtl8168e-3_0.0.4 03/27/12",
+				"autonegotiation": "on",
+				"link": "yes",
+				"speed": "100Mbit/s",
+				"port": "MII",
+				"driver": "r8169",
+				"multicast": "yes",
+				"ip": "192.168.1.118",
+				"broadcast": "yes",
+				"latency": "0",
+				"duplex": "full"
+			},
+			"businfo": "pci@0000:01:00.0",
+			"product": "RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller",
+			"logicalname": "enp1s0",
+			"serial": "74:d4:35:0c:71:15",
+			"units": "bit/s",
+			"version": "06",
+			"claimed": true
+		}],
+		"interface_addresses": {
+			"lo": [
+				[2, "127.0.0.1", "255.0.0.0", null, null],
+				[10, "::1", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", null, null],
+				[17, "00:00:00:00:00:00", null, null, null]
+			],
+			"enp1s0": [
+				[2, "192.168.1.118", "255.255.255.0", "192.168.1.255", null],
+				[10, "fe80::6f5e:5e5d:e616:a1f4%enp1s0", "ffff:ffff:ffff:ffff::", null, null],
+				[17, "74:d4:35:0c:71:15", null, "ff:ff:ff:ff:ff:ff", null]
+			],
+			"lxcbr0": [
+				[2, "10.0.3.1", "255.255.255.0", "10.0.3.1", null],
+				[17, "00:16:3e:00:00:00", null, "ff:ff:ff:ff:ff:ff", null]
+			],
+			"docker0": [
+				[2, "172.17.0.1", "255.255.0.0", "172.17.255.255", null],
+				[17, "02:42:61:40:97:96", null, "ff:ff:ff:ff:ff:ff", null]
+			]
+		},
+		"connection": [
+			[175, 10, 1, ["::ffff:192.168.1.118", 59930],
+				["::ffff:104.17.47.2", 443], "CLOSE_WAIT", 18688
+			],
+			[463, 2, 1, ["192.168.1.118", 38332],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[478, 2, 1, ["192.168.1.118", 41836],
+				["34.237.135.137", 443], "ESTABLISHED", 26324
+			],
+			[451, 2, 1, ["192.168.1.118", 40674],
+				["107.178.250.6", 443], "ESTABLISHED", 26324
+			],
+			[455, 2, 1, ["192.168.1.118", 38338],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[3, 2, 1, ["0.0.0.0", 22],
+				[], "LISTEN", 18780
+			],
+			[4, 10, 1, ["::", 22],
+				[], "LISTEN", 18780
+			],
+			[442, 2, 1, ["192.168.1.118", 38340],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[477, 2, 1, ["192.168.1.118", 48512],
+				["157.240.9.23", 443], "ESTABLISHED", 26324
+			],
+			[438, 2, 1, ["192.168.1.118", 33658],
+				["104.25.251.109", 443], "ESTABLISHED", 26324
+			],
+			[466, 2, 1, ["192.168.1.118", 38344],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[468, 2, 1, ["192.168.1.118", 38346],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[467, 2, 1, ["192.168.1.118", 38358],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[-1, 2, 1, ["127.0.1.1", 4369],
+				["127.0.0.1", 42460], "TIME_WAIT", null
+			],
+			[343, 2, 1, ["192.168.1.118", 43782],
+				["198.252.206.25", 443], "ESTABLISHED", 26324
+			],
+			[202, 10, 2, ["::", 5353],
+				[], "NONE", 26324
+			],
+			[83, 2, 1, ["192.168.1.118", 44930],
+				["108.168.151.6", 443], "ESTABLISHED", 26324
+			],
+			[59, 10, 1, ["::ffff:192.168.1.118", 40178],
+				["::ffff:104.16.66.137", 80], "CLOSE_WAIT", 18688
+			],
+			[17, 2, 1, ["127.0.0.1", 3306],
+				[], "LISTEN", 3985
+			],
+			[439, 2, 1, ["192.168.1.118", 39268],
+				["192.229.182.210", 443], "ESTABLISHED", 26324
+			],
+			[11, 2, 1, ["127.0.0.1", 631],
+				[], "LISTEN", 24549
+			],
+			[3, 2, 1, ["192.168.1.118", 37424],
+				["91.191.171.133", 22], "ESTABLISHED", 8558
+			],
+			[479, 2, 1, ["192.168.1.118", 58618],
+				["93.184.220.66", 443], "ESTABLISHED", 26324
+			],
+			[436, 2, 1, ["192.168.1.118", 33440],
+				["23.111.9.35", 443], "ESTABLISHED", 26324
+			],
+			[7, 2, 1, ["10.0.3.1", 53],
+				[], "LISTEN", 3787
+			],
+			[3, 2, 1, ["192.168.1.118", 38552],
+				["91.191.171.111", 22], "ESTABLISHED", 9123
+			],
+			[48, 10, 1, ["::ffff:127.0.0.1", 38585],
+				[], "LISTEN", 18688
+			],
+			[6, 2, 1, ["127.0.0.1", 8484],
+				[], "LISTEN", 30213
+			],
+			[146, 10, 1, ["::ffff:192.168.1.118", 59258],
+				["::ffff:104.17.47.2", 443], "CLOSE_WAIT", 18688
+			],
+			[425, 2, 1, ["192.168.1.118", 49800],
+				["128.196.130.48", 80], "CLOSE_WAIT", 26324
+			],
+			[405, 2, 1, ["192.168.1.118", 49798],
+				["128.196.130.48", 80], "CLOSE_WAIT", 26324
+			],
+			[173, 10, 1, ["::ffff:192.168.1.118", 49162],
+				["::ffff:104.17.46.2", 443], "CLOSE_WAIT", 18688
+			],
+			[14, 10, 2, ["::", 5353],
+				[], "NONE", 1205
+			],
+			[16, 10, 2, ["::", 38708],
+				[], "NONE", 1205
+			],
+			[44, 2, 1, ["127.0.0.1", 44233],
+				["127.0.0.1", 4369], "ESTABLISHED", 10405
+			],
+			[206, 2, 1, ["127.0.0.1", 63342],
+				[], "LISTEN", 5426
+			],
+			[342, 2, 1, ["192.168.1.118", 59052],
+				["151.101.1.69", 443], "ESTABLISHED", 26324
+			],
+			[43, 2, 1, ["127.0.0.1", 39096],
+				["127.0.0.1", 53014], "ESTABLISHED", 5426
+			],
+			[40, 2, 1, ["0.0.0.0", 39096],
+				[], "LISTEN", 5426
+			],
+			[452, 2, 1, ["192.168.1.118", 38330],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[4, 10, 1, ["::", 4369],
+				[], "LISTEN", 10500
+			],
+			[43, 2, 1, ["0.0.0.0", 25672],
+				[], "LISTEN", 10405
+			],
+			[16, 10, 2, ["::", 123],
+				[], "NONE", 3701
+			],
+			[52, 10, 1, ["::", 5672],
+				[], "LISTEN", 10405
+			],
+			[85, 10, 1, ["::ffff:192.168.1.118", 58796],
+				["::ffff:198.41.30.200", 443], "CLOSE_WAIT", 18688
+			],
+			[20, 10, 2, ["::1", 123],
+				[], "NONE", 3701
+			],
+			[229, 2, 1, ["192.168.1.118", 38354],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[13, 2, 2, ["0.0.0.0", 5353],
+				[], "NONE", 1205
+			],
+			[3, 2, 1, ["0.0.0.0", 4369],
+				[], "LISTEN", 10500
+			],
+			[351, 2, 1, ["192.168.1.118", 42062],
+				["138.91.254.234", 443], "ESTABLISHED", 26324
+			],
+			[470, 2, 1, ["192.168.1.118", 38348],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[480, 2, 1, ["192.168.1.118", 53304],
+				["157.240.9.35", 443], "ESTABLISHED", 26324
+			],
+			[476, 2, 1, ["192.168.1.118", 52970],
+				["34.202.72.69", 443], "CLOSE_WAIT", 26324
+			],
+			[18, 2, 2, ["127.0.0.1", 123],
+				[], "NONE", 3701
+			],
+			[4, 2, 2, ["127.0.1.1", 53],
+				[], "NONE", 3303
+			],
+			[17, 2, 2, ["0.0.0.0", 123],
+				[], "NONE", 3701
+			],
+			[6, 2, 2, ["0.0.0.0", 68],
+				[], "NONE", 3291
+			],
+			[150, 2, 1, ["127.0.0.1", 6942],
+				[], "LISTEN", 5426
+			],
+			[363, 2, 1, ["192.168.1.118", 38500],
+				["104.16.109.18", 443], "ESTABLISHED", 26324
+			],
+			[39, 2, 1, ["0.0.0.0", 35454],
+				[], "LISTEN", 5426
+			],
+			[5, 2, 1, ["127.0.0.1", 53014],
+				["127.0.0.1", 39096], "ESTABLISHED", 30213
+			],
+			[158, 10, 1, ["::ffff:192.168.1.118", 46080],
+				["::ffff:104.16.67.137", 80], "CLOSE_WAIT", 18688
+			],
+			[469, 2, 1, ["192.168.1.118", 52968],
+				["34.202.72.69", 443], "ESTABLISHED", 26324
+			],
+			[11, 2, 2, ["0.0.0.0", 43394],
+				[], "NONE", 3303
+			],
+			[433, 2, 1, ["192.168.1.118", 39266],
+				["192.229.182.210", 443], "ESTABLISHED", 26324
+			],
+			[474, 2, 1, ["192.168.1.118", 43260],
+				["104.244.42.136", 443], "ESTABLISHED", 26324
+			],
+			[21, 10, 2, ["fe80::6f5e:5e5d:e616:a1f4", 123],
+				[], "NONE", 3701
+			],
+			[122, 10, 1, ["::ffff:192.168.1.118", 33396],
+				["::ffff:138.201.81.7", 443], "CLOSE_WAIT", 18688
+			],
+			[445, 2, 1, ["192.168.1.118", 57406],
+				["23.209.102.112", 443], "ESTABLISHED", 26324
+			],
+			[215, 2, 1, ["192.168.1.118", 38336],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[19, 2, 1, ["192.168.1.118", 33904],
+				["192.168.1.198", 389], "ESTABLISHED", 1307
+			],
+			[475, 2, 1, ["192.168.1.118", 38352],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[174, 10, 1, ["::ffff:192.168.1.118", 51188],
+				["::ffff:104.16.68.137", 80], "CLOSE_WAIT", 18688
+			],
+			[446, 2, 1, ["192.168.1.118", 38342],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[408, 2, 1, ["192.168.1.118", 43230],
+				["104.198.14.52", 443], "ESTABLISHED", 26324
+			],
+			[15, 2, 2, ["0.0.0.0", 43761],
+				[], "NONE", 1205
+			],
+			[5, 2, 1, ["127.0.1.1", 53],
+				[], "LISTEN", 3303
+			],
+			[447, 2, 1, ["192.168.1.118", 51156],
+				["104.19.195.102", 443], "ESTABLISHED", 26324
+			],
+			[465, 2, 1, ["192.168.1.118", 38334],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[367, 2, 1, ["192.168.1.118", 37646],
+				["104.74.100.205", 443], "ESTABLISHED", 26324
+			],
+			[444, 2, 1, ["192.168.1.118", 60788],
+				["52.222.158.171", 443], "ESTABLISHED", 26324
+			],
+			[396, 2, 1, ["192.168.1.118", 38904],
+				["192.0.73.2", 443], "ESTABLISHED", 26324
+			],
+			[203, 2, 2, ["0.0.0.0", 5353],
+				[], "NONE", 26324
+			],
+			[66, 2, 1, ["0.0.0.0", 46159],
+				[], "LISTEN", 5426
+			],
+			[472, 2, 1, ["192.168.1.118", 50192],
+				["151.101.114.2", 443], "ESTABLISHED", 26324
+			],
+			[473, 2, 1, ["192.168.1.118", 38350],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[27, 2, 1, ["192.168.1.118", 33906],
+				["192.168.1.198", 389], "ESTABLISHED", 1120
+			],
+			[19, 2, 2, ["192.168.1.118", 123],
+				[], "NONE", 3701
+			],
+			[4, 2, 2, ["0.0.0.0", 67],
+				[], "NONE", 3787
+			],
+			[11, 2, 1, ["192.168.1.118", 33902],
+				["192.168.1.198", 389], "ESTABLISHED", 1194
+			],
+			[120, 2, 1, ["192.168.1.118", 51438],
+				["64.233.167.188", 5228], "ESTABLISHED", 26324
+			],
+			[10, 10, 1, ["::1", 631],
+				[], "LISTEN", 24549
+			],
+			[4, 2, 1, ["127.0.0.1", 34692],
+				["127.0.0.1", 35454], "CLOSE_WAIT", 30213
+			],
+			[274, 2, 2, ["192.168.1.118", 37583],
+				["172.217.17.174", 443], "NONE", 26324
+			],
+			[460, 2, 1, ["192.168.1.118", 38356],
+				["192.229.220.156", 443], "ESTABLISHED", 26324
+			],
+			[3, 2, 1, ["192.168.1.118", 57088],
+				["91.191.171.128", 22], "ESTABLISHED", 11443
+			],
+			[6, 2, 2, ["10.0.3.1", 53],
+				[], "NONE", 3787
+			],
+			[5, 2, 1, ["127.0.0.1", 4369],
+				["127.0.0.1", 44233], "ESTABLISHED", 10500
+			]
+		],
+		"ip_addresses": ["127.0.0.1", "192.168.1.118", "10.0.3.1", "172.17.0.1"]
+	},
+	"processes": [{
+		"name": "systemd",
+		"cpu_times": [17.96, 7.6, 9603.31, 4253.56],
+		"pid": 1,
+		"cpu_percent": 0.0,
+		"username": "root",
+		"memory_info": [5693440, 190029824, 3481600, 1425408, 0, 153018368, 0]
+	}, {
+		"name": "kthreadd",
+		"cpu_times": [0.0, 0.37, 0.0, 0.0],
+		"pid": 2,
+		"cpu_percent": 0.0,
+		"username": "root",
+		"memory_info": [0, 0, 0, 0, 0, 0, 0]
+	}],
+	"bios": {
+		"vendor": "American Megatrends Inc.\n",
+		"version": "F1\n",
+		"release_date": "08/22/2013\n"
+	},
+	"cpu": {
+		"hz_advertised": "2.4000 GHz",
+		"processor": "x86_64",
+		"raw_arch_string": "x86_64",
+		"model": 16,
+		"stats": [4289497532, 2155844018, 583034767, 0],
+		"cpu-times": [436258.49, 1048.08, 74149.6, 5989162.29, 5437.78, 0.0, 565.09, 0.0, 0.0, 0.0],
+		"arch": "X86_64",
+		"extended_model": 1,
+		"flags": ["3dnowprefetch", "abm", "aes", "aperfmperf", "apic", "arat", "avx", "bmi1", "clflush", "cmov", "cmp_legacy", "constant_tsc", "cpb", "cr8_legacy", "cx16", "cx8", "de", "decodeassists", "extapic", "extd_apicid", "f16c", "flushbyasid", "fma", "fma4", "fpu", "fxsr", "fxsr_opt", "ht", "hw_pstate", "ibs", "lahf_lm", "lbrv", "lm", "lwp", "mca", "mce", "misalignsse", "mmx", "mmxext", "monitor", "msr", "mtrr", "nodeid_msr", "nonstop_tsc", "nopl", "npt", "nrip_save", "nx", "osvw", "pae", "pat", "pausefilter", "pclmulqdq", "pdpe1gb", "perfctr_core", "perfctr_nb", "pfthreshold", "pge", "pni", "popcnt", "pse", "pse36", "rdtscp", "rep_good", "sep", "skinit", "sse", "sse2", "sse4_1", "sse4_2", "sse4a", "ssse3", "svm", "svm_lock", "syscall", "tbm", "tce", "topoext", "tsc", "tsc_scale", "vmcb_clean", "vme", "vmmcall", "wdt", "xop", "xsave"],
+		"l2_cache_associativity": "0x800",
+		"bits": 64,
+		"cpuinfo_version": [3, 3, 0],
+		"l2_cache_line_size": 8,
+		"hz_advertised_raw": [2400000000, 0],
+		"family": 21,
+		"logical-core-count": 4,
+		"l2_cache_size": "2048 KB",
+		"count": 4,
+		"stepping": 1,
+		"brand": "AMD A10-5800K APU with Radeon(tm) HD Graphics",
+		"hz_actual": "2.4000 GHz",
+		"extended_family": 6,
+		"vendor_id": "AuthenticAMD",
+		"pyhsical-core-count": 2,
+		"hz_actual_raw": [2400000000, 0]
+	},
+	"platform": {
+		"release": "4.4.0-21-generic",
+		"node": "r2d2",
+		"machine": "x86_64",
+		"system": "Linux",
+		"version": "#37-Ubuntu SMP Mon Apr 18 18:33:37 UTC 2016"
+	},
+	"gpu": {
+		"devices": [{
+			"subsystem": "Advanced Micro Devices, Inc. [AMD/ATI] Trinity [Radeon HD 7660D]",
+			"kernel": "radeon",
+			"memory": "256M"
+		}]
+	},
+	"peripheral_devices": [{
+		"tag": "Linux Foundation 1.1 root hub",
+		"id": "1d6b:0001",
+		"device": "/dev/bus/usb/005/001"
+	}, {
+		"tag": "Genesys Logic, Inc. microSD Reader/Writer",
+		"id": "05e3:0736",
+		"device": "/dev/bus/usb/002/003"
+	}],
+	"memory": {
+		"virtual_memory": {
+			"free": 1403133952,
+			"total": 16046960640,
+			"used": 7574691840,
+			"cached": 6634561536,
+			"shared": 197976064,
+			"percent": 48.8,
+			"available": 8213708800,
+			"active": 8460730368,
+			"inactive": 5340327936,
+			"buffers": 434573312
+		},
+		"swap_memory": {
+			"free": 11900362752,
+			"total": 12024541184,
+			"sout": 142073856,
+			"used": 124178432,
+			"sin": 3489792,
+			"percent": 1.0
+		},
+		"devices": [{
+			"speed": "1600 MHz",
+			"size": "4096 MB",
+			"type": "DDR3",
+			"manufacturer": "Kingston"
+		}, {
+			"speed": "1600 MHz",
+			"size": "4096 MB",
+			"type": "DDR3",
+			"manufacturer": "Undefined"
+		}]
+	}
+}

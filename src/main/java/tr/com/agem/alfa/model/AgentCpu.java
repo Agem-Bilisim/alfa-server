@@ -5,25 +5,31 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "c_agent_cpu")
+@Table(name = "c_agent_cpu_agent")
+@AssociationOverrides({ @AssociationOverride(name = "pk.agent", joinColumns = @JoinColumn(name = "AGENT_ID")),
+		@AssociationOverride(name = "pk.cpu", joinColumns = @JoinColumn(name = "CPU_ID")) })
 public class AgentCpu implements Serializable {
 
 	private static final long serialVersionUID = 7337356336364195558L;
 
+	@EmbeddedId
 	private AgentCpuId pk = new AgentCpuId();
 
+	@Column(name = "HZ_ACTUAL", length = 100)
 	private String hzActual;
 
+	@Column(name = "CPU_TIMES", length = 500)
 	private String commaSeparatedCpuTimes;
 
+	@Column(name = "STATS", length = 500)
 	private String commaSeparatedStats;
 
+	@Column(name = "FLAGS", length = 500)
 	private String commaSeparatedFlags;
 
 	public AgentCpu() {
 	}
 
-	@EmbeddedId
 	public AgentCpuId getPk() {
 		return pk;
 	}

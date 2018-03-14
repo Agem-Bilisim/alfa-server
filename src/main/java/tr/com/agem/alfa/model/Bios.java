@@ -7,19 +7,24 @@ import java.util.Set;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "c_agent_bios")
+@Table(name = "c_agent_bios", uniqueConstraints = { @UniqueConstraint(columnNames = "VERSION"),
+		@UniqueConstraint(columnNames = "VENDOR") })
 public class Bios extends BaseModel {
 
 	private static final long serialVersionUID = -6764863993208773539L;
 
+	@Column(name = "VENDOR", nullable = false)
 	private String vendor;
 
+	@Column(name = "VERSION", nullable = false)
 	private String version;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name = "RELEASE_DATE")
 	private Date releaseDate;
 
-	@ManyToMany(cascade = { CascadeType.ALL })
-	private Set<Agent> agents = new HashSet<Agent>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bios")
+	private Set<Agent> agents = new HashSet<Agent>(0);
 
 	public String getVendor() {
 		return vendor;

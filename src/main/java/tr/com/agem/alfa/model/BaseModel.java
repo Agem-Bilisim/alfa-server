@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,20 +18,22 @@ public abstract class BaseModel implements Serializable {
 	private static final long serialVersionUID = -3892645791411537782L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID", unique = true, nullable = false)
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date", nullable = false)
+	@Column(name = "CREATED_DATE", nullable = false)
 	private Date createdDate;
 
-	@Column(name = "created_by", nullable = false)
+	@Column(name = "CREATED_BY", nullable = false)
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_modified_date", nullable = true)
+	@Column(name = "LAST_MODIFIED_DATE")
 	private Date lastModifiedDate;
 
-	@Column(name = "last_modified_by", nullable = true)
+	@Column(name = "LAST_MODIFIED_BY")
 	private String lastModifiedBy;
 
 	public Long getId() {

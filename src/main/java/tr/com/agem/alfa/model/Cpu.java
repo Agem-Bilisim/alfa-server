@@ -1,6 +1,12 @@
 package tr.com.agem.alfa.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -8,38 +14,57 @@ import javax.persistence.Table;
 public class Cpu extends BaseModel {
 
 	private static final long serialVersionUID = 7537194714323092263L;
-	
+
+	@Column(name = "L2_CACHE_SIZE")
 	private String l2CacheSize;
 
+	@Column(name = "BITS")
 	private String bits;
 
+	@Column(name = "VENDOR_ID")
 	private String vendorId;
 
+	@Column(name = "EXTENDED_FAMILY")
 	private String extendedFamily;
 
+	@Column(name = "L2_CACHE_ASSOCIATIVITY")
 	private String l2CacheAssociativity;
 
+	@Column(name = "L2_CACHE_LINE_SIZE")
 	private String l2CacheLineSize;
 
+	@Column(name = "HZ_ADVERTISED", nullable = false)
 	private String hzAdvertised;
 
+	@Column(name = "PROCESSOR", nullable = false)
 	private String processor;
 
+	@Column(name = "PYHSICAL_CORE_COUNT", nullable = false)
 	private Integer pyhsicalCoreCount;
 
+	@Column(name = "LOGICAL_CORE_COUNT", nullable = false)
 	private Integer logicalCoreCount;
 
+	@Column(name = "BRAND", nullable = false)
 	private String brand;
 
+	@Column(name = "RAW_ARCH_STRING")
 	private String rawArchString;
 
+	@Column(name = "COUNT")
 	private Integer count;
 
+	@Column(name = "FAMILY")
 	private String family;
 
+	@Column(name = "ARCH")
 	private String arch;
 
+	@Column(name = "MODEL")
 	private String model;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.cpu")
+	private Set<AgentCpu> agentCpus = new HashSet<AgentCpu>(0);
 
 	public String getBits() {
 		return bits;
@@ -167,6 +192,14 @@ public class Cpu extends BaseModel {
 
 	public void setModel(String model) {
 		this.model = model;
+	}
+
+	public Set<AgentCpu> getAgentCpus() {
+		return agentCpus;
+	}
+
+	public void setAgentCpus(Set<AgentCpu> agentCpus) {
+		this.agentCpus = agentCpus;
 	}
 
 }
