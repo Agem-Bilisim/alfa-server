@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body layout:fragment="modal(modalId, modalHeader, modalButton)">
+	<div class="modal fade" tabindex="-1" th:id="${modalId}">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" th:text="${modalHeader}">My Modal</h4>
+				</div>
+				<div class="modal-body">
+					<div layout:fragment="modal-content">
+						<p>My modal content</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" th:id="${modalId + 'Btn'}" class="btn btn-default pull-left"
+						data-dismiss="modal" th:text="${modalButton}">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

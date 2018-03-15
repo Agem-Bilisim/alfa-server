@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<!--/*@thymesVar id="users" type="java.util.List<tr.com.agem.lider.model.User>"*/-->
+<!--/*@thymesVar id="agents" type="java.util.List<tr.com.agem.lider.model.Agent>"*/-->
+<!--/*@thymesVar id="template" type="java.util.List<tr.com.agem.lider.model.TaskTemplate>"*/-->
+<head>
+	<title>Task Execution</title>
+	<!-- iCheck -->
+	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
+	<!-- DataTables -->
+	<link th:href="@{/plugins/datatables.net-bs/css/dataTables.bootstrap.min.css}" rel="stylesheet" />
+	<!-- Datepicker -->
+	<link th:href="@{/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" rel="stylesheet" />
+	<!-- Timepicker -->
+	<link th:href="@{/plugins/timepicker/bootstrap-timepicker.min.css}" rel="stylesheet" />
+	<!-- Select2 -->
+	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li><a th:href="@{/task-template/list}">Task Templates</a></li>
+		<li class="active">Task Execution</li>
+	</th:block>
+
+	<div layout:fragment="content">
+	
+		<!-- Task result will be displayed here -->
+		<div class="row hidden" id="resultRow">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">Result</h3>
+					</div>
+					<div class="box-body" id="resultDiv">
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Search agent and users -->
+		<div class="row" id="searchRow">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">Search agents &amp; users</h3>
+					</div>
+					<div class="box-body">
+						<table id="agentUserTable"
+							class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th><label><input type="checkbox" class="minimal"
+											id="toggleAll"></label></th>
+									<th>Hostname/Username</th>
+									<th>Details</th>
+								</tr>
+							</thead>
+							<tbody id="agentUserTableBody">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Task parameters form -->
+		<div class="row" id="paramRow">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">Parameters</h3>
+					</div>
+					<form role="form" id="taskForm">
+						<div class="box-body">
+							<div layout:fragment="plugin-parameters-form"></div>
+							<div class="col-lg-6" style="padding-left: 0px;">
+								<div class="form-group">
+									<label>Activation date</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right datepicker" id="activationDate">
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="bootstrap-timepicker">
+									<div class="form-group">
+										<label>&nbsp;</label>
+										<div class="input-group">
+											<div class="input-group-addon">
+												<i class="fa fa-clock-o"></i>
+											</div>
+											<input type="text" class="form-control pull-right timepicker" id="activationDateTime">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6" style="padding-left: 0px;">
+								<div class="form-group">
+									<label>Timeout date</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right datepicker" id="timeoutDate">
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="bootstrap-timepicker">
+									<div class="form-group">
+										<label>&nbsp;</label>
+										<div class="input-group">
+											<div class="input-group-addon">
+												<i class="fa fa-clock-o"></i>
+											</div>
+											<input type="text" class="form-control pull-right timepicker" id="timeoutDateTime">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="button" class="btn btn-default">Cancel</button>
+							<div class="btn-toolbar pull-right">
+								<button type="button" class="btn btn-info" data-toggle="modal"
+									data-target="#executeScheduledModal">Execute
+									scheduled</button>
+								<button type="button" class="btn btn-primary"
+									id="executeTaskBtn">Execute</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Task scheduler modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='executeScheduledModal', modalHeader='Execute scheduled', modalButton='Schedule')"
+			th:remove="tag">
+			<form layout:fragment="modal-content">
+				<div class="form-group">
+					<label>Timing</label> <select class="form-control select2"
+						style="width: 100%;" id="timing">
+						<option selected="selected" value="custom">Custom</option>
+						<option value="yearly">Yearly</option>
+						<option value="monthly">Monthly</option>
+						<option value="weekly">Weekly</option>
+						<option value="daily">Daily</option>
+						<option value="hourly">Hourly</option>
+						<option value="just-once">Just Once</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="minute">Minute</label> <input type="text"
+						class="form-control" id="minute" placeholder="Enter minute">
+				</div>
+				<div class="form-group">
+					<label for="hour">Hour</label> <input type="text"
+						class="form-control" id="hour" placeholder="Enter hour">
+				</div>
+				<div class="form-group">
+					<label for="dayOfMonth">Day of month</label> <input type="text"
+						class="form-control" id="dayOfMonth"
+						placeholder="Enter day of month">
+				</div>
+				<div class="form-group">
+					<label for="month">Month</label> <input type="text"
+						class="form-control" id="month" placeholder="Enter month">
+				</div>
+				<div class="form-group">
+					<label for="dayOfWeek">Day of week</label> <input type="text"
+						class="form-control" id="dayOfWeek"
+						placeholder="Enter day of week">
+				</div>
+				<div class="form-group">
+					<label>Date:</label>
+					<div class="input-group date">
+						<div class="input-group-addon">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control pull-right datepicker" id="justOnceDate">
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<!-- Task confirmation modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='executeModal', modalHeader='Execute task?', modalButton='Confirm')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">Task is about to be sent for execution. Do you want to continue?</p>
+		</div>
+
+		<!-- Agent details modal -->
+		<div
+			layout:insert="layouts/info-modal :: modal(modalId='agentDetailModal', modalHeader='Agent Details', modalButton='Close')"
+			th:remove="tag">
+			<div class="nav-tabs-custom" layout:fragment="modal-content">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+              		<li><a href="#tab_2" data-toggle="tab">Sessions</a></li>
+              		<li><a href="#tab_3" data-toggle="tab">Properties</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_1">
+						<dl class="dl-horizontal">
+							<dt>Hostname</dt>
+							<dd id="agentHostname"></dd>
+							<dd id="agentOnline"></dd>
+							<dt>MAC address</dt>
+							<dd id="agentMacAddresses"></dd>
+							<dt>IP address</dt>
+							<dd id="agentIpAddresses"></dd>
+							<dt>Type</dt>
+							<dd id="agentType"></dd>
+							<dt>Last installation</dt>
+							<dd id="agentLastInstallationDate"></dd>
+						</dl>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<table id="agentSessionsTable" class="table table-bordered table-striped" style="width: 100%;">
+							<thead>
+								<tr>
+									<th>User</th>
+									<th>Event</th>
+									<th>Date</th>
+								</tr>
+							</thead>
+							<tbody id="agentSessionsTableBody"></tbody>
+						</table>
+					</div>
+					<div class="tab-pane" id="tab_3">
+						<table id="agentPropertiesTable" class="table table-bordered table-striped" style="width: 100%;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Value</th>
+								</tr>
+							</thead>
+							<tbody id="agentPropertiesTableBody"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(document).ready(function() {
+			var messagingIdList = [];
+			var agentPropertyTable = null;
+			var agentSessionTable = null;
+			
+			// Populate table!
+			$.ajax({
+				type : "GET",
+				contentType : "application/json",
+				url : "/lider/task/init",
+				dataType : 'json',
+				cache : false,
+				timeout : 600000,
+				success : function(result) {
+					if (result) {
+						for (var i in result["data"]["agents"]) {
+							agent = result["data"]["agents"][i];
+							$("#agentUserTableBody").append("<tr><td><input type=\"checkbox\" class=\"minimal\" messagingId=\"" + agent.messagingId + "\"></td><td>" + agent.hostName + "</td><td><a class=\"btn agent-detail-btn\" agentid=\"" + agent.id + "\"><i class=\"fa fa-desktop\"></i> Details</a></td></tr>");
+						}
+						
+						$('#agentUserTable').DataTable();
+						
+						// Config checkboxes
+					    $('input[type="checkbox"].minimal').iCheck({
+					      checkboxClass: 'icheckbox_minimal-blue'
+					    });
+						$('input[type="checkbox"].minimal:not(#toggleAll)').on("ifToggled", function(){
+							if ($(this).is(':checked')) {
+			 					messagingIdList.push($(this).attr('messagingId'));
+							} else {
+								var index = messagingIdList.indexOf($(this).attr('messagingId'));
+								messagingIdList.splice(index, 1);
+							}
+						});
+						
+						// Config agent detail buttons
+						$('.agent-detail-btn').on('click', function() {
+							var agentId = $(this).attr("agentid");
+							$.ajax({
+								type : "GET",
+								contentType : "application/json",
+								url : "/lider/agent/" + agentId + "/detail",
+								dataType : 'json',
+								cache : false,
+								timeout : 600000,
+								success : function(result) {
+									if (result && result.data && result.data.agent) {
+										// General
+										$("#agentHostname").html(result.data.agent['hostName']);
+										$("#agentOnline").html(result.data['online-status'] ? "<i class=\"fa fa-circle text-success\"></i> Online" 
+												: "<i class=\"fa fa-circle text-error\"></i> Offline");
+										$("#agentMacAddresses").html(result.data.agent['macAddresses']);
+										$("#agentIpAddresses").html(result.data.agent['ipAddresses']);
+										$("#agentType").html(result.data.agent['type']);
+										$("#agentLastInstallationDate").html(result.data.agent['lastInstallationDate']);
+										
+										// Sessions
+										$('#agentSessionsTableBody').html("");
+										if (result.data.agent.sessions) {
+											for (var index in result.data.agent['sessions']) {
+												var sess = result.data.agent['sessions'][index];
+												$('#agentSessionsTableBody').append('<tr><td>' + sess['userName'] + '</td><td>' + sess['sessionEvent'] + '</td><td>' + sess['sessionEventDate'] + '</td></tr>');
+											}
+											if (agentSessionTable) {
+												agentSessionTable.draw('full-reset');
+											} else {
+												agentSessionTable = $('#agentSessionsTable').DataTable();
+											}
+										}
+										
+										// Properties
+										$('#agentPropertiesTableBody').html("");
+										if (result.data.agent.properties) {
+											for (var index in result.data.agent['properties']) {
+												var prop = result.data.agent['properties'][index];
+												$('#agentPropertiesTableBody').append('<tr><td>' + prop['name'] + '</td><td>' + prop['value'] + '</td></tr>');
+											}
+											if (agentPropertyTable) {
+												agentPropertyTable.draw('full-reset');
+											} else {
+												agentPropertyTable = $('#agentPropertiesTable').DataTable();
+											}
+										}
+										
+										// Show modal
+										$('#agentDetailModal').modal('show');
+									}
+								}
+							});
+						});
+					}
+				},
+				error : function(e) {
+					console.log("ERROR : ", e);
+				}
+			});
+			
+			// Config date pickers
+			var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy'; 
+			$('.datepicker').datepicker({
+				autoclose : true,
+				format: (dateFormat + '').toLowerCase() // To prevent formatting months with name strings.
+			});
+			$('.timepicker').timepicker({
+				showInputs: true
+			});
+			
+			// Handle toggle all
+			$('#toggleAll').on("ifToggled", function() {
+				$('input[type="checkbox"].minimal:not(#toggleAll)').iCheck($(this).is(':checked') ? 'check' : 'uncheck');
+			});
+			
+			// Handle scheduler
+			$('#justOnceDate').prop('disabled', true);
+			$('#timing').change(function(){
+				var selected = $(this).val();
+				$('#justOnceDate').prop('disabled', selected != 'just-once');
+			});
+
+			// Show task execution confirm box
+			$('#executeTaskBtn').click(function(event) {
+				event.preventDefault();
+				$('#executeModal').modal('show');
+			});
+			// Handle task submission
+			$('#executeModalBtn').click(function(event) {
+				// TODO activationDate, timeoutDate
+				
+				// Task form
+				var pluginName = /*[[${template.pluginName}]]*/ '';
+				var pluginVersion = /*[[${template.pluginVersion}]]*/ '';
+				var taskCode = /*[[${template.taskCode}]]*/ '';
+				var templateId = /*[[${template.id}]]*/ '';
+				var form = {
+					'pluginName': pluginName,
+					'pluginVersion': pluginVersion,
+					'taskCode': taskCode,
+					'templateId': templateId,
+					'parameterMap': $("#taskForm").serializeObject(['hour', 'minute', 'meridian']),
+					'messagingIdList': messagingIdList
+				};
+				
+				$('#executeModal').modal('hide');
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : "/lider/task/execute",
+					dataType : 'json',
+					data: JSON.stringify(form),
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						if (result && result.data) {
+							Lider.addTaskQueue(result.data.taskId);
+							// Hide search and parameter rows, show result row
+							$('#searchRow, #paramRow').addClass('hidden');
+							$('#resultRow').removeClass('hidden');
+							Pace.start();
+							// Result row is initially emtpy, 
+							// it will be populated according to SSE messages
+						}
+					}
+				});
+			});
+			// Handle scheduled task submission
+			$('#executeScheduledModalBtn').click(function(event) {
+				// TODO build cron string...
+				// TODO cronExpression, finishDate
+			});
+			
+		});
+	</script>
+</body>
+</html>
