@@ -32,6 +32,7 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 	private String from;
 
 	@NotEmpty
+	@JsonProperty("agent_install_path")
 	private String agentInstallPath;
 
 	@NotNull

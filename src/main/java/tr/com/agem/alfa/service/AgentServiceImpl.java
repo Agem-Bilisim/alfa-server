@@ -1,5 +1,6 @@
 package tr.com.agem.alfa.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -13,6 +14,7 @@ public class AgentServiceImpl implements AgentService {
 
 	private final AgentRepository agentRepository;
 
+	@Autowired
 	public AgentServiceImpl(AgentRepository agentRepository) {
 		super();
 		this.agentRepository = agentRepository;
@@ -20,7 +22,7 @@ public class AgentServiceImpl implements AgentService {
 
 	@Override
 	public Agent createOrUpdate(Agent agent) {
-		Assert.notNull(agent, "Agent must not be null");
+		Assert.notNull(agent, "Agent must not be null.");
 		return this.agentRepository.save(agent);
 	}
 
