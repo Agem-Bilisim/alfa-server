@@ -9,7 +9,7 @@ public class Memory implements Serializable
 
     private VirtualMemory virtualMemory;
     private SwapMemory swapMemory;
-    private List<Device___> devices = null;
+    private List<MemoryDevice> devices = null;
     private final static long serialVersionUID = -1401881594673409436L;
 
     public VirtualMemory getVirtualMemory() {
@@ -28,11 +28,11 @@ public class Memory implements Serializable
         this.swapMemory = swapMemory;
     }
 
-    public List<Device___> getDevices() {
+    public List<MemoryDevice> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<Device___> devices) {
+    public void setDevices(List<MemoryDevice> devices) {
         this.devices = devices;
     }
 

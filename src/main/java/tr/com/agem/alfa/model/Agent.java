@@ -12,10 +12,10 @@ public class Agent extends BaseModel {
 
 	private static final long serialVersionUID = 8396192263006131366L;
 
-	@Column(name = "TYPE")
+	@Column(name = "TYPE", nullable = false)
 	private Integer type;
 
-	@Column(name = "MESSAGING_ID", unique = true)
+	@Column(name = "MESSAGING_ID", nullable = false, unique = true)
 	private String messagingId;
 
 	@Column(name = "DELETED")
@@ -268,6 +268,27 @@ public class Agent extends BaseModel {
 			this.networkInterfaces = new HashSet<NetworkInterface>();
 		}
 		this.networkInterfaces.add(inet);
+	}
+
+	public void addInstalledPackage(InstalledPackage _package) {
+		if (this.installedPackages == null) {
+			this.installedPackages = new HashSet<InstalledPackage>();
+		}
+		this.installedPackages.add(_package);
+	}
+
+	public void addMemory(Memory mem) {
+		if (this.memories == null) {
+			this.memories = new HashSet<Memory>();
+		}
+		this.memories.add(mem);
+	}
+
+	public void addGpu(Gpu gpu) {
+		if (this.gpus == null) {
+			this.gpus = new HashSet<Gpu>();
+		}
+		this.gpus.add(gpu);
 	}
 
 }

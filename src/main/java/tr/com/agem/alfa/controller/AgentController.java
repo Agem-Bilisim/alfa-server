@@ -2,6 +2,8 @@ package tr.com.agem.alfa.controller;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.validation.Valid;
 
@@ -19,9 +21,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tr.com.agem.alfa.dto.Device;
+import tr.com.agem.alfa.dto.GpuDevice;
+import tr.com.agem.alfa.dto.MemoryDevice;
+import tr.com.agem.alfa.dto.InstalledPackage;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.Disk;
+import tr.com.agem.alfa.model.Gpu;
+import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
@@ -98,10 +105,49 @@ public class AgentController {
 			inet.setVendor(d.getVendor());
 			inet.setVersion(d.getVersion());
 			inet.setProduct(d.getProduct());
-			inet.setCapabilities(capabilities);
+			inet.setCapabilities(toCapabilityString(d.getCapabilities()));
 			agent.addNetworkInterface(inet);
 		}
+		//
+		// Installed packages
+		//
+		for (InstalledPackage _package : message.getInstalledPackages()) {
+			tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
+			mPackage.setName(_package.getName());
+			mPackage.setVersion(_package.getVersion());
+			agent.addInstalledPackage(mPackage);
+		}
+		//
+		// Memories
+		//
+		for (MemoryDevice d : message.getMemory().getDevices()) {
+			Memory mem = new Memory();
+			mem.setSpeed(d.getSpeed());
+			mem.setSize(d.getSize());
+			mem.setType(d.getType());
+			mem.setManufacturer(d.getManufacturer());
+			agent.addMemory(mem);
+		}
+		//
+		// GPU
+		//
+		for (GpuDevice d : message.getGpu().getDevices()) {
+			Gpu gpu = new Gpu();
+			gpu.setSubsystem(d.getSubsystem());
+			gpu.setKernel(d.getKernel());
+			gpu.setMemory(d.getKernel());
+			agent.addGpu(gpu);
+		}
+		// TODO users, processes, cpus, peripheral, bios, platform
 		return agent;
+	}
+
+	private String toCapabilityString(Map<String, String> capabilities) {
+		StringBuilder cap = new StringBuilder();
+		for (Entry<String, String> e : capabilities.entrySet()) {
+			cap.append(e.getKey()).append(":").append(e.getValue()).append(",");
+		}
+		return cap.toString();
 	}
 
 }

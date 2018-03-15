@@ -1,4 +1,3 @@
-
 package tr.com.agem.alfa.messaging.message;
 
 import java.util.List;
@@ -7,35 +6,68 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import tr.com.agem.alfa.dto.Bios;
 import tr.com.agem.alfa.dto.Cpu;
 import tr.com.agem.alfa.dto.Disk;
 import tr.com.agem.alfa.dto.Gpu;
+import tr.com.agem.alfa.dto.InstalledPackage;
 import tr.com.agem.alfa.dto.Memory;
 import tr.com.agem.alfa.dto.Network;
 import tr.com.agem.alfa.dto.PeripheralDevice;
 import tr.com.agem.alfa.dto.Platform;
 import tr.com.agem.alfa.dto.Process;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "platform", "installed_packages", "disk", "cpu", "bios", "peripheral_devices", "gpu", "processes",
+		"users", "network", "memory" })
 public class SysInfoResultMessage extends AgentBaseMessage {
 
 	private static final long serialVersionUID = 1135297498132000603L;
 
 	@NotEmpty
 	private String from;
+
 	@NotEmpty
 	private String agentInstallPath;
-	private Disk disk;
-	private Network network;
-	private List<Process> processes = null;
+
 	@NotNull
-	private Bios bios;
-	@NotNull
-	private Cpu cpu;
-	@NotNull
+	@JsonProperty("platform")
 	private Platform platform;
-	private Gpu gpu;
+
+	@JsonProperty("installed_packages")
+	private List<InstalledPackage> installedPackages = null;
+
+	@JsonProperty("disk")
+	private Disk disk;
+
+	@NotNull
+	@JsonProperty("cpu")
+	private Cpu cpu;
+
+	@NotNull
+	@JsonProperty("bios")
+	private Bios bios;
+
+	@JsonProperty("peripheral_devices")
 	private List<PeripheralDevice> peripheralDevices = null;
+
+	@JsonProperty("gpu")
+	private Gpu gpu;
+
+	@JsonProperty("processes")
+	private List<Process> processes = null;
+
+	@JsonProperty("users")
+	private List<String> users = null;
+
+	@JsonProperty("network")
+	private Network network;
+
+	@JsonProperty("memory")
 	private Memory memory;
 
 	public Disk getDisk() {
@@ -124,6 +156,22 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 
 	public void setAgentInstallPath(String agentInstallPath) {
 		this.agentInstallPath = agentInstallPath;
+	}
+
+	public List<InstalledPackage> getInstalledPackages() {
+		return installedPackages;
+	}
+
+	public void setInstalledPackages(List<InstalledPackage> installedPackages) {
+		this.installedPackages = installedPackages;
+	}
+
+	public List<String> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<String> users) {
+		this.users = users;
 	}
 
 }
