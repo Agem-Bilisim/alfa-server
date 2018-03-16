@@ -55,8 +55,9 @@ public class AgentController {
 			return ResponseEntity.badRequest().body(result);
 		}
 		try {
-			Agent agent = toAgentEntity(message, "SYSTEM");
-			agentService.createOrUpdate(agent);
+			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
+			agent = toAgentEntity(message, "SYSTEM", agent);
+			agentService.saveOrUpdate(agent);
 			log.info("Agent and its system info created/updated successfully.");
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";
@@ -67,8 +68,9 @@ public class AgentController {
 		return ResponseEntity.ok(result);
 	}
 
-	private Agent toAgentEntity(SysInfoResultMessage message, String principal) throws JsonProcessingException {
-		Agent agent = new Agent();
+	private Agent toAgentEntity(SysInfoResultMessage message, String principal, Agent origAgent)
+			throws JsonProcessingException {
+		Agent agent = origAgent != null ? origAgent : new Agent();
 		//
 		// Agent
 		//
@@ -142,7 +144,8 @@ public class AgentController {
 		//
 		// BIOS
 		//
-		tr.com.agem.alfa.model.Bios bios = new tr.com.agem.alfa.model.Bios();
+		tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
+				: new tr.com.agem.alfa.model.Bios();
 		bios.setVendor(message.getBios().getVendor());
 		bios.setVersion(message.getBios().getVersion());
 		bios.setReleaseDate(message.getBios().getReleaseDate());
@@ -150,7 +153,7 @@ public class AgentController {
 		//
 		// Platform
 		//
-		Platform pl = new Platform();
+		Platform pl = agent.getPlatform() != null ? agent.getPlatform() : new Platform();
 		pl.setRelease(message.getPlatform().getRelease());
 		pl.setVersion(message.getPlatform().getVersion());
 		pl.setSystem(message.getPlatform().getSystem());

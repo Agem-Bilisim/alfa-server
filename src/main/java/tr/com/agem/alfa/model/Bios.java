@@ -11,8 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "c_agent_bios", uniqueConstraints = { @UniqueConstraint(columnNames = "VERSION"),
-		@UniqueConstraint(columnNames = "VENDOR") })
+@Table(name = "c_agent_bios", uniqueConstraints = { @UniqueConstraint(columnNames = { "VERSION", "VENDOR" }) })
 public class Bios extends BaseModel {
 
 	private static final long serialVersionUID = -6764863993208773539L;
@@ -66,6 +65,30 @@ public class Bios extends BaseModel {
 			this.agents = new HashSet<Agent>();
 		}
 		this.agents.add(agent);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Bios other = (Bios) obj;
+		if (vendor == null) {
+			if (other.vendor != null) return false;
+		} else if (!vendor.equals(other.vendor)) return false;
+		if (version == null) {
+			if (other.version != null) return false;
+		} else if (!version.equals(other.version)) return false;
+		return true;
 	}
 
 }

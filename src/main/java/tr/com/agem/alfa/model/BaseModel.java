@@ -104,5 +104,5 @@ public abstract class BaseModel implements Serializable {
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
-
+	
 }

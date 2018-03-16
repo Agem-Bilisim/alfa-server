@@ -6,4 +6,6 @@ import tr.com.agem.alfa.model.Agent;
 
 public interface AgentRepository extends CrudRepository<Agent, Long> {
 
+	Agent getAgentByMessagingId(String messagingId);
+
 }

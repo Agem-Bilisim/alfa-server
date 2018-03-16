@@ -23,11 +23,9 @@
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-        <li><a th:href="@{/networkinventory/list}"><i class="fa fa-cloud"></i> <span>Inventory</span></a></li>
-        <li><a th:href="@{/task-template/list}"><i class="fa fa-terminal"></i> <span>Task Templates</span></a></li>
-        <li><a th:href="@{/task/list}"><i class="fa fa-tasks"></i> <span>Tasks</span></a></li>
-        <li><a th:href="@{/report/list}"><i class="fa fa-line-chart"></i> <span>Reports</span></a></li>
+        <li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> <span>Pano</span></a></li>
+        <li><a th:href="@{/networkinventory/list}"><i class="fa fa-cloud"></i> <span>Envanter</span></a></li>
+        <li><a th:href="@{/report/list}"><i class="fa fa-line-chart"></i> <span>Uyumluluk Analizi</span></a></li>
         
         <!-- Only for Admin! -->
         <li class="treeview" sec:authorize="hasRole('ROLE_ADMIN')">
@@ -37,16 +35,13 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a th:href="@{/sysconfig/list}"><i class="fa fa-circle-o"></i> Configuration</a></li>
-            <li><a th:href="@{/sysupdate/list}"><i class="fa fa-circle-o"></i> Update & Backup</a></li>
-            <li><a th:href="@{/ldap/integration/list}"><i class="fa fa-circle-o"></i> Integrations</a></li>
-            <li><a th:href="@{/notification/list}"><i class="fa fa-circle-o"></i> Notifications</a></li>
+            <li><a th:href="@{/notification/list}"><i class="fa fa-circle-o"></i> Anket</a></li>
           </ul>
         </li>
-        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/user/list}"><i class="fa fa-users"></i> <span>User Management</span></a></li>
+        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/user/list}"><i class="fa fa-users"></i> <span>Kullanıcı Yönetimi</span></a></li>
         <!--  -->
         
-        <li><a th:href="@{/help}"><i class="fa fa-question"></i> <span>Help</span></a></li>
+        <li><a th:href="@{/help}"><i class="fa fa-question"></i> <span>Yardım</span></a></li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

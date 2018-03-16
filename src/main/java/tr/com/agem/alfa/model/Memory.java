@@ -80,4 +80,36 @@ public class Memory extends BaseModel {
 		this.agents.add(agent);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
+		result = prime * result + ((size == null) ? 0 : size.hashCode());
+		result = prime * result + ((speed == null) ? 0 : speed.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Memory other = (Memory) obj;
+		if (manufacturer == null) {
+			if (other.manufacturer != null) return false;
+		} else if (!manufacturer.equals(other.manufacturer)) return false;
+		if (size == null) {
+			if (other.size != null) return false;
+		} else if (!size.equals(other.size)) return false;
+		if (speed == null) {
+			if (other.speed != null) return false;
+		} else if (!speed.equals(other.speed)) return false;
+		if (type == null) {
+			if (other.type != null) return false;
+		} else if (!type.equals(other.type)) return false;
+		return true;
+	}
+
 }

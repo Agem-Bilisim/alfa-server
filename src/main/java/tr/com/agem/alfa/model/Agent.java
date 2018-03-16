@@ -53,56 +53,56 @@ public class Agent extends BaseModel {
 	@Column(name = "SYS_INFO")
 	private byte[] sysinfo;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_disk_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DISK_ID", nullable = false, updatable = false) })
 	private Set<Disk> disks = new HashSet<Disk>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_inet_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "NETWORK_INTERFACE_ID", nullable = false, updatable = false) })
 	private Set<NetworkInterface> networkInterfaces = new HashSet<NetworkInterface>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_package_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "INSTALLED_PACKAGE_ID", nullable = false, updatable = false) })
 	private Set<InstalledPackage> installedPackages = new HashSet<InstalledPackage>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_user_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "USER_ID", nullable = false, updatable = false) })
 	private Set<AgentUser> users = new HashSet<AgentUser>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_memory_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "MEMORY_ID", nullable = false, updatable = false) })
 	private Set<Memory> memories = new HashSet<Memory>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_gpu_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "GPU_ID", nullable = false, updatable = false) })
 	private Set<Gpu> gpus = new HashSet<Gpu>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentCpu> agentCpus = new HashSet<AgentCpu>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentPeripheralDevice> agentPeripheralDevices = new HashSet<AgentPeripheralDevice>(0);
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "BIOS_ID", nullable = false)
 	private Bios bios;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "PLATFORM_ID", nullable = false)
 	private Platform platform;
 

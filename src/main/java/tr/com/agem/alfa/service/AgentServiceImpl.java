@@ -1,5 +1,8 @@
 package tr.com.agem.alfa.service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,18 +15,25 @@ import tr.com.agem.alfa.repository.AgentRepository;
 @Transactional
 public class AgentServiceImpl implements AgentService {
 
-	private final AgentRepository agentRepository;
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
-	public AgentServiceImpl(AgentRepository agentRepository) {
-		super();
-		this.agentRepository = agentRepository;
+	private AgentRepository agentRepository;
+
+	@Override
+	public Agent saveOrUpdate(Agent agent) {
+		Assert.notNull(agent, "Agent must not be null.");
+		if (agent.getId() != null) {
+			return this.em.merge(agent);
+		}
+		return this.agentRepository.save(agent);
 	}
 
 	@Override
-	public Agent createOrUpdate(Agent agent) {
-		Assert.notNull(agent, "Agent must not be null.");
-		return this.agentRepository.save(agent);
+	public Agent getAgentByMessagingId(String messagingId) {
+		Assert.notNull(messagingId, "Messaging ID must not be null.");
+		return this.agentRepository.getAgentByMessagingId(messagingId);
 	}
 
 }

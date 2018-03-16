@@ -11,8 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "c_agent_platform", uniqueConstraints = { @UniqueConstraint(columnNames = "SYSTEM"),
-		@UniqueConstraint(columnNames = "PL_RELEASE") })
+@Table(name = "c_agent_platform", uniqueConstraints = { @UniqueConstraint(columnNames = { "SYSTEM", "PL_RELEASE" }) })
 public class Platform extends BaseModel {
 
 	private static final long serialVersionUID = 4952577557714888266L;
@@ -77,6 +76,30 @@ public class Platform extends BaseModel {
 			this.agents = new HashSet<Agent>();
 		}
 		this.agents.add(agent);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((release == null) ? 0 : release.hashCode());
+		result = prime * result + ((system == null) ? 0 : system.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Platform other = (Platform) obj;
+		if (release == null) {
+			if (other.release != null) return false;
+		} else if (!release.equals(other.release)) return false;
+		if (system == null) {
+			if (other.system != null) return false;
+		} else if (!system.equals(other.system)) return false;
+		return true;
 	}
 
 }

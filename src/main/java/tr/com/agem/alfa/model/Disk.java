@@ -11,8 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "c_agent_disk", uniqueConstraints = { @UniqueConstraint(columnNames = "PRODUCT"),
-		@UniqueConstraint(columnNames = "VERSION") })
+@Table(name = "c_agent_disk", uniqueConstraints = { @UniqueConstraint(columnNames = { "PRODUCT", "VERSION" }) })
 public class Disk extends BaseModel {
 
 	private static final long serialVersionUID = -3332758640758446379L;
@@ -88,6 +87,30 @@ public class Disk extends BaseModel {
 			this.agents = new HashSet<Agent>();
 		}
 		this.agents.add(agent);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Disk other = (Disk) obj;
+		if (product == null) {
+			if (other.product != null) return false;
+		} else if (!product.equals(other.product)) return false;
+		if (version == null) {
+			if (other.version != null) return false;
+		} else if (!version.equals(other.version)) return false;
+		return true;
 	}
 
 }

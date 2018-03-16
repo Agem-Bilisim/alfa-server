@@ -8,9 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "c_agent_package")
+@Table(name = "c_agent_package", uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME", "VERSION" }) })
 public class InstalledPackage extends BaseModel {
 
 	private static final long serialVersionUID = -4829346133428733432L;
@@ -45,6 +46,30 @@ public class InstalledPackage extends BaseModel {
 			this.agents = new HashSet<Agent>();
 		}
 		this.agents.add(agent);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		InstalledPackage other = (InstalledPackage) obj;
+		if (name == null) {
+			if (other.name != null) return false;
+		} else if (!name.equals(other.name)) return false;
+		if (version == null) {
+			if (other.version != null) return false;
+		} else if (!version.equals(other.version)) return false;
+		return true;
 	}
 
 }
