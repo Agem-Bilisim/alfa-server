@@ -8,8 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author emre
@@ -37,6 +42,28 @@ public abstract class BaseModel implements Serializable {
 
 	@Column(name = "LAST_MODIFIED_BY")
 	private String lastModifiedBy;
+
+	@PrePersist
+	public void prePersist() {
+		if (createdDate == null) {
+			createdDate = new Date();
+		}
+		if (createdBy == null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			createdBy = (String) authentication.getPrincipal();
+		}
+	}
+
+	@PreUpdate
+	public void preUpdate() {
+		if (lastModifiedDate == null) {
+			lastModifiedDate = new Date();
+		}
+		if (lastModifiedBy == null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			lastModifiedBy = (String) authentication.getPrincipal();
+		}
+	}
 
 	public Long getId() {
 		return id;

@@ -3,10 +3,20 @@ package tr.com.agem.alfa.util;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import tr.com.agem.alfa.security.CustomAuthenticationProvider;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 public class CommonUtils {
+
+	// Used only for debug purposes!
+	public static void main(String[] args) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(CustomAuthenticationProvider.ENCODER_STRENGTH);
+		System.out.println("PWD: " + encoder.encode("test"));
+	}
 
 	public static final String SPACE_DELIM = " ";
 	public static final String COMMA_DELIM = ",";

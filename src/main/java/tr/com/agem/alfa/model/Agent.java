@@ -4,7 +4,19 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "c_agent")
@@ -37,59 +49,60 @@ public class Agent extends BaseModel {
 	@Column(name = "LAST_INSTALLATION_DATE", nullable = false)
 	private Date lastInstallationDate;
 
+	@Lob
 	@Column(name = "SYS_INFO")
 	private byte[] sysinfo;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "c_agent_disk_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DISK_ID", nullable = false, updatable = false) })
 	private Set<Disk> disks = new HashSet<Disk>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "c_agent_inet_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "NETWORK_INTERFACE_ID", nullable = false, updatable = false) })
 	private Set<NetworkInterface> networkInterfaces = new HashSet<NetworkInterface>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "c_agent_package_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "INSTALLED_PACKAGE_ID", nullable = false, updatable = false) })
 	private Set<InstalledPackage> installedPackages = new HashSet<InstalledPackage>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "c_agent_user_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "USER_ID", nullable = false, updatable = false) })
 	private Set<AgentUser> users = new HashSet<AgentUser>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "c_agent_memory_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "MEMORY_ID", nullable = false, updatable = false) })
 	private Set<Memory> memories = new HashSet<Memory>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "c_agent_gpu_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "GPU_ID", nullable = false, updatable = false) })
 	private Set<Gpu> gpus = new HashSet<Gpu>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.PERSIST)
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.PERSIST)
 	private Set<AgentCpu> agentCpus = new HashSet<AgentCpu>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.agent", cascade = CascadeType.PERSIST)
 	private Set<AgentPeripheralDevice> agentPeripheralDevices = new HashSet<AgentPeripheralDevice>(0);
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "BIOS_ID", nullable = false)
 	private Bios bios;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "PLATFORM_ID", nullable = false)
 	private Platform platform;
 
@@ -166,6 +179,7 @@ public class Agent extends BaseModel {
 
 	public void setBios(Bios bios) {
 		this.bios = bios;
+		this.bios.addAgent(this);
 	}
 
 	public Platform getPlatform() {
@@ -174,6 +188,7 @@ public class Agent extends BaseModel {
 
 	public void setPlatform(Platform platform) {
 		this.platform = platform;
+		this.platform.addAgent(this);
 	}
 
 	public Set<NetworkInterface> getNetworkInterfaces() {
@@ -260,6 +275,7 @@ public class Agent extends BaseModel {
 		if (this.disks == null) {
 			this.disks = new HashSet<Disk>();
 		}
+		disk.addAgent(this);
 		this.disks.add(disk);
 	}
 
@@ -267,6 +283,7 @@ public class Agent extends BaseModel {
 		if (this.networkInterfaces == null) {
 			this.networkInterfaces = new HashSet<NetworkInterface>();
 		}
+		inet.addAgent(this);
 		this.networkInterfaces.add(inet);
 	}
 
@@ -274,6 +291,7 @@ public class Agent extends BaseModel {
 		if (this.installedPackages == null) {
 			this.installedPackages = new HashSet<InstalledPackage>();
 		}
+		_package.addAgent(this);
 		this.installedPackages.add(_package);
 	}
 
@@ -281,6 +299,7 @@ public class Agent extends BaseModel {
 		if (this.memories == null) {
 			this.memories = new HashSet<Memory>();
 		}
+		mem.addAgent(this);
 		this.memories.add(mem);
 	}
 
@@ -288,6 +307,7 @@ public class Agent extends BaseModel {
 		if (this.gpus == null) {
 			this.gpus = new HashSet<Gpu>();
 		}
+		gpu.addAgent(this);
 		this.gpus.add(gpu);
 	}
 

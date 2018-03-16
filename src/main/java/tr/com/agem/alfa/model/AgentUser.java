@@ -21,7 +21,7 @@ public class AgentUser extends BaseModel {
 	@Column(name = "GROUPS", nullable = false, length = 255)
 	private String commaSeparatedGroups;
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "disks")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 
 	public String getName() {
@@ -46,6 +46,13 @@ public class AgentUser extends BaseModel {
 
 	public void setAgents(Set<Agent> agents) {
 		this.agents = agents;
+	}
+
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
 	}
 
 }

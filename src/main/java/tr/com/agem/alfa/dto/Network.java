@@ -1,16 +1,20 @@
-
 package tr.com.agem.alfa.dto;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Network implements Serializable {
 
 	private static final long serialVersionUID = -7522997601681145638L;
 
 	private List<Device> devices = null;
+	@JsonProperty("mac_addresses")
 	private List<String> macAddresses = null;
+	@JsonProperty("ip_addresses")
 	private List<String> ipAddresses = null;
+	@JsonProperty("interface_addresses")
 	private List<InterfaceAddress> interfaceAddresses = null;
 
 	public List<Device> getDevices() {

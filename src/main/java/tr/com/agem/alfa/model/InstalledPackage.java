@@ -3,9 +3,9 @@ package tr.com.agem.alfa.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -21,8 +21,8 @@ public class InstalledPackage extends BaseModel {
 	@Column(name = "VERSION", length = 100)
 	private String version;
 
-	@ManyToMany(cascade = { CascadeType.ALL })
-	private Set<Agent> agents = new HashSet<Agent>();
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "installedPackages")
+	private Set<Agent> agents = new HashSet<Agent>(0);
 
 	public String getName() {
 		return name;
@@ -38,6 +38,13 @@ public class InstalledPackage extends BaseModel {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
 	}
 
 }

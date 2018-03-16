@@ -22,14 +22,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tr.com.agem.alfa.dto.Device;
 import tr.com.agem.alfa.dto.GpuDevice;
-import tr.com.agem.alfa.dto.MemoryDevice;
 import tr.com.agem.alfa.dto.InstalledPackage;
+import tr.com.agem.alfa.dto.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.model.Platform;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.util.CommonUtils;
@@ -138,7 +139,24 @@ public class AgentController {
 			gpu.setMemory(d.getKernel());
 			agent.addGpu(gpu);
 		}
-		// TODO users, processes, cpus, peripheral, bios, platform
+		//
+		// BIOS
+		//
+		tr.com.agem.alfa.model.Bios bios = new tr.com.agem.alfa.model.Bios();
+		bios.setVendor(message.getBios().getVendor());
+		bios.setVersion(message.getBios().getVersion());
+		bios.setReleaseDate(message.getBios().getReleaseDate());
+		agent.setBios(bios);
+		//
+		// Platform
+		//
+		Platform pl = new Platform();
+		pl.setRelease(message.getPlatform().getRelease());
+		pl.setVersion(message.getPlatform().getVersion());
+		pl.setSystem(message.getPlatform().getSystem());
+		pl.setMachine(message.getPlatform().getMachine());
+		agent.setPlatform(pl);
+		// TODO users, processes, cpus, peripheral
 		return agent;
 	}
 

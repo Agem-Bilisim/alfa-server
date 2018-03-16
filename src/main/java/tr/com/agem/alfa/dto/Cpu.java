@@ -11,7 +11,7 @@ public class Cpu implements Serializable
     private String processor;
     private String rawArchString;
     private Integer model;
-    private List<Integer> stats = null;
+    private List<Long> stats = null;
     private List<Float> cpuTimes = null;
     private String arch;
     private Integer extendedModel;
@@ -66,11 +66,11 @@ public class Cpu implements Serializable
         this.model = model;
     }
 
-    public List<Integer> getStats() {
+    public List<Long> getStats() {
         return stats;
     }
 
-    public void setStats(List<Integer> stats) {
+    public void setStats(List<Long> stats) {
         this.stats = stats;
     }
 

@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -24,6 +25,7 @@ public class NetworkInterface extends BaseModel {
 	@Column(name = "PRODUCT", nullable = false)
 	private String product;
 
+	@Lob
 	@Column(name = "CAPABILITIES")
 	private String capabilities;
 
@@ -68,6 +70,13 @@ public class NetworkInterface extends BaseModel {
 
 	public void setAgents(Set<Agent> agents) {
 		this.agents = agents;
+	}
+
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
 	}
 
 }

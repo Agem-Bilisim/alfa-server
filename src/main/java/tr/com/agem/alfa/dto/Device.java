@@ -16,7 +16,7 @@ public class Device implements Serializable {
 	private String physid;
 	private String handle;
 	@JsonProperty("class")
-	private String _class;
+	private String clazz;
 	private Map<String, String> capabilities;
 	private String description;
 	private Map<String, String> configuration;
@@ -27,7 +27,7 @@ public class Device implements Serializable {
 	private String dev;
 	private String product;
 	private Boolean claimed;
-	private Integer size;
+	private String size;
 	private String serial;
 	private String units;
 
@@ -61,14 +61,6 @@ public class Device implements Serializable {
 
 	public void setHandle(String handle) {
 		this.handle = handle;
-	}
-
-	public String getClass_() {
-		return _class;
-	}
-
-	public void setClass_(String _class) {
-		this._class = _class;
 	}
 
 	public String getDescription() {
@@ -143,11 +135,19 @@ public class Device implements Serializable {
 		this.claimed = claimed;
 	}
 
-	public Integer getSize() {
+	public String getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
+	}
+
+	public String getSize() {
 		return size;
 	}
 
-	public void setSize(Integer size) {
+	public void setSize(String size) {
 		this.size = size;
 	}
 

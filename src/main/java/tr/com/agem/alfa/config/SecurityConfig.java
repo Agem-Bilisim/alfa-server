@@ -32,14 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/fonts/**", 
 			"/plugins/**", 
 			"/js/**",
-			"/agent/register/**",
-			"/agent/task-status/**",
-			"/agent/session/**",
-			"/agent/missing-plugin/**"
+			"/agent/sysinfo-result/**",
+			"/agent/survey-result/**",
 	};
 	private static final String[] NON_CSRF_URLS = {
 			"/agent/sysinfo-result/**",
-			"/agent/survey-result/**",
+			"/agent/survey-result/**"
 	};
 	// @formatter:on
 

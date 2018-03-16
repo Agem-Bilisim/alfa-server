@@ -73,4 +73,11 @@ public class Memory extends BaseModel {
 		this.agents = agents;
 	}
 
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
+	}
+
 }

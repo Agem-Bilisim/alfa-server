@@ -8,9 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "c_agent_platform")
+@Table(name = "c_agent_platform", uniqueConstraints = { @UniqueConstraint(columnNames = "SYSTEM"),
+		@UniqueConstraint(columnNames = "PL_RELEASE") })
 public class Platform extends BaseModel {
 
 	private static final long serialVersionUID = 4952577557714888266L;
@@ -68,6 +70,13 @@ public class Platform extends BaseModel {
 
 	public void setAgents(Set<Agent> agents) {
 		this.agents = agents;
+	}
+
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
 	}
 
 }

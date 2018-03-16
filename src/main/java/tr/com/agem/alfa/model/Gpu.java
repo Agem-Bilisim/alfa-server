@@ -61,5 +61,12 @@ public class Gpu extends BaseModel {
 	public void setAgents(Set<Agent> agents) {
 		this.agents = agents;
 	}
+	
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
+	}
 
 }
