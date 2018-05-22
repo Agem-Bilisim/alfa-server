@@ -24,7 +24,7 @@ public class PackageServiceImpl implements PackageService {
 	public PackageServiceImpl(PackageRepository packageRepository) {
 		this.packageRepository = packageRepository;
 	}
-	
+
 	@Override
 	public InstalledPackage getPackage(Long id) {
 		Assert.notNull(id, "ID must not be null");
@@ -48,7 +48,8 @@ public class PackageServiceImpl implements PackageService {
 	public Page<InstalledPackage> getPackages(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			return this.packageRepository.findByNameContainingAndVersionContainingAllIgnoringCase(search, search, pageable);
+			return this.packageRepository.findByNameContainingAndVersionContainingAllIgnoringCase(search, search,
+					pageable);
 		}
 		return this.packageRepository.findAll(pageable);
 	}
@@ -61,11 +62,17 @@ public class PackageServiceImpl implements PackageService {
 			// Update
 			p.setName(_package.getName());
 			p.setVersion(_package.getVersion());
-			packageRepository.save(p);
+			this.packageRepository.save(p);
 			return;
 		}
 		// Create
-		packageRepository.save(_package);
+		this.packageRepository.save(_package);
+	}
+
+	@Override
+	public void delete(Long id) {
+		Assert.notNull(id, "ID must not be null.");
+		this.packageRepository.delete(id);
 	}
 
 }

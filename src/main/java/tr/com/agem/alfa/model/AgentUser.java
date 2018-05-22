@@ -15,7 +15,7 @@ public class AgentUser extends BaseModel {
 
 	private static final long serialVersionUID = 6660316032136480916L;
 
-	@Column(name = "NAME", nullable = false, length = 255)
+	@Column(name = "NAME", nullable = false, length = 255, unique = true)
 	private String name;
 
 	@Column(name = "GROUPS", nullable = false, length = 255)

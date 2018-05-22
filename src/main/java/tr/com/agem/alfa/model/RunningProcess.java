@@ -15,7 +15,7 @@ public class RunningProcess extends BaseModel {
 
 	private static final long serialVersionUID = 2751855136492532472L;
 
-	@Column(name = "NAME", nullable = false, length = 100)
+	@Column(name = "NAME", nullable = false, length = 100, unique = true)
 	private String name;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.runningProcess")

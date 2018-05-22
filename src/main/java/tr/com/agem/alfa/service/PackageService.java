@@ -21,4 +21,6 @@ public interface PackageService {
 
 	void save(InstalledPackage packageEntity);
 
+	void delete(Long id);
+
 }
