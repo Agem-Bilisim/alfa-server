@@ -40,9 +40,9 @@ public class EncryptionService {
 	private static final int NKEYITERATIONS = 2000;
 	private KeyParameter aes; // computed as needed
 	// There are used to generate the AES key.
-	@Value("${alfa.encryption.password}")
+	@Value("${sys.encryption.password}")
 	private String password;
-	@Value("${alfa.encryption.salt}")
+	@Value("${sys.encryption.salt}")
 	private String salt;
 
 	public EncryptionService() {

@@ -30,10 +30,10 @@ public abstract class BaseModel implements Serializable {
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE", nullable = false)
+	@Column(name = "CREATED_DATE", nullable = false, updatable = false)
 	private Date createdDate;
 
-	@Column(name = "CREATED_BY", nullable = false)
+	@Column(name = "CREATED_BY", nullable = false, updatable = false)
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -104,5 +104,5 @@ public abstract class BaseModel implements Serializable {
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
-	
+
 }

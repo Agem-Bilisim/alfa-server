@@ -16,13 +16,13 @@ import tr.com.agem.alfa.model.CurrentUser;
 @ControllerAdvice
 public class BaseControllerAdvice {
 
-	@Value("${info.app.version}")
+	@Value("${sys.version}")
 	private String applicationVersion;
 
-	@Value("${alfa.date-format}")
+	@Value("${sys.date-format}")
 	private String applicationDateFormat;
 
-	@Value("${alfa.datetime-format}")
+	@Value("${sys.datetime-format}")
 	private String applicationDatetimeFormat;
 
 	@ModelAttribute("currentUser")

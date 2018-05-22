@@ -14,7 +14,7 @@ import tr.com.agem.alfa.dto.Bios;
 import tr.com.agem.alfa.dto.Cpu;
 import tr.com.agem.alfa.dto.Disk;
 import tr.com.agem.alfa.dto.Gpu;
-import tr.com.agem.alfa.dto.InstalledPackage;
+import tr.com.agem.alfa.dto.PackageForm;
 import tr.com.agem.alfa.dto.Memory;
 import tr.com.agem.alfa.dto.Network;
 import tr.com.agem.alfa.dto.PeripheralDevice;
@@ -40,7 +40,7 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 	private Platform platform;
 
 	@JsonProperty("installed_packages")
-	private List<InstalledPackage> installedPackages = null;
+	private List<PackageForm> installedPackages = null;
 
 	@JsonProperty("disk")
 	private Disk disk;
@@ -159,11 +159,11 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 		this.agentInstallPath = agentInstallPath;
 	}
 
-	public List<InstalledPackage> getInstalledPackages() {
+	public List<PackageForm> getInstalledPackages() {
 		return installedPackages;
 	}
 
-	public void setInstalledPackages(List<InstalledPackage> installedPackages) {
+	public void setInstalledPackages(List<PackageForm> installedPackages) {
 		this.installedPackages = installedPackages;
 	}
 

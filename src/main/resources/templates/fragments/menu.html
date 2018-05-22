@@ -9,27 +9,15 @@
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
 
-      <!-- search form (Optional) -->
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" th:placeholder="#{search.placeholder}" />
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div>
-      </form>
-      <!-- /.search form -->
-
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> <span>Pano</span></a></li>
-        <li><a th:href="@{/networkinventory/list}"><i class="fa fa-cloud"></i> <span>Envanter</span></a></li>
+        <li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> <span>Yönetim Paneli</span></a></li>
+        <li><a th:href="@{/installed-package/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
         <li><a th:href="@{/report/list}"><i class="fa fa-line-chart"></i> <span>Uyumluluk Analizi</span></a></li>
         
         <!-- Only for Admin! -->
         <li class="treeview" sec:authorize="hasRole('ROLE_ADMIN')">
-          <a href="#"><i class="fa fa-server"></i> <span>System Administration</span>
+          <a href="#"><i class="fa fa-server"></i> <span>Sistem Yönetimi</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-right pull-right"></i>
             </span>

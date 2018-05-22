@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tr.com.agem.alfa.dto.Device;
 import tr.com.agem.alfa.dto.GpuDevice;
-import tr.com.agem.alfa.dto.InstalledPackage;
+import tr.com.agem.alfa.dto.PackageForm;
 import tr.com.agem.alfa.dto.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
@@ -114,7 +114,7 @@ public class AgentController {
 		//
 		// Installed packages
 		//
-		for (InstalledPackage _package : message.getInstalledPackages()) {
+		for (PackageForm _package : message.getInstalledPackages()) {
 			tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
 			mPackage.setName(_package.getName());
 			mPackage.setVersion(_package.getVersion());

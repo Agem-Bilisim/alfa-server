@@ -1,7 +1,10 @@
 package tr.com.agem.alfa.controller;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.data.domain.Page;
 
 /**
  * This is used for base response body in RESTful web services.
@@ -47,6 +50,19 @@ public class RestResponseBody implements Serializable {
 
 	public void setData(Map<String, Object> data) {
 		this.data = data;
+	}
+
+	/**
+	 * Helper method to easily add data.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void add(String key, Object value) {
+		if (this.data == null) {
+			data = new HashMap<String, Object>();
+		}
+		data.put(key, value);
 	}
 
 }
