@@ -18,7 +18,7 @@
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#software" aria-controls="software" role="tab" data-toggle="tab">Yazılım</a></li>
-					<li role="presentation" class="active"><a href="#process" aria-controls="process" role="tab" data-toggle="tab">Hizmet</a></li>
+					<li role="presentation"><a href="#process" aria-controls="process" role="tab" data-toggle="tab">Hizmet</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
 			  	</ul>
 			
@@ -122,11 +122,10 @@
 					});
 				}
 			};
-			const colsSoftware = [
-				{"data": "name", "property": "name", "name": "Hizmet Adı", "searchable": true, "orderable": true } 
+			const colsProcess = [
+				{"data": "name", "property": "name", "name": "Hizmet Adı", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsProcess, "name": "İşlem", "searchable": false, "orderable": false }
 			];
-			$('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
 			
 			// Problem
 			var fnActionBtnsProblem = function(row, type, val, meta) {
@@ -146,10 +145,13 @@
 				{"data": "solved", "property": "solved", "name": "Durum", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsProblem, "name": "İşlem", "searchable": false, "orderable": false }
 			];
+			
+			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-				if ($.fn.DataTable.isDataTable('#problemTable')) return;
 				if ($(e.target).attr('href') == "#problem") {
 					$('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
+				} else if ($(e.target).attr('href') == "#process") {
+					$('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
 				}
 			});
 		});

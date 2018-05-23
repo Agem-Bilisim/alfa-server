@@ -25,7 +25,7 @@
 					<div class="box-header">
 						<h3 class="box-title">Yazılım Ekle</h3>
 					</div>
-					<form role="form" id="packageForm" th:action="@{/software/create}" method="post" th:object="${form}">
+					<form role="form" id="packageForm" th:action="@{/installed-package/create}" method="post" th:object="${form}">
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>
@@ -46,7 +46,7 @@
 						<div class="box-footer">
 							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
 							<div class="btn-toolbar pull-right">
-								<button type="submit" class="btn btn-primary pull-right" id="savePackageBtn">Kaydet</button>
+								<button type="submit" class="btn btn-primary pull-right">Kaydet</button>
 							</div>
 						</div>
 					</form>

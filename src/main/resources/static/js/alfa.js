@@ -58,6 +58,7 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 		console.log('DataTable function does not exist. Ensure that its js file is included in the HTML page.');
 		return;
 	}
+	if ($.fn.DataTable.isDataTable(this)) return;
 	if (!url) {
 		console.log('URL parameter was null.');
 		return;
