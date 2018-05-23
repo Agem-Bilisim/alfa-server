@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import tr.com.agem.alfa.model.enums.AgentType;
+
 @Entity
 @Table(name = "c_agent")
 public class Agent extends BaseModel {
@@ -255,12 +257,16 @@ public class Agent extends BaseModel {
 		this.gpus = gpus;
 	}
 
-	public Integer getType() {
-		return type;
+	public AgentType getType() {
+		return AgentType.getType(type);
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setType(AgentType type) {
+		if (type == null) {
+			this.type = null;
+		} else {
+			this.type = type.getId();
+		}
 	}
 
 	public String getMessagingId() {

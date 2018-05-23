@@ -13,7 +13,7 @@
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
-		<li><a th:href="@{/installed-package/list}"><i class="fa fa-cubes"></i> Yazılım Envanteri</a></li>
+		<li><a th:href="@{/software/list}"><i class="fa fa-cubes"></i> Yazılım Envanteri</a></li>
 		<li class="active">Yazılım Düzenle</li>
 	</th:block>
 
@@ -24,7 +24,7 @@
 					<div class="box-header">
 						<h3 class="box-title">Yazılım Düzenle</h3>
 					</div>
-					<form role="form" id="userForm" th:action="@{'/installed-package/' + ${form.id}}" method="post" th:object="${form}">
+					<form role="form" id="userForm" th:action="@{'/software/' + ${form.id}}" method="post" th:object="${form}">
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>
@@ -58,7 +58,7 @@
 		$(function() {
 			// Return to list when cancel button is clicked
 			$('#cancelBtn').click(function() {
-				window.location.href = /*[[@{'/installed-package/list'}]]*/'';
+				window.location.href = /*[[@{'/software/list'}]]*/'';
 			});
 		});
 	</script>

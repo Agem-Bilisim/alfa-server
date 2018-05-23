@@ -26,98 +26,100 @@ import org.springframework.web.servlet.ModelAndView;
 import tr.com.agem.alfa.dto.PackageForm;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.InstalledPackage;
-import tr.com.agem.alfa.service.PackageService;
 import tr.com.agem.alfa.util.AlfaBeanUtils;
+import tr.com.agem.alfa.service.SoftwareService;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Controller
-public class PackageController {
+public class SoftwareController {
 
-	private static final Logger log = LoggerFactory.getLogger(PackageController.class);
+	private static final Logger log = LoggerFactory.getLogger(SoftwareController.class);
 
-	private final PackageService packageService;
+	private final SoftwareService softwareService;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
-	public PackageController(PackageService packageService) {
-		this.packageService = packageService;
+	public SoftwareController(SoftwareService softwareService) {
+		this.softwareService = softwareService;
 	}
 
-	@GetMapping("/installed-package/create")
+	@GetMapping("/software/create")
 	public ModelAndView getCreatePage() {
 		log.debug("Getting installed package create form");
-		return new ModelAndView("installed-package/create", "form", new PackageForm());
+		return new ModelAndView("software/create", "form", new PackageForm());
 	}
 
-	@PostMapping("/installed-package/create")
+	@PostMapping("/software/create")
 	public String handleCreate(@Valid @ModelAttribute("form") PackageForm form, BindingResult bindingResult,
 			Authentication authentication) {
 		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
-			return "installed-package/create";
+			return "software/create";
 		}
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			packageService.save(toPackageEntity(form, user.getUsername()));
+			softwareService.savePackage(toPackageEntity(form, user.getUsername()));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save the package, assuming duplicate name-version", e);
-			bindingResult.reject("name.version.exists", "Hata oluştu. Aynı paket adı ve sürümüyle birden fazla kayıt olamaz.");
-			return "installed-package/create";
+			bindingResult.reject("name.version.exists",
+					"Hata oluştu. Aynı paket adı ve sürümüyle birden fazla kayıt olamaz.");
+			return "software/create";
 		}
 		// everything fine redirect to list
-		return "redirect:/installed-package/list";
+		return "redirect:/software/list";
 	}
 
-	@GetMapping("/installed-package/{id}")
+	@GetMapping("/software/{id}")
 	public ModelAndView getPackage(@PathVariable Long id) {
 		log.debug("Getting page for the package:{}", id);
-		InstalledPackage _package = packageService.getPackage(id);
+		InstalledPackage _package = softwareService.getPackage(id);
 		checkNotNull(_package, String.format("Package:%d not found.", id));
-		return new ModelAndView("installed-package/edit", "form", toPackageForm(_package));
+		return new ModelAndView("software/edit", "form", toPackageForm(_package));
 	}
 
-	@PostMapping("/installed-package/{id}")
+	@PostMapping("/software/{id}")
 	public String handleUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") PackageForm form,
 			BindingResult bindingResult, Authentication authentication) {
 		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
-			return "installed-package/edit";
+			return "software/edit";
 		}
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
 			form.setId(id);
-			packageService.save(toPackageEntity(form, user.getUsername()));
+			softwareService.savePackage(toPackageEntity(form, user.getUsername()));
 		} catch (Exception e) {
 			log.warn("Exception occurred when trying to save the package, duplicate name and version", e);
-			bindingResult.reject("name.version.exists", "Hata oluştu. Aynı paket adı ve sürümüyle birden fazla kayıt olamaz.");
-			return "installed-package/edit";
+			bindingResult.reject("name.version.exists",
+					"Hata oluştu. Aynı paket adı ve sürümüyle birden fazla kayıt olamaz.");
+			return "software/edit";
 		}
 		// everything fine redirect to list
-		return "redirect:/installed-package/list";
+		return "redirect:/software/list";
 	}
 
-	@GetMapping("/installed-package/list")
+	@GetMapping("/software/list")
 	public String getListPage() {
 		log.debug("Getting installed package list page");
-		return "installed-package/list";
+		return "software/list";
 	}
 
-	@GetMapping("/installed-package/list-paginated")
+	@GetMapping("/software/list-paginated")
 	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
 		log.info("Getting package page with page number:{} and size: {}", pageable.getPageNumber(),
 				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
-			Page<InstalledPackage> packages = packageService.getPackages(pageable, search);
+			Page<InstalledPackage> packages = softwareService.getPackages(pageable, search);
 			result.add("packages", checkNotNull(packages, "Packages not found."));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find packages, assuming invalid parameters", e);
@@ -128,13 +130,9 @@ public class PackageController {
 	}
 
 	private InstalledPackage toPackageEntity(PackageForm form, String username) {
-		
 		InstalledPackage entity = new InstalledPackage();
 		AlfaBeanUtils.getInstance().copyProperties(form, entity);
 		Date date = new Date();
-//		entity.setId(form.getId());
-//		entity.setName(form.getName());
-//		entity.setVersion(form.getVersion());
 		entity.setCreatedBy(username);
 		entity.setCreatedDate(date);
 		entity.setLastModifiedBy(username);
@@ -145,13 +143,6 @@ public class PackageController {
 	private PackageForm toPackageForm(InstalledPackage entity) {
 		PackageForm form = new PackageForm();
 		AlfaBeanUtils.getInstance().copyProperties(entity, form);
-//		form.setId(entity.getId());
-//		form.setName(entity.getName());
-//		form.setVersion(entity.getVersion());
-//		form.setCreatedBy(entity.getCreatedBy());
-//		form.setCreatedDate(entity.getCreatedDate());
-//		form.setLastModifiedBy(entity.getLastModifiedBy());
-//		form.setLastModifiedDate(entity.getLastModifiedDate());
 		return form;
 	}
 

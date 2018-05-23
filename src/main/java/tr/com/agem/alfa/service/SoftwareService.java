@@ -9,7 +9,7 @@ import tr.com.agem.alfa.model.InstalledPackage;
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
-public interface PackageService {
+public interface SoftwareService {
 	
 	InstalledPackage getPackage(Long id);
 
@@ -19,8 +19,8 @@ public interface PackageService {
 	
 	Page<InstalledPackage> getPackages(Pageable pageable, String search);
 
-	void save(InstalledPackage packageEntity);
+	void savePackage(InstalledPackage packageEntity);
 
-	void delete(Long id);
+	void deletePackage(Long id);
 
 }

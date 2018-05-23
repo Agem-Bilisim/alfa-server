@@ -77,8 +77,8 @@ public class AgentController {
 		//
 		agent.setType(message.getPlatform().getSystem() != null
 				&& message.getPlatform().getSystem().toLowerCase(Locale.ENGLISH).contains("win")
-						? AgentType.WINDOWS_BASED.getId()
-						: AgentType.DEBIAN_BASED.getId());
+						? AgentType.WINDOWS_BASED
+						: AgentType.DEBIAN_BASED);
 		agent.setMessagingId(message.getFrom());
 		agent.setDeleted(false);
 		agent.setInstallPath(message.getAgentInstallPath());

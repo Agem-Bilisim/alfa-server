@@ -10,19 +10,22 @@ import org.springframework.util.Assert;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.repository.PackageRepository;
+import tr.com.agem.alfa.repository.ProcessRepository;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
-@Component("packageService")
+@Component("softwareService")
 @Transactional
-public class PackageServiceImpl implements PackageService {
+public class SoftwareServiceImpl implements SoftwareService {
 
 	private final PackageRepository packageRepository;
+	private final ProcessRepository processRepository;
 
 	@Autowired
-	public PackageServiceImpl(PackageRepository packageRepository) {
+	public SoftwareServiceImpl(PackageRepository packageRepository, ProcessRepository processRepository) {
 		this.packageRepository = packageRepository;
+		this.processRepository = processRepository;
 	}
 
 	@Override
@@ -48,14 +51,14 @@ public class PackageServiceImpl implements PackageService {
 	public Page<InstalledPackage> getPackages(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			return this.packageRepository.findByNameContainingAndVersionContainingAllIgnoringCase(search, search,
+			return this.packageRepository.findByNameContainingOrVersionContainingAllIgnoringCase(search, search,
 					pageable);
 		}
 		return this.packageRepository.findAll(pageable);
 	}
 
 	@Override
-	public void save(InstalledPackage _package) {
+	public void savePackage(InstalledPackage _package) {
 		Assert.notNull(_package, "Package must not be null.");
 		InstalledPackage p = null;
 		if (_package.getId() != null && (p = packageRepository.findOne(_package.getId())) != null) {
@@ -70,7 +73,7 @@ public class PackageServiceImpl implements PackageService {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void deletePackage(Long id) {
 		Assert.notNull(id, "ID must not be null.");
 		this.packageRepository.delete(id);
 	}

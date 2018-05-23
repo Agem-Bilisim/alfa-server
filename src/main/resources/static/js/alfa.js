@@ -74,7 +74,7 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 		"processing": true,
 		"serverSide": true,
 		"ajax": function(data, callback, settings) {
-			var finalUrl = url + "?pageNumber=" + (data.start / data.length);
+			var finalUrl = url + (url.indexOf('?') > -1 ? "&" : "?") + "pageNumber=" + (data.start / data.length);
 			if (data.length) {
 				finalUrl += "&pageSize=" + data.length;
 			}

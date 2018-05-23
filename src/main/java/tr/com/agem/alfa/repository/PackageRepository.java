@@ -18,7 +18,7 @@ public interface PackageRepository extends JpaRepository<InstalledPackage, Long>
 	@Query("SELECT i from InstalledPackage i INNER JOIN i.agents a WHERE a.id = ?1 ORDER BY i.name, i.version DESC")
 	Page<InstalledPackage> findByAgent(Agent agent, Pageable pageable);
 
-	Page<InstalledPackage> findByNameContainingAndVersionContainingAllIgnoringCase(String name, String version,
+	Page<InstalledPackage> findByNameContainingOrVersionContainingAllIgnoringCase(String name, String version,
 			Pageable pageable);
 
 }

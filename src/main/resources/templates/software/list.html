@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Yazılım Envanteri</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Yazılım Envanteri</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#software" aria-controls="software" role="tab" data-toggle="tab">Yazılım</a></li>
+			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
+			  	</ul>
+			
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="software">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Yazılım listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="packageTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Paket Adı</th>
+											<th>Paket Sürümü</th>
+											<th>İşlem</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>					
+					</div>
+					<div role="tabpanel" class="tab-pane" id="problem">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Göçe engel teşkil eden yazılım kaynaklı sorunlar</h3>
+							</div>
+							<div class="box-body">
+								<table id="problemTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Kısa Tanım</th>
+											<th>Açıklama</th>
+											<th>Durum</th>
+											<th>İşlem</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			
+			// Software
+			var fnActionBtns = function(row, type, val, meta) {
+				return "<a class=\"btn\" href=\"/alfa/software/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+			};
+			var drawCallback = function(settings) {
+				if ($("#newPackageBtn").length == 0) {
+					$("#packageTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPackageBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#newPackageBtn").on("click", function() {
+						window.location.href = /*[[@{'/software/create'}]]*/'';
+					});
+				}
+			};
+			const cols = [
+				{"data": "name", "property": "name", "name": "Paket Adı", "searchable": true, "orderable": true }, 
+				{"data": "version", "property": "version", "name": "Paket Sürümü", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+			];
+			$('#packageTable').paginatedTable("/alfa/software/list-paginated", "packages", cols, drawCallback);
+			
+			// Problem
+			var fnActionBtnsProblem = function(row, type, val, meta) {
+				return "<a class=\"btn\" href=\"/alfa/problem/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+			};
+			var drawCallbackProblem = function(settings) {
+				if ($("#newProblemBtn").length == 0) {
+					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#newProblemBtn").on("click", function() {
+						window.location.href = /*[[@{'/problem/create'}]]*/'';
+					});
+				}
+			};
+			const colsProblem = [
+				{"data": "label", "property": "label", "name": "Kısa Tanım", "searchable": true, "orderable": true }, 
+				{"data": "description", "property": "description", "name": "Açıklama", "searchable": true, "orderable": true }, 
+				{"data": "solved", "property": "solved", "name": "Durum", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsProblem, "name": "İşlem", "searchable": false, "orderable": false }
+			];
+			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				if ($.fn.DataTable.isDataTable('#problemTable')) return;
+				if ($(e.target).attr('href') == "#problem") {
+					$('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
+				}
+			});
+		});
+	</script>
+</body>
+</html>
