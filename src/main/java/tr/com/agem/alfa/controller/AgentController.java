@@ -33,6 +33,7 @@ import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.Platform;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
+import tr.com.agem.alfa.util.AlfaBeanUtils;
 import tr.com.agem.alfa.util.CommonUtils;
 
 @Controller
@@ -93,11 +94,12 @@ public class AgentController {
 		//
 		for (Device d : message.getDisk().getDevices()) {
 			Disk disk = new Disk();
-			disk.setVendor(d.getVendor());
-			disk.setDescription(d.getDescription());
-			disk.setVersion(d.getVersion());
-			disk.setProduct(d.getProduct());
-			disk.setSerial(d.getSerial());
+			AlfaBeanUtils.getInstance().copyProperties(d, disk);
+//			disk.setVendor(d.getVendor());
+//			disk.setDescription(d.getDescription());
+//			disk.setVersion(d.getVersion());
+//			disk.setProduct(d.getProduct());
+//			disk.setSerial(d.getSerial());
 			agent.addDisk(disk);
 		}
 		//
@@ -105,9 +107,10 @@ public class AgentController {
 		//
 		for (Device d : message.getNetwork().getDevices()) {
 			NetworkInterface inet = new NetworkInterface();
-			inet.setVendor(d.getVendor());
-			inet.setVersion(d.getVersion());
-			inet.setProduct(d.getProduct());
+			AlfaBeanUtils.getInstance().copyProperties(d, inet);
+//			inet.setVendor(d.getVendor());
+//			inet.setVersion(d.getVersion());
+//			inet.setProduct(d.getProduct());
 			inet.setCapabilities(toCapabilityString(d.getCapabilities()));
 			agent.addNetworkInterface(inet);
 		}
@@ -116,8 +119,9 @@ public class AgentController {
 		//
 		for (PackageForm _package : message.getInstalledPackages()) {
 			tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
-			mPackage.setName(_package.getName());
-			mPackage.setVersion(_package.getVersion());
+			AlfaBeanUtils.getInstance().copyProperties(_package, mPackage);
+//			mPackage.setName(_package.getName());
+//			mPackage.setVersion(_package.getVersion());
 			agent.addInstalledPackage(mPackage);
 		}
 		//
@@ -125,10 +129,11 @@ public class AgentController {
 		//
 		for (MemoryDevice d : message.getMemory().getDevices()) {
 			Memory mem = new Memory();
-			mem.setSpeed(d.getSpeed());
-			mem.setSize(d.getSize());
-			mem.setType(d.getType());
-			mem.setManufacturer(d.getManufacturer());
+			AlfaBeanUtils.getInstance().copyProperties(d, mem);
+//			mem.setSpeed(d.getSpeed());
+//			mem.setSize(d.getSize());
+//			mem.setType(d.getType());
+//			mem.setManufacturer(d.getManufacturer());
 			agent.addMemory(mem);
 		}
 		//
@@ -136,9 +141,10 @@ public class AgentController {
 		//
 		for (GpuDevice d : message.getGpu().getDevices()) {
 			Gpu gpu = new Gpu();
-			gpu.setSubsystem(d.getSubsystem());
-			gpu.setKernel(d.getKernel());
-			gpu.setMemory(d.getKernel());
+			AlfaBeanUtils.getInstance().copyProperties(d, gpu);			
+//			gpu.setSubsystem(d.getSubsystem());
+//			gpu.setKernel(d.getKernel());
+//			gpu.setMemory(d.getMemory());
 			agent.addGpu(gpu);
 		}
 		//
@@ -146,19 +152,22 @@ public class AgentController {
 		//
 		tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
 				: new tr.com.agem.alfa.model.Bios();
-		bios.setVendor(message.getBios().getVendor());
-		bios.setVersion(message.getBios().getVersion());
-		bios.setReleaseDate(message.getBios().getReleaseDate());
+		AlfaBeanUtils.getInstance().copyProperties(message.getBios(), bios);			
+//		bios.setVendor(message.getBios().getVendor());
+//		bios.setVersion(message.getBios().getVersion());
+//		bios.setReleaseDate(message.getBios().getReleaseDate());
 		agent.setBios(bios);
 		//
 		// Platform
 		//
 		Platform pl = agent.getPlatform() != null ? agent.getPlatform() : new Platform();
-		pl.setRelease(message.getPlatform().getRelease());
-		pl.setVersion(message.getPlatform().getVersion());
-		pl.setSystem(message.getPlatform().getSystem());
-		pl.setMachine(message.getPlatform().getMachine());
+		AlfaBeanUtils.getInstance().copyProperties(message.getPlatform(), pl);			
+//		pl.setRelease(message.getPlatform().getRelease());
+//		pl.setVersion(message.getPlatform().getVersion());
+//		pl.setSystem(message.getPlatform().getSystem());
+//		pl.setMachine(message.getPlatform().getMachine());
 		agent.setPlatform(pl);
+		
 		// TODO users, processes, cpus, peripheral
 		return agent;
 	}

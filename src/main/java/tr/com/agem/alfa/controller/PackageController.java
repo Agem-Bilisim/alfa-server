@@ -27,6 +27,7 @@ import tr.com.agem.alfa.dto.PackageForm;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.service.PackageService;
+import tr.com.agem.alfa.util.AlfaBeanUtils;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -127,11 +128,13 @@ public class PackageController {
 	}
 
 	private InstalledPackage toPackageEntity(PackageForm form, String username) {
+		
 		InstalledPackage entity = new InstalledPackage();
+		AlfaBeanUtils.getInstance().copyProperties(form, entity);
 		Date date = new Date();
-		entity.setId(form.getId());
-		entity.setName(form.getName());
-		entity.setVersion(form.getVersion());
+//		entity.setId(form.getId());
+//		entity.setName(form.getName());
+//		entity.setVersion(form.getVersion());
 		entity.setCreatedBy(username);
 		entity.setCreatedDate(date);
 		entity.setLastModifiedBy(username);
@@ -141,13 +144,14 @@ public class PackageController {
 
 	private PackageForm toPackageForm(InstalledPackage entity) {
 		PackageForm form = new PackageForm();
-		form.setId(entity.getId());
-		form.setName(entity.getName());
-		form.setVersion(entity.getVersion());
-		form.setCreatedBy(entity.getCreatedBy());
-		form.setCreatedDate(entity.getCreatedDate());
-		form.setLastModifiedBy(entity.getLastModifiedBy());
-		form.setLastModifiedDate(entity.getLastModifiedDate());
+		AlfaBeanUtils.getInstance().copyProperties(entity, form);
+//		form.setId(entity.getId());
+//		form.setName(entity.getName());
+//		form.setVersion(entity.getVersion());
+//		form.setCreatedBy(entity.getCreatedBy());
+//		form.setCreatedDate(entity.getCreatedDate());
+//		form.setLastModifiedBy(entity.getLastModifiedBy());
+//		form.setLastModifiedDate(entity.getLastModifiedDate());
 		return form;
 	}
 
