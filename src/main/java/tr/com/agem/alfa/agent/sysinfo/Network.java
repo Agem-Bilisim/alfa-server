@@ -1,4 +1,4 @@
-package tr.com.agem.alfa.dto;
+package tr.com.agem.alfa.agent.sysinfo;
 
 import java.io.Serializable;
 import java.util.List;

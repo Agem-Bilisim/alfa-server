@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.InstalledPackage;
+import tr.com.agem.alfa.model.RunningProcess;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -22,5 +23,11 @@ public interface SoftwareService {
 	void savePackage(InstalledPackage packageEntity);
 
 	void deletePackage(Long id);
+
+	void saveProcess(RunningProcess processEntity);
+
+	RunningProcess getProcess(Long id);
+
+	Page<RunningProcess> getProcesses(Pageable pageable, String search);
 
 }

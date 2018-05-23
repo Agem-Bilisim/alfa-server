@@ -1,18 +1,13 @@
-package tr.com.agem.alfa.dto;
+package tr.com.agem.alfa.agent.sysinfo;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import java.io.Serializable;
 
-/**
- * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
- */
-public class PackageForm extends BaseForm {
+public class InstalledPackage implements Serializable {
 
 	private static final long serialVersionUID = 8825161815758128735L;
 
-	@NotEmpty
 	private String name;
 
-	@NotEmpty
 	private String version;
 
 	public String getName() {

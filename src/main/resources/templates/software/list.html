@@ -18,6 +18,7 @@
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#software" aria-controls="software" role="tab" data-toggle="tab">Yazılım</a></li>
+					<li role="presentation" class="active"><a href="#process" aria-controls="process" role="tab" data-toggle="tab">Hizmet</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
 			  	</ul>
 			
@@ -32,8 +33,27 @@
 								<table id="packageTable" class="table table-bordered table-striped">
 									<thead>
 										<tr>
-											<th>Paket Adı</th>
-											<th>Paket Sürümü</th>
+											<th>Yazılım Adı</th>
+											<th>Sürümü</th>
+											<th>İşlem</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>					
+					</div>
+					<div role="tabpanel" class="tab-pane" id="process">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Hizmet listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="processTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Hizmet Adı</th>
 											<th>İşlem</th>
 										</tr>
 									</thead>
@@ -72,23 +92,41 @@
 		$(function() {
 			
 			// Software
-			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/software/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+			var fnActionBtnsSoftware = function(row, type, val, meta) {
+				return "<a class=\"btn\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
 			};
-			var drawCallback = function(settings) {
+			var drawCallbackSoftware = function(settings) {
 				if ($("#newPackageBtn").length == 0) {
 					$("#packageTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPackageBtn\" style=\"margin-left:10px;\">Yeni</button>");
 					$("#newPackageBtn").on("click", function() {
-						window.location.href = /*[[@{'/software/create'}]]*/'';
+						window.location.href = /*[[@{'/installed-package/create'}]]*/'';
 					});
 				}
 			};
-			const cols = [
+			const colsSoftware = [
 				{"data": "name", "property": "name", "name": "Paket Adı", "searchable": true, "orderable": true }, 
 				{"data": "version", "property": "version", "name": "Paket Sürümü", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": fnActionBtnsSoftware, "name": "İşlem", "searchable": false, "orderable": false }
 			];
-			$('#packageTable').paginatedTable("/alfa/software/list-paginated", "packages", cols, drawCallback);
+			$('#packageTable').paginatedTable("/alfa/installed-package/list-paginated", "packages", colsSoftware, drawCallbackSoftware);
+			
+			// Process
+			var fnActionBtnsProcess = function(row, type, val, meta) {
+				return "<a class=\"btn\" href=\"/alfa/process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+			};
+			var drawCallbackProcess = function(settings) {
+				if ($("#newProcessBtn").length == 0) {
+					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#newProcessBtn").on("click", function() {
+						window.location.href = /*[[@{'/process/create'}]]*/'';
+					});
+				}
+			};
+			const colsSoftware = [
+				{"data": "name", "property": "name", "name": "Hizmet Adı", "searchable": true, "orderable": true } 
+				{"data": fnActionBtnsProcess, "name": "İşlem", "searchable": false, "orderable": false }
+			];
+			$('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
 			
 			// Problem
 			var fnActionBtnsProblem = function(row, type, val, meta) {

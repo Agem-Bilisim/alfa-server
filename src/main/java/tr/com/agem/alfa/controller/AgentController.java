@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import tr.com.agem.alfa.dto.Device;
-import tr.com.agem.alfa.dto.GpuDevice;
-import tr.com.agem.alfa.dto.PackageForm;
-import tr.com.agem.alfa.dto.MemoryDevice;
+import tr.com.agem.alfa.agent.sysinfo.Device;
+import tr.com.agem.alfa.agent.sysinfo.GpuDevice;
+import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
+import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.Disk;
@@ -95,11 +95,6 @@ public class AgentController {
 		for (Device d : message.getDisk().getDevices()) {
 			Disk disk = new Disk();
 			AlfaBeanUtils.getInstance().copyProperties(d, disk);
-//			disk.setVendor(d.getVendor());
-//			disk.setDescription(d.getDescription());
-//			disk.setVersion(d.getVersion());
-//			disk.setProduct(d.getProduct());
-//			disk.setSerial(d.getSerial());
 			agent.addDisk(disk);
 		}
 		//
@@ -108,20 +103,15 @@ public class AgentController {
 		for (Device d : message.getNetwork().getDevices()) {
 			NetworkInterface inet = new NetworkInterface();
 			AlfaBeanUtils.getInstance().copyProperties(d, inet);
-//			inet.setVendor(d.getVendor());
-//			inet.setVersion(d.getVersion());
-//			inet.setProduct(d.getProduct());
 			inet.setCapabilities(toCapabilityString(d.getCapabilities()));
 			agent.addNetworkInterface(inet);
 		}
 		//
 		// Installed packages
 		//
-		for (PackageForm _package : message.getInstalledPackages()) {
+		for (InstalledPackage _package : message.getInstalledPackages()) {
 			tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
 			AlfaBeanUtils.getInstance().copyProperties(_package, mPackage);
-//			mPackage.setName(_package.getName());
-//			mPackage.setVersion(_package.getVersion());
 			agent.addInstalledPackage(mPackage);
 		}
 		//
@@ -130,10 +120,6 @@ public class AgentController {
 		for (MemoryDevice d : message.getMemory().getDevices()) {
 			Memory mem = new Memory();
 			AlfaBeanUtils.getInstance().copyProperties(d, mem);
-//			mem.setSpeed(d.getSpeed());
-//			mem.setSize(d.getSize());
-//			mem.setType(d.getType());
-//			mem.setManufacturer(d.getManufacturer());
 			agent.addMemory(mem);
 		}
 		//
@@ -142,9 +128,6 @@ public class AgentController {
 		for (GpuDevice d : message.getGpu().getDevices()) {
 			Gpu gpu = new Gpu();
 			AlfaBeanUtils.getInstance().copyProperties(d, gpu);			
-//			gpu.setSubsystem(d.getSubsystem());
-//			gpu.setKernel(d.getKernel());
-//			gpu.setMemory(d.getMemory());
 			agent.addGpu(gpu);
 		}
 		//
@@ -153,19 +136,12 @@ public class AgentController {
 		tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
 				: new tr.com.agem.alfa.model.Bios();
 		AlfaBeanUtils.getInstance().copyProperties(message.getBios(), bios);			
-//		bios.setVendor(message.getBios().getVendor());
-//		bios.setVersion(message.getBios().getVersion());
-//		bios.setReleaseDate(message.getBios().getReleaseDate());
 		agent.setBios(bios);
 		//
 		// Platform
 		//
 		Platform pl = agent.getPlatform() != null ? agent.getPlatform() : new Platform();
 		AlfaBeanUtils.getInstance().copyProperties(message.getPlatform(), pl);			
-//		pl.setRelease(message.getPlatform().getRelease());
-//		pl.setVersion(message.getPlatform().getVersion());
-//		pl.setSystem(message.getPlatform().getSystem());
-//		pl.setMachine(message.getPlatform().getMachine());
 		agent.setPlatform(pl);
 		
 		// TODO users, processes, cpus, peripheral

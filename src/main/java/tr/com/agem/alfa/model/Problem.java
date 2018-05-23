@@ -26,9 +26,6 @@ public class Problem extends BaseModel {
 	@Column(name = "SOLVED")
 	private Boolean solved;
 
-	@Column(name = "DELETED")
-	private Boolean deleted;
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "problem")
 	private Set<ProblemReference> references = new HashSet<ProblemReference>(0);
 
@@ -54,14 +51,6 @@ public class Problem extends BaseModel {
 
 	public void setSolved(Boolean solved) {
 		this.solved = solved;
-	}
-
-	public Boolean getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
 	}
 
 	public Set<ProblemReference> getReferences() {

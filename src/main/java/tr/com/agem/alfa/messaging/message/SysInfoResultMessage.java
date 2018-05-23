@@ -10,17 +10,22 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import tr.com.agem.alfa.dto.Bios;
-import tr.com.agem.alfa.dto.Cpu;
-import tr.com.agem.alfa.dto.Disk;
-import tr.com.agem.alfa.dto.Gpu;
-import tr.com.agem.alfa.dto.PackageForm;
-import tr.com.agem.alfa.dto.Memory;
-import tr.com.agem.alfa.dto.Network;
-import tr.com.agem.alfa.dto.PeripheralDevice;
-import tr.com.agem.alfa.dto.Platform;
-import tr.com.agem.alfa.dto.Process;
+import tr.com.agem.alfa.agent.sysinfo.Bios;
+import tr.com.agem.alfa.agent.sysinfo.Cpu;
+import tr.com.agem.alfa.agent.sysinfo.Disk;
+import tr.com.agem.alfa.agent.sysinfo.Gpu;
+import tr.com.agem.alfa.agent.sysinfo.Memory;
+import tr.com.agem.alfa.agent.sysinfo.Network;
+import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
+import tr.com.agem.alfa.agent.sysinfo.PeripheralDevice;
+import tr.com.agem.alfa.agent.sysinfo.Platform;
+import tr.com.agem.alfa.agent.sysinfo.Process;
 
+/**
+ * Classes are auto-generated from JSON using online tools! DO NOT change anything!
+ * 
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "platform", "installed_packages", "disk", "cpu", "bios", "peripheral_devices", "gpu", "processes",
 		"users", "network", "memory" })
@@ -40,7 +45,7 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 	private Platform platform;
 
 	@JsonProperty("installed_packages")
-	private List<PackageForm> installedPackages = null;
+	private List<InstalledPackage> installedPackages = null;
 
 	@JsonProperty("disk")
 	private Disk disk;
@@ -159,11 +164,11 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 		this.agentInstallPath = agentInstallPath;
 	}
 
-	public List<PackageForm> getInstalledPackages() {
+	public List<InstalledPackage> getInstalledPackages() {
 		return installedPackages;
 	}
 
-	public void setInstalledPackages(List<PackageForm> installedPackages) {
+	public void setInstalledPackages(List<InstalledPackage> installedPackages) {
 		this.installedPackages = installedPackages;
 	}
 

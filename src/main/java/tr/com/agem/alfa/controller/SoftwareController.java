@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import tr.com.agem.alfa.dto.PackageForm;
+import tr.com.agem.alfa.form.PackageForm;
+import tr.com.agem.alfa.form.ProcessForm;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.InstalledPackage;
+import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.util.AlfaBeanUtils;
 import tr.com.agem.alfa.service.SoftwareService;
 
@@ -47,19 +49,25 @@ public class SoftwareController {
 		this.softwareService = softwareService;
 	}
 
-	@GetMapping("/software/create")
-	public ModelAndView getCreatePage() {
+	@GetMapping("/installed-package/create")
+	public ModelAndView getPackageCreatePage() {
 		log.debug("Getting installed package create form");
-		return new ModelAndView("software/create", "form", new PackageForm());
+		return new ModelAndView("installed-package/create", "form", new PackageForm());
+	}
+	
+	@GetMapping("/process/create")
+	public ModelAndView getProcessCreatePage() {
+		log.debug("Getting process create form");
+		return new ModelAndView("process/create", "form", new ProcessForm());
 	}
 
-	@PostMapping("/software/create")
-	public String handleCreate(@Valid @ModelAttribute("form") PackageForm form, BindingResult bindingResult,
+	@PostMapping("/installed-package/create")
+	public String handlePackageCreate(@Valid @ModelAttribute("form") PackageForm form, BindingResult bindingResult,
 			Authentication authentication) {
 		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
-			return "software/create";
+			return "installed-package/create";
 		}
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
@@ -69,27 +77,57 @@ public class SoftwareController {
 			log.error("Exception occurred when trying to save the package, assuming duplicate name-version", e);
 			bindingResult.reject("name.version.exists",
 					"Hata oluştu. Aynı paket adı ve sürümüyle birden fazla kayıt olamaz.");
-			return "software/create";
+			return "installed-package/create";
+		}
+		// everything fine redirect to list
+		return "redirect:/software/list";
+	}
+	
+	@PostMapping("/process/create")
+	public String handleProcessCreate(@Valid @ModelAttribute("form") ProcessForm form, BindingResult bindingResult,
+			Authentication authentication) {
+		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
+		if (bindingResult.hasErrors()) {
+			// failed validation
+			return "process/create";
+		}
+		try {
+			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+			checkNotNull(user, "Current user not found.");
+			softwareService.saveProcess(toProcessEntity(form, user.getUsername()));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to save the process, assuming duplicate name", e);
+			bindingResult.reject("name.exists",
+					"Hata oluştu. Aynı hizmet adıyla birden fazla kayıt olamaz.");
+			return "process/create";
 		}
 		// everything fine redirect to list
 		return "redirect:/software/list";
 	}
 
-	@GetMapping("/software/{id}")
+	@GetMapping("/installed-package/{id}")
 	public ModelAndView getPackage(@PathVariable Long id) {
 		log.debug("Getting page for the package:{}", id);
 		InstalledPackage _package = softwareService.getPackage(id);
 		checkNotNull(_package, String.format("Package:%d not found.", id));
-		return new ModelAndView("software/edit", "form", toPackageForm(_package));
+		return new ModelAndView("installed-package/edit", "form", toPackageForm(_package));
+	}
+	
+	@GetMapping("/process/{id}")
+	public ModelAndView getProcess(@PathVariable Long id) {
+		log.debug("Getting page for the process:{}", id);
+		RunningProcess process = softwareService.getProcess(id);
+		checkNotNull(process, String.format("Process:%d not found.", id));
+		return new ModelAndView("process/edit", "form", toProcessForm(process));
 	}
 
-	@PostMapping("/software/{id}")
-	public String handleUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") PackageForm form,
+	@PostMapping("/installed-package/{id}")
+	public String handlePackageUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") PackageForm form,
 			BindingResult bindingResult, Authentication authentication) {
 		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
-			return "software/edit";
+			return "installed-package/edit";
 		}
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
@@ -100,7 +138,30 @@ public class SoftwareController {
 			log.warn("Exception occurred when trying to save the package, duplicate name and version", e);
 			bindingResult.reject("name.version.exists",
 					"Hata oluştu. Aynı paket adı ve sürümüyle birden fazla kayıt olamaz.");
-			return "software/edit";
+			return "installed-package/edit";
+		}
+		// everything fine redirect to list
+		return "redirect:/software/list";
+	}
+	
+	@PostMapping("/process/{id}")
+	public String handleProcessUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") ProcessForm form,
+			BindingResult bindingResult, Authentication authentication) {
+		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
+		if (bindingResult.hasErrors()) {
+			// failed validation
+			return "process/edit";
+		}
+		try {
+			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+			checkNotNull(user, "Current user not found.");
+			form.setId(id);
+			softwareService.saveProcess(toProcessEntity(form, user.getUsername()));
+		} catch (Exception e) {
+			log.warn("Exception occurred when trying to save the process, duplicate name", e);
+			bindingResult.reject("name.exists",
+					"Hata oluştu. Aynı hizmet adıyla birden fazla kayıt olamaz.");
+			return "process/edit";
 		}
 		// everything fine redirect to list
 		return "redirect:/software/list";
@@ -108,12 +169,12 @@ public class SoftwareController {
 
 	@GetMapping("/software/list")
 	public String getListPage() {
-		log.debug("Getting installed package list page");
+		log.debug("Getting list page");
 		return "software/list";
 	}
 
-	@GetMapping("/software/list-paginated")
-	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
+	@GetMapping("/installed-package/list-paginated")
+	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
 		log.info("Getting package page with page number:{} and size: {}", pageable.getPageNumber(),
 				pageable.getPageSize());
@@ -123,6 +184,23 @@ public class SoftwareController {
 			result.add("packages", checkNotNull(packages, "Packages not found."));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find packages, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/process/list-paginated")
+	public ResponseEntity<?> handleProcessList(@RequestParam(value = "search", required = false) String search,
+			Pageable pageable) {
+		log.info("Getting process page with page number:{} and size: {}", pageable.getPageNumber(),
+				pageable.getPageSize());
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<RunningProcess> processes = softwareService.getProcesses(pageable, search);
+			result.add("processes", checkNotNull(processes, "Processes not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find processes, assuming invalid parameters", e);
 			result.setMessage(e.getMessage());
 			return ResponseEntity.badRequest().body(result);
 		}
@@ -139,9 +217,26 @@ public class SoftwareController {
 		entity.setLastModifiedDate(date);
 		return entity;
 	}
+	
+	private RunningProcess toProcessEntity(ProcessForm form, String username) {
+		RunningProcess entity = new RunningProcess();
+		AlfaBeanUtils.getInstance().copyProperties(form, entity);
+		Date date = new Date();
+		entity.setCreatedBy(username);
+		entity.setCreatedDate(date);
+		entity.setLastModifiedBy(username);
+		entity.setLastModifiedDate(date);
+		return entity;
+	}
 
 	private PackageForm toPackageForm(InstalledPackage entity) {
 		PackageForm form = new PackageForm();
+		AlfaBeanUtils.getInstance().copyProperties(entity, form);
+		return form;
+	}
+	
+	private ProcessForm toProcessForm(RunningProcess entity) {
+		ProcessForm form = new ProcessForm();
 		AlfaBeanUtils.getInstance().copyProperties(entity, form);
 		return form;
 	}

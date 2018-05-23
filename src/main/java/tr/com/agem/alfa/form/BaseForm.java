@@ -1,4 +1,4 @@
-package tr.com.agem.alfa.dto;
+package tr.com.agem.alfa.form;
 
 import java.io.Serializable;
 import java.util.Date;

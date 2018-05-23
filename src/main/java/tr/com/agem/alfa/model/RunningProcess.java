@@ -21,4 +21,20 @@ public class RunningProcess extends BaseModel {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.runningProcess")
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Set<AgentRunningProcess> getAgentRunningProcesses() {
+		return agentRunningProcesses;
+	}
+
+	public void setAgentRunningProcesses(Set<AgentRunningProcess> agentRunningProcesses) {
+		this.agentRunningProcesses = agentRunningProcesses;
+	}
+
 }

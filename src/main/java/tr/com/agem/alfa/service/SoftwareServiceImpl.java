@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.InstalledPackage;
+import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.repository.PackageRepository;
 import tr.com.agem.alfa.repository.ProcessRepository;
 
@@ -76,6 +77,35 @@ public class SoftwareServiceImpl implements SoftwareService {
 	public void deletePackage(Long id) {
 		Assert.notNull(id, "ID must not be null.");
 		this.packageRepository.delete(id);
+	}
+
+	@Override
+	public void saveProcess(RunningProcess process) {
+		Assert.notNull(process, "Process must not be null.");
+		RunningProcess p = null;
+		if (process.getId() != null && (p = processRepository.findOne(process.getId())) != null) {
+			// Update
+			p.setName(process.getName());
+			this.processRepository.save(p);
+			return;
+		}
+		// Create
+		this.processRepository.save(process);
+	}
+
+	@Override
+	public RunningProcess getProcess(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.processRepository.findOne(id);
+	}
+
+	@Override
+	public Page<RunningProcess> getProcesses(Pageable pageable, String search) {
+		Assert.notNull(pageable, "Pageable must not be null.");
+		if (search != null && !search.isEmpty()) {
+			return this.processRepository.findByNameContainingIgnoreCase(search, pageable);
+		}
+		return this.processRepository.findAll(pageable);
 	}
 
 }

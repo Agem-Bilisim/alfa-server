@@ -27,9 +27,6 @@ public class ProblemReference extends BaseModel {
 	@Column(name = "REFERENCE_ID", nullable = false)
 	private Long referenceId;
 
-	@Column(name = "DELETED")
-	private Boolean deleted;
-
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "PROBLEM_ID", nullable = false)
 	private Problem problem;
@@ -63,14 +60,6 @@ public class ProblemReference extends BaseModel {
 
 	public void setProblem(Problem problem) {
 		this.problem = problem;
-	}
-
-	public Boolean getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
 	}
 
 }
