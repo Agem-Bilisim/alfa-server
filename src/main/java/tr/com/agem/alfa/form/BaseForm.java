@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
- *
  */
 public abstract class BaseForm implements Serializable {
 
@@ -21,6 +19,17 @@ public abstract class BaseForm implements Serializable {
 	private Date lastModifiedDate;
 
 	private String lastModifiedBy;
+
+	/**
+	 * Optional parameter to enforce refirect after a successfull create/edit
+	 * operation.
+	 */
+	private String redirect;
+	
+	public BaseForm setRedirect(String redirect) {
+		this.redirect = redirect;
+		return this;
+	}
 
 	public Long getId() {
 		return id;
@@ -60,6 +69,10 @@ public abstract class BaseForm implements Serializable {
 
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public String getRedirect() {
+		return redirect;
 	}
 
 }

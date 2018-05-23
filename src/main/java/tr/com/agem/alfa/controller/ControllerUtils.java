@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import tr.com.agem.alfa.form.BaseForm;
 import tr.com.agem.alfa.util.CommonUtils;
 
 public class ControllerUtils {
@@ -32,6 +33,12 @@ public class ControllerUtils {
 			}
 		}
 		return errMsg.toString();
+	}
+
+	public static String getRedirectMapping(BaseForm form, String orElse) {
+		String url = form != null && form.getRedirect() != null && !form.getRedirect().isEmpty() ? form.getRedirect()
+				: orElse;
+		return "redirect:" + (url.startsWith("/") ? url : "/" + url);
 	}
 
 }

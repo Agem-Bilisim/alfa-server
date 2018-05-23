@@ -5,7 +5,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	th:with="lang=${#locale.language}" th:lang="${lang}">
 <head>
-<title layout:title-pattern="$LAYOUT_TITLE :: $CONTENT_TITLE">Lider Ahenk</title>
+<title layout:title-pattern="$LAYOUT_TITLE :: $CONTENT_TITLE">Alfa</title>
 <object th:include="fragments/head :: head" th:remove="tag"></object>
 </head>
 <body class="hold-transition skin-blue-light sidebar-mini">
@@ -24,7 +24,7 @@
 			<section class="content-header">
 				<h1>&nbsp;</h1>
 				<ol class="breadcrumb">
-					<li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> Home</a></li>
+					<li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> Anasayfa</a></li>
 					<th:block layout:fragment="breadcrumb-list"></th:block>
 				</ol>
 			</section>

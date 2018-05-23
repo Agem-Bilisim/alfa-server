@@ -12,4 +12,8 @@ public interface ProblemService {
 
 	Page<Problem> getProblems(Pageable pageable, String search, Integer referenceType);
 
+	void saveProblem(Problem problemEntity);
+
+	Problem getProblem(Long id);
+
 }
