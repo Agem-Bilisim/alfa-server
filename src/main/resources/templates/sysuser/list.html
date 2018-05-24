@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<!--/*@thymesVar id="users" type="java.util.List<tr.com.agem.lider.model.User>"*/-->
+<head>
+	<title>Sistem Kullanıcıları Listesi</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Sistem Kullanıcıları Listesi</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Kullanıcı Listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="userTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Kullanıcı Adı</th>
+									<th>İsim</th>
+									<th>Soyisim</th>
+									<th>E-posta</th>
+									<th>Rol</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			var fnActionBtns = function(row, type, val, meta) {
+				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/sysuser/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>";
+			};
+			
+			var drawCallback = function(settings) {
+				if ($("#newUserBtn").length == 0) {
+					$("#userTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newUserBtn\">Yeni</button>");
+					$("#newUserBtn").on("click", function() {
+						window.location.href = /*[[@{'/sysuser/create'}]]*/'';
+					});
+				}
+			};
+			
+			const cols = [
+				{"data": "userName", "property": "userName", "name": "Kullanıcı Adı", "searchable": true, "orderable": true }, 
+				{"data": "firstName", "property": "firstName", "name": "İsim", "searchable": true, "orderable": true }, 
+				{"data": "lastName", "property": "lastName", "name": "Soyisim", "searchable": true, "orderable": true }, 
+				{"data": "email", "property": "email", "name": "E-posta", "searchable": true, "orderable": true }, 
+				{"data": "roleString", "property": "role.name", "name": "Rol", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+			];
+			
+			$('#userTable').paginatedTable("/alfa/sysuser/list-paginated", "users", cols, drawCallback);
+		});
+	</script>
+</body>
+</html>

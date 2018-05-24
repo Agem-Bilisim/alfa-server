@@ -136,7 +136,7 @@
 			};
 			var drawCallbackSoftware = function(settings) {
 				if ($("#newPackageBtn").length == 0) {
-					$("#packageTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPackageBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#packageTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPackageBtn\">Yeni</button>");
 					$("#newPackageBtn").on("click", function() {
 						window.location.href = /*[[@{'/installed-package/create'}]]*/'';
 					});
@@ -158,7 +158,7 @@
 			};
 			var drawCallbackProcess = function(settings) {
 				if ($("#newProcessBtn").length == 0) {
-					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\">Yeni</button>");
 					$("#newProcessBtn").on("click", function() {
 						window.location.href = /*[[@{'/process/create'}]]*/'';
 					});
@@ -178,7 +178,7 @@
 			};
 			var drawCallbackProblem = function(settings) {
 				if ($("#newProblemBtn").length == 0) {
-					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
 					$("#newProblemBtn").on("click", function() {
 						window.location.href = /*[[@{'/problem/create?redirect=software/list'}]]*/'';
 					});

@@ -5,24 +5,26 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Entity
 @Table(name = "c_role")
-public class Role extends BaseModel {
+public class SysRole extends BaseModel {
 
 	private static final long serialVersionUID = 255243218266449046L;
 
-	@Column(name = "NAME", nullable = false)
+	@Column(name = "NAME", nullable = false, updatable = false)
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-	private Set<User> users = new HashSet<User>(0);
+	@JsonIgnore
+	@OneToMany(mappedBy = "role")
+	private Set<SysUser> users = new HashSet<SysUser>(0);
 
 	public String getName() {
 		return name;
@@ -32,11 +34,11 @@ public class Role extends BaseModel {
 		this.name = name;
 	}
 
-	public Set<User> getUsers() {
+	public Set<SysUser> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Set<User> users) {
+	public void setUsers(Set<SysUser> users) {
 		this.users = users;
 	}
 

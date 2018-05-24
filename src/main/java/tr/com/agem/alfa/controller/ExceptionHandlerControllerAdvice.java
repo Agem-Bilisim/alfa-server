@@ -1,6 +1,7 @@
 package tr.com.agem.alfa.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,10 @@ public class ExceptionHandlerControllerAdvice {
 
 	private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerControllerAdvice.class);
 
-	@ExceptionHandler(Exception.class)
-	public ModelAndView handleError500(HttpServletRequest request, Exception e) {
+	@ExceptionHandler(Throwable.class)
+	public ModelAndView handleError500(HttpServletRequest request, HttpServletResponse response, Exception e) {
 		log.error("Request: {} raised {}", new Object[] { request.getRequestURL(), e.getMessage() });
-		return new ModelAndView("error/500");
+		return response.isCommitted() ? null : new ModelAndView("error/500");
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)
