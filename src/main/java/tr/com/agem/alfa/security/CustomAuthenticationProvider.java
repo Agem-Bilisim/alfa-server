@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import tr.com.agem.alfa.model.CurrentUser;
-import tr.com.agem.alfa.model.User;
-import tr.com.agem.alfa.service.UserService;
+import tr.com.agem.alfa.model.SysUser;
+import tr.com.agem.alfa.service.SysUserService;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -35,13 +35,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	private static final Logger log = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 
-	private UserService userService;
+	private SysUserService userService;
 
 	public static final int ENCODER_STRENGTH = 11;
 	private static final String ROLE_PREFIX = "ROLE_";
 
 	@Autowired
-	public CustomAuthenticationProvider(UserService userService) {
+	public CustomAuthenticationProvider(SysUserService userService) {
 		this.userService = userService;
 	}
 
@@ -62,10 +62,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 		String password = auth.getCredentials().toString();
 
-		User user = null;
+		SysUser user = null;
 
 		try {
-			user = userService.findByUserNameOrEmail(userName);
+			user = userService.getUserByUserName(userName);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -99,7 +99,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		return auth.equals(UsernamePasswordAuthenticationToken.class);
 	}
 
-	private Collection<? extends GrantedAuthority> getAuthorities(User user) {
+	private Collection<? extends GrantedAuthority> getAuthorities(SysUser user) {
 		checkArgument(user != null, "User cannot be null.");
 		checkArgument(user.getRole() != null && !isNullOrEmpty(user.getRole().getName()),
 				"Role and its name cannot be null or empty.");

@@ -2,7 +2,6 @@ package tr.com.agem.alfa.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -12,7 +11,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "c_user")
-public class User extends BaseModel {
+public class SysUser extends BaseModel {
 
 	private static final long serialVersionUID = 8155712510767070264L;
 
@@ -34,9 +33,9 @@ public class User extends BaseModel {
 	@Column(name = "DISABLED")
 	private Boolean disabled;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "ROLE_ID", nullable = false)
-	private Role role;
+	private SysRole role;
 
 	public String getUserName() {
 		return userName;
@@ -86,15 +85,11 @@ public class User extends BaseModel {
 		this.disabled = disabled;
 	}
 
-	public Role getRole() {
+	public SysRole getRole() {
 		return role;
 	}
 
-	public String getRoleString() {
-		return role.getName();
-	}
-
-	public void setRole(Role role) {
+	public void setRole(SysRole role) {
 		this.role = role;
 	}
 

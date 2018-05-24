@@ -1,9 +1,25 @@
 package tr.com.agem.alfa.service;
 
-import tr.com.agem.alfa.model.User;
+import java.util.List;
 
-public interface UserService {
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-	User findByUserNameOrEmail(String username);
+import tr.com.agem.alfa.model.SysRole;
+import tr.com.agem.alfa.model.SysUser;
+
+public interface SysUserService {
+
+	SysUser getUserByEmail(String email);
+
+	List<SysRole> getRoles();
+
+	SysUser getUser(Long id);
+
+	void saveUser(SysUser userEntity);
+
+	Page<SysUser> getUsers(Pageable pageable, String search);
+
+	SysUser getUserByUserName(String userName);
 
 }
