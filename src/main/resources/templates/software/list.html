@@ -88,15 +88,49 @@
 			</div>
 		</div>
 		
+		<!-- Delete confirmation modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='deleteConfirmModal', modalHeader='Kayıt silinecek?', modalButton='Devam')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?</p>
+		</div>
+		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		// Hook handler for delete confirmation
+		var tables = {};
+		var handleDelete = function(url, tableToRefresh) {
+			console.log(url);
+			console.log(tableToRefresh);
+			$("#deleteConfirmModalBtn").click(function(){
+				$('#deleteConfirmModal').modal('hide');
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : url,
+					dataType : 'json',
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						alertify.success('Kayıt silindi.');
+						if (tables[tableToRefresh]) tables[tableToRefresh].ajax.reload();
+					}
+				});
+			});
+			$('#deleteConfirmModal').modal('show');
+		};
+		
 		$(function() {
-			var tables = {};
 			
 			// Software
 			var fnActionBtnsSoftware = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
-					+ "<button class=\"btn\" onclick=\"handleDelete('/alfa/installed-package/'" + row['id'] + "'/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i> Sil</button>";
+				return "<div class=\"btn-group\" role=\"group\"><a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/installed-package/" + row['id'] + "/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i></button></div>";
 			};
 			var drawCallbackSoftware = function(settings) {
 				if ($("#newPackageBtn").length == 0) {
@@ -157,29 +191,6 @@
 					tables.processTable = $('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
 				}
 			});
-			
-			// Hook handler for delete confirmation
-			var handleDelete = function(url, tableToRefresh) {
-				$("#deleteConfirmModalBtn").click(function(){
-					$.ajax({
-						type : "POST",
-						contentType : "application/json",
-						url : url,
-						dataType : 'json',
-						cache : false,
-						timeout : 600000,
-						beforeSend: function(xhr) {
-							var token = $('#_csrf').attr('content');
-							var header = $('#_csrf_header').attr('content');
-							xhr.setRequestHeader(header, token);
-						},
-						success : function(result) {
-							if (tables[tableToRefresh]).ajax.reload();
-						}
-					});
-				});
-				$('#deleteConfirmModal').modal('show');
-			};
 		});
 	</script>
 </body>

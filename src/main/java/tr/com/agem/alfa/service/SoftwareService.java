@@ -30,4 +30,6 @@ public interface SoftwareService {
 
 	Page<RunningProcess> getProcesses(Pageable pageable, String search);
 
+	void deleteProcess(Long checkNotNull);
+
 }

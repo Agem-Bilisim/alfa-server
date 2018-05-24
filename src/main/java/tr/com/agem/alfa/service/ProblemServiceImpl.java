@@ -58,4 +58,10 @@ public class ProblemServiceImpl implements ProblemService {
 		return this.problemRepository.findOne(id);
 	}
 
+	@Override
+	public void deleteProblem(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		this.problemRepository.delete(id);
+	}
+
 }

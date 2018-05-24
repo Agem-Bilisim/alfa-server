@@ -134,7 +134,7 @@ $(document).ajaxStart(function() {
 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
 	console.log('E:' + event + ' jqxhr: ' + jqxhr + ' settings:' + settings 
 			+ ' thrownError:' + thrownError);
-	alertify.error('Unexpected error! URL:' + settings.url + ' Cause:' + thrownError);
+	alertify.error('Beklenmedik hata oluştu!');
 });
 
 alfaDefaultOptions = {

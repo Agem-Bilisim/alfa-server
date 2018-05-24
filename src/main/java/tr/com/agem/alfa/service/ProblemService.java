@@ -16,4 +16,6 @@ public interface ProblemService {
 
 	Problem getProblem(Long id);
 
+	void deleteProblem(Long checkNotNull);
+
 }

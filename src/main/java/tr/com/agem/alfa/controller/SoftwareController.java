@@ -166,6 +166,34 @@ public class SoftwareController {
 		// everything fine redirect to list
 		return "redirect:/software/list";
 	}
+	
+	@PostMapping("/installed-package/{id}/delete")
+	public ResponseEntity<?> handlePackageDelete(@PathVariable Long id) {
+		log.debug("Processing delete for package:{}}", id);
+		RestResponseBody result = new RestResponseBody();
+		try {
+			softwareService.deletePackage(checkNotNull(id, "ID not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete package, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/process/{id}/delete")
+	public ResponseEntity<?> handleProcessDelete(@PathVariable Long id) {
+		log.debug("Processing delete for running process:{}}", id);
+		RestResponseBody result = new RestResponseBody();
+		try {
+			softwareService.deleteProcess(checkNotNull(id, "ID not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete process, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
 
 	@GetMapping("/software/list")
 	public String getListPage() {

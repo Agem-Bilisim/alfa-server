@@ -108,6 +108,20 @@ public class ProblemController {
 		return ControllerUtils.getRedirectMapping(form, "/problem/list");
 	}
 	
+	@PostMapping("/problem/{id}/delete")
+	public ResponseEntity<?> handleProcessDelete(@PathVariable Long id) {
+		log.debug("Processing delete for problem:{}}", id);
+		RestResponseBody result = new RestResponseBody();
+		try {
+			problemService.deleteProblem(checkNotNull(id, "ID not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete problem, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+	
 	@GetMapping("/problem/list")
 	public String getListPage() {
 		log.debug("Getting list page");

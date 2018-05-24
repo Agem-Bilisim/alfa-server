@@ -108,4 +108,10 @@ public class SoftwareServiceImpl implements SoftwareService {
 		return this.processRepository.findAll(pageable);
 	}
 
+	@Override
+	public void deleteProcess(Long id) {
+		Assert.notNull(id, "ID must not be null.");
+		this.processRepository.delete(id);
+	}
+
 }
