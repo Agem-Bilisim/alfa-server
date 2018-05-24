@@ -12,11 +12,18 @@
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
         <li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> <span>Yönetim Paneli</span></a></li>
+<<<<<<< f099c143e5a6132177412c38d499cb081be33c46
         <li><a th:href="@{/agent/list}"><i class="fa fa-desktop"></i> <span>Bilgisayar Envanteri</span></a></li>
         <li><a th:href="@{/software/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
         <li><a th:href="@{/hardware/list}"><i class="fa fa-microchip"></i> <span>Donanım Envanteri</span></a></li>
         <li><a th:href="@{/peripheral/list}"><i class="fa fa-print"></i> <span>Çevresel Birimler</span></a></li>
+=======
+>>>>>>> BPM Process Upload Routines
         <li><a th:href="@{/installed-package/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
+        <li><a th:href="@{/agent/list}"><i class="fa fa-desktop"></i> <span>Bilgisayar Envanteri</span></a></li>
+        <li><a th:href="@{/software/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
+        <li><a th:href="@{/hardware/list}"><i class="fa fa-microchip"></i> <span>Donanım Envanteri</span></a></li>
+        <li><a th:href="@{/peripheral/list}"><i class="fa fa-print"></i> <span>Çevresel Birimler</span></a></li>
         <li><a th:href="@{/report/list}"><i class="fa fa-line-chart"></i> <span>Uyumluluk Analizi</span></a></li>
         
         <!-- Only for Admin! -->
@@ -28,7 +35,11 @@
           </a>
           <ul class="treeview-menu">
             <li><a th:href="@{/notification/list}"><i class="fa fa-circle-o"></i> Anket</a></li>
+<<<<<<< f099c143e5a6132177412c38d499cb081be33c46
         	<li><a th:href="@{/bpm-process/list}"><i class="fa  fa-circle-o"></i> Süreçler</a></li>
+=======
+	        <li><a th:href="@{/bpm-process/list}"><i class="fa fa-circle-o"></i> Süreçler </a></li>
+>>>>>>> BPM Process Upload Routines
           </ul>
         </li>
         <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/user/list}"><i class="fa fa-users"></i> <span>Kullanıcı Yönetimi</span></a></li>
