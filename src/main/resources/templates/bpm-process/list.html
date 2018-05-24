@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Saklanan Süreçler</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Saklanan Süreçler</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Süreç listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="processTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Süreç Adı</th>
+									<th>Süreç Sürümü</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			var fnActionBtns = function(row, type, val, meta) {
+				return "<a class=\"btn\" href=\"/alfa/bpm-process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+			};
+			
+			var drawCallback = function(settings) {
+				if ($("#newProcessBtn").length == 0) {
+					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#newProcessBtn").on("click", function() {
+						window.location.href = /*[[@{'/bpm-process/create'}]]*/'';
+					});
+				}
+			};
+			
+			const cols = [
+				{"data": "name", "property": "name", "name": "Paket Adı", "searchable": true, "orderable": true }, 
+				{"data": "version", "property": "version", "name": "Paket Sürümü", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "name": "Action", "searchable": false, "orderable": false }
+			];
+			
+			$('#processTable').paginatedTable("/alfa/bpm-process/list-paginated", "processes", cols, drawCallback);
+		});
+	</script>
+</body>
+</html>

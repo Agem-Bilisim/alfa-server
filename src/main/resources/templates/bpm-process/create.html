@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Süreç Ekle</title>
+	<!-- iCheck -->
+	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+	<!-- Select2 -->
+	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li><a th:href="@{/bpm-process/list}"><i class="fa fa-cubes"></i> BPMN Süreçleri</a></li>
+		<li class="active">Süreç Ekle</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">Süreç Ekle</h3>
+					</div>
+					<form role="form" id="bpmProcessForm" th:action="@{/bpm-process/create}" method="post" enctype="multipart/form-data" th:object="${form}">
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+    						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+						</div>
+						<div class="box-body">
+							<div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'has-error' : ''">
+								<label for="name">Ad</label>
+								<input type="text" class="form-control" id="name"
+									name="name" placeholder="Ad" th:field="*{name}" />
+								<span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('version')} ? 'has-error' : ''">
+								<label for="version">Sürüm</label>
+								<input type="text" class="form-control" id="version" name="version"
+									placeholder="Sürüm" th:field="*{version}" />
+								<span class="help-block" th:if="${#fields.hasErrors('version')}" th:errors="*{version}">Error</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('file')} ? 'has-error' : ''">
+								<label for="version">BPMN 2.0 Dosya </label>
+								<input type="file" class="form-control" id="file" name="file" placeholder="BPMN 2.0 dosya" th:field="*{file}" />
+								<span class="help-block" th:if="${#fields.hasErrors('file')}" th:errors="*{file}">Error</span>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
+							<div class="btn-toolbar pull-right">
+								<button type="submit" class="btn btn-primary pull-right" id="saveProcessBtn">Kaydet</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			// Return to list when cancel button is clicked
+			$('#cancelBtn').click(function() {
+				window.location.href = /*[[@{'/bpm-process/list'}]]*/'';
+			});
+		});
+	</script>
+</body>
+</html>
