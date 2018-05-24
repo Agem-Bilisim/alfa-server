@@ -2,10 +2,13 @@ package tr.com.agem.alfa.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tr.com.agem.alfa.model.enums.ProblemReferenceType;
+import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
-public class PackageForm extends BaseForm {
+public class PackageForm extends BaseForm implements OptionFormConvertable {
 
 	private static final long serialVersionUID = 8825161815758128735L;
 
@@ -29,6 +32,16 @@ public class PackageForm extends BaseForm {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	@Override
+	public String getOptionText() {
+		return this.name + " " + this.version;
+	}
+
+	@Override
+	public String getOptionValue() {
+		return ProblemReferenceType.PACKAGE.toString() + "-" + this.getId();
 	}
 
 }

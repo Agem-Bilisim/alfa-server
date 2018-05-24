@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,5 +33,9 @@ public interface SoftwareService {
 	Page<RunningProcess> getProcesses(Pageable pageable, String search);
 
 	void deleteProcess(Long checkNotNull);
+
+	List<InstalledPackage> getPackages();
+	
+	List<RunningProcess> getProcesses();
 
 }

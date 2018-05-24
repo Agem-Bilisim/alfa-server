@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Bilgisayar Envanteri</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Bilgisayar Envanteri</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Bilgisayar listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="agentTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Hastname</th>
+									<th>IP Adresleri</th>
+									<th>MAC Adresleri</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>					
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			
+			// Agent
+			var fnActionBtnsAgent = function(row, type, val, meta) {
+				return "<a class=\"btn\" href=\"/alfa/agent/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Detaylar</a>";
+			};
+// 			var drawCallbackAgent = function(settings) {
+// 				if ($("#newAgentBtn").length == 0) {
+// 					$("#agentTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newAgentBtn\" style=\"margin-left:10px;\">Yeni</button>");
+// 					$("#newAgentBtn").on("click", function() {
+// 						window.location.href = /*[[@{'/agent/create'}]]*/'';
+// 					});
+// 				}
+// 			};
+			// TODO cols'un içeriğini düzelt
+			const colsAgent = [
+				{"data": "hostName", "property": "hostName", "name": "Host Name", "searchable": true, "orderable": true }, 
+				{"data": "ipAddresses", "property": "ipAddresses", "name": "IP Adresleri", "searchable": true, "orderable": true }, 
+				{"data": "macAddresses", "property": "macAddresses", "name": "MAC Adresleri", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsAgent, "name": "İşlem", "searchable": false, "orderable": false }
+			];
+			$('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, null);
+			
+			// Handle table init
+// 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+// 				if ($(e.target).attr('href') == "#problem") {
+// 					$('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
+// 				} else if ($(e.target).attr('href') == "#process") {
+// 					$('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
+// 				}
+// 			});
+		});
+	</script>
+</body>
+</html>

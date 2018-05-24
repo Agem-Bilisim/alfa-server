@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_bios", uniqueConstraints = { @UniqueConstraint(columnNames = { "VERSION", "VENDOR" }) })
 public class Bios extends BaseModel {
@@ -25,6 +27,7 @@ public class Bios extends BaseModel {
 	@Column(name = "RELEASE_DATE")
 	private String releaseDate;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bios")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 

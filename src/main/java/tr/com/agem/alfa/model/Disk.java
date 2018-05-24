@@ -10,6 +10,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_disk", uniqueConstraints = { @UniqueConstraint(columnNames = { "PRODUCT", "VERSION" }) })
 public class Disk extends BaseModel {
@@ -31,6 +33,7 @@ public class Disk extends BaseModel {
 	@Column(name = "SERIAL")
 	private String serial;
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "disks")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 

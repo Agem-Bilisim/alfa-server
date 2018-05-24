@@ -5,11 +5,13 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Embeddable
 public class AgentPeripheralDeviceId implements Serializable {
 
 	private static final long serialVersionUID = 1927236167006978858L;
-
+	
 	@ManyToOne
 	private Agent agent;
 

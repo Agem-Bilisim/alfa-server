@@ -45,6 +45,7 @@ public class ProblemServiceImpl implements ProblemService {
 			p.setLabel(problem.getLabel());
 			p.setDescription(problem.getDescription());
 			p.setSolved(problem.getSolved());
+			p.setReferences(problem.getReferences());
 			this.problemRepository.save(p);
 			return;
 		}

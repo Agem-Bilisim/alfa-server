@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_cpu_agent")
 @AssociationOverrides({ @AssociationOverride(name = "pk.agent", joinColumns = @JoinColumn(name = "AGENT_ID")),
@@ -12,6 +14,7 @@ public class AgentCpu implements Serializable {
 
 	private static final long serialVersionUID = 7337356336364195558L;
 
+	@JsonIgnore
 	@EmbeddedId
 	private AgentCpuId pk = new AgentCpuId();
 

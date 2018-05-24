@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_memory")
 public class Memory extends BaseModel {
@@ -27,6 +29,7 @@ public class Memory extends BaseModel {
 	@Column(name = "MANUFACTURER", nullable = false, length = 100)
 	private String manufacturer;
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "memories")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 

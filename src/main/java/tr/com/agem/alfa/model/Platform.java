@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_platform", uniqueConstraints = { @UniqueConstraint(columnNames = { "SYSTEM", "PL_RELEASE" }) })
 public class Platform extends BaseModel {
@@ -28,6 +30,7 @@ public class Platform extends BaseModel {
 	@Column(name = "MACHINE", nullable = false)
 	private String machine;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "platform")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 

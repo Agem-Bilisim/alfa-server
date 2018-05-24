@@ -1,5 +1,8 @@
 package tr.com.agem.alfa.form;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -17,8 +20,10 @@ public class ProblemForm extends BaseForm {
 
 	private Boolean solved;
 
-	// TODO iliskili kayitlar
+	private String[] strReferences;
 	
+	private Set<ProblemReferenceForm> references = new HashSet<ProblemReferenceForm>(0);
+
 	public String getLabel() {
 		return label;
 	}
@@ -41,6 +46,27 @@ public class ProblemForm extends BaseForm {
 
 	public void setSolved(Boolean solved) {
 		this.solved = solved;
+	}
+
+	public Set<ProblemReferenceForm> getReferences() {
+		return references;
+	}
+
+	public void setReferences(Set<ProblemReferenceForm> references) {
+		this.references = references;
+	}
+
+	public String[] getStrReferences() {
+		return strReferences;
+	}
+
+	public void setStrReferences(String[] strReferences) {
+		this.strReferences = strReferences;
+		if (strReferences != null) {
+			for(String ref : strReferences) {
+				this.references.add(new ProblemReferenceForm(ref));
+			}
+		}
 	}
 
 }

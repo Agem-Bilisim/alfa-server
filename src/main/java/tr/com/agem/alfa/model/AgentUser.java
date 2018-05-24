@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_user")
 public class AgentUser extends BaseModel {
@@ -21,6 +23,7 @@ public class AgentUser extends BaseModel {
 	@Column(name = "GROUPS", nullable = false, length = 255)
 	private String commaSeparatedGroups;
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 
