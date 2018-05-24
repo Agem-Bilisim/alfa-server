@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Cross-table for c_agent and c_agent_running_process
  * 
@@ -23,7 +25,8 @@ import javax.persistence.Transient;
 public class AgentRunningProcess implements Serializable {
 
 	private static final long serialVersionUID = 6844159583081268836L;
-
+	
+	@JsonIgnore
 	@EmbeddedId
 	private AgentRunningProcessId pk = new AgentRunningProcessId();
 

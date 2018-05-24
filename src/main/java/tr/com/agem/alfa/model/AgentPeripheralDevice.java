@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_peripheral_agent")
 @AssociationOverrides({ @AssociationOverride(name = "pk.agent", joinColumns = @JoinColumn(name = "AGENT_ID")),
@@ -19,6 +21,7 @@ public class AgentPeripheralDevice implements Serializable {
 
 	private static final long serialVersionUID = 3225471957126758413L;
 
+	@JsonIgnore
 	@EmbeddedId
 	private AgentPeripheralDeviceId pk = new AgentPeripheralDeviceId();
 

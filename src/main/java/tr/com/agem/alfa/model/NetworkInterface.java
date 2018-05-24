@@ -10,6 +10,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_inet")
 public class NetworkInterface extends BaseModel {
@@ -29,6 +31,7 @@ public class NetworkInterface extends BaseModel {
 	@Column(name = "CAPABILITIES")
 	private String capabilities;
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "networkInterfaces")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 

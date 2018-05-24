@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_gpu")
 public class Gpu extends BaseModel {
@@ -24,6 +26,7 @@ public class Gpu extends BaseModel {
 	@Column(name = "MEMORY", nullable = false, length = 20)
 	private String memory;
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "gpus")
 	private Set<Agent> agents = new HashSet<Agent>(0);
 
