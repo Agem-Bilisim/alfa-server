@@ -4,11 +4,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.repository.AgentRepository;
 
 @Component("agentService")
@@ -34,6 +37,16 @@ public class AgentServiceImpl implements AgentService {
 	public Agent getAgentByMessagingId(String messagingId) {
 		Assert.notNull(messagingId, "Messaging ID must not be null.");
 		return this.agentRepository.getAgentByMessagingId(messagingId);
+	}
+	
+	@Override
+	public Page<Agent> getAgents(Pageable pageable, String search) {
+		Assert.notNull(pageable, "Pageable must not be null.");
+		if (search != null && !search.isEmpty()) {
+			// TODO
+			return null;
+		}
+		return this.agentRepository.findAll(pageable);
 	}
 
 }
