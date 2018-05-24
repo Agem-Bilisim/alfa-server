@@ -58,4 +58,12 @@ public class AgentUser extends BaseModel {
 		this.agents.add(agent);
 	}
 
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return null;
+	}
+
 }

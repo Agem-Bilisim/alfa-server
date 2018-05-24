@@ -1,5 +1,6 @@
 package tr.com.agem.alfa.form;
 
+import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 
 /**
@@ -37,6 +38,14 @@ public class ProblemReferenceForm extends BaseForm {
 
 	public void setReferenceId(Long referenceId) {
 		this.referenceId = referenceId;
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
+	 */
+	@Override
+	public Object getCorrespondingModel() {
+		return new ProblemReference();
 	}
 
 }

@@ -40,4 +40,12 @@ public class Role extends BaseModel {
 		this.users = users;
 	}
 
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return null;
+	}
+
 }

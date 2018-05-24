@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import tr.com.agem.alfa.form.ProcessForm;
+
 @Entity
 @Table(name = "c_agent_process")
 public class RunningProcess extends BaseModel {
@@ -35,6 +37,14 @@ public class RunningProcess extends BaseModel {
 
 	public void setAgentRunningProcesses(Set<AgentRunningProcess> agentRunningProcesses) {
 		this.agentRunningProcesses = agentRunningProcesses;
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return new ProcessForm();
 	}
 
 }

@@ -202,4 +202,12 @@ public class Cpu extends BaseModel {
 		this.agentCpus = agentCpus;
 	}
 
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return null;
+	}
+
 }

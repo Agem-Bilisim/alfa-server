@@ -12,6 +12,8 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import tr.com.agem.alfa.form.PackageForm;
+
 @Entity
 @Table(name = "c_agent_package", uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME", "VERSION" }) })
 public class InstalledPackage extends BaseModel {
@@ -73,6 +75,14 @@ public class InstalledPackage extends BaseModel {
 			if (other.version != null) return false;
 		} else if (!version.equals(other.version)) return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return new PackageForm();
 	}
 
 }

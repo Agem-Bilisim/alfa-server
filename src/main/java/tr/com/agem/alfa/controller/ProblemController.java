@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProcessForm;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Problem;
+import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.service.HardwareService;
 import tr.com.agem.alfa.service.ProblemService;
 import tr.com.agem.alfa.service.SoftwareService;
@@ -176,6 +178,13 @@ public class ProblemController {
 		entity.setCreatedDate(date);
 		entity.setLastModifiedBy(username);
 		entity.setLastModifiedDate(date);
+		if (entity.getReferences() != null) {
+			Iterator<ProblemReference> it = entity.getReferences().iterator();
+			while (it.hasNext()) {
+				ProblemReference ref = it.next();
+				ref.setProblem(entity);
+			}
+		}
 		return entity;
 	}
 

@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.model;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -50,7 +52,9 @@ public abstract class BaseModel implements Serializable {
 		}
 		if (createdBy == null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			createdBy = (String) authentication.getPrincipal();
+			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+			checkNotNull(user, "Current user not found.");
+			createdBy = (String) user.getUsername();
 		}
 	}
 
@@ -61,7 +65,9 @@ public abstract class BaseModel implements Serializable {
 		}
 		if (lastModifiedBy == null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			lastModifiedBy = (String) authentication.getPrincipal();
+			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+			checkNotNull(user, "Current user not found.");
+			lastModifiedBy = (String) user.getUsername();
 		}
 	}
 
@@ -105,4 +111,5 @@ public abstract class BaseModel implements Serializable {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
+	public abstract Object getCorrespondingForm();
 }

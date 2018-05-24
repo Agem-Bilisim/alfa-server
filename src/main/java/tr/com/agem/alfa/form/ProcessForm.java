@@ -2,6 +2,7 @@ package tr.com.agem.alfa.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
@@ -31,6 +32,14 @@ public class ProcessForm extends BaseForm implements OptionFormConvertable {
 	@Override
 	public String getOptionValue() {
 		return ProblemReferenceType.PROCESS.toString() + "-" + this.getId();
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
+	 */
+	@Override
+	public Object getCorrespondingModel() {
+		return new RunningProcess();
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tr.com.agem.alfa.model.Problem;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -67,6 +69,14 @@ public class ProblemForm extends BaseForm {
 				this.references.add(new ProblemReferenceForm(ref));
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
+	 */
+	@Override
+	public Object getCorrespondingModel() {
+		return new Problem();
 	}
 
 }

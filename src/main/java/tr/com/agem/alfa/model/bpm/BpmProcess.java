@@ -8,6 +8,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import tr.com.agem.alfa.form.bpm.BpmProcessForm;
 import tr.com.agem.alfa.model.BaseModel;
 
 @Entity
@@ -83,6 +84,14 @@ public class BpmProcess extends BaseModel {
 			if (other.version != null) return false;
 		} else if (!version.equals(other.version)) return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return new BpmProcessForm();
 	}
 
 

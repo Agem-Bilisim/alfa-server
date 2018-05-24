@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import tr.com.agem.alfa.form.ProblemReferenceForm;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 
 /**
@@ -58,6 +59,14 @@ public class ProblemReference extends BaseModel {
 
 	public void setProblem(Problem problem) {
 		this.problem = problem;
+	}
+
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return new ProblemReferenceForm();
 	}
 
 }

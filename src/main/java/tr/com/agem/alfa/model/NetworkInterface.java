@@ -114,4 +114,12 @@ public class NetworkInterface extends BaseModel {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return null;
+	}
+
 }

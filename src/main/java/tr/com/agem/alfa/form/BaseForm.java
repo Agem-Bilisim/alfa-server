@@ -74,5 +74,7 @@ public abstract class BaseForm implements Serializable {
 	public String getRedirect() {
 		return redirect;
 	}
+	
+	public abstract Object getCorrespondingModel();
 
 }

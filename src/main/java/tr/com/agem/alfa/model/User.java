@@ -98,4 +98,12 @@ public class User extends BaseModel {
 		this.role = role;
 	}
 
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
+	 */
+	@Override
+	public Object getCorrespondingForm() {
+		return null;
+	}
+
 }
