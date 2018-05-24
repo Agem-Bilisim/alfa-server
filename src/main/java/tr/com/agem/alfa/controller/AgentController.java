@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.controller;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -10,11 +12,15 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -154,6 +160,29 @@ public class AgentController {
 			cap.append(e.getKey()).append(":").append(e.getValue()).append(",");
 		}
 		return cap.toString();
+	}
+	
+	@GetMapping("/agent/list")
+	public String getListPage() {
+		log.debug("Getting agent list page");
+		return "agent/list";
+	}
+	
+	@GetMapping("/agent/list-paginated")
+	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
+			Pageable pageable) {
+		log.info("Getting agent page with page number:{} and size: {}", pageable.getPageNumber(),
+				pageable.getPageSize());
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<Agent> agents = agentService.getAgents(pageable, search);
+			result.add("agents", checkNotNull(agents, "Agents not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find agents, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
 	}
 
 }
