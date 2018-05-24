@@ -66,7 +66,7 @@
 					<div role="tabpanel" class="tab-pane" id="problem">
 						<div class="box">
 							<div class="box-header">
-								<h3 class="box-title">Göçe engel teşkil eden yazılım kaynaklı sorunlar</h3>
+								<h3 class="box-title">Yazılım kaynaklı sorunlar</h3>
 							</div>
 							<div class="box-body">
 								<table id="problemTable" class="table table-bordered table-striped">
@@ -87,13 +87,16 @@
 				</div>
 			</div>
 		</div>
+		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
+			var tables = {};
 			
 			// Software
 			var fnActionBtnsSoftware = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+				return "<a class=\"btn\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn\" onclick=\"handleDelete('/alfa/installed-package/'" + row['id'] + "'/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i> Sil</button>";
 			};
 			var drawCallbackSoftware = function(settings) {
 				if ($("#newPackageBtn").length == 0) {
@@ -108,7 +111,7 @@
 				{"data": "version", "property": "version", "name": "Paket Sürümü", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsSoftware, "name": "İşlem", "searchable": false, "orderable": false }
 			];
-			$('#packageTable').paginatedTable("/alfa/installed-package/list-paginated", "packages", colsSoftware, drawCallbackSoftware);
+			tables.packageTable = $('#packageTable').paginatedTable("/alfa/installed-package/list-paginated", "packages", colsSoftware, drawCallbackSoftware);
 			
 			// Process
 			var fnActionBtnsProcess = function(row, type, val, meta) {
@@ -129,13 +132,13 @@
 			
 			// Problem
 			var fnActionBtnsProblem = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/problem/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+				return "<a class=\"btn\" href=\"/alfa/problem/" + row["id"] + "?redirect=software/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
 			};
 			var drawCallbackProblem = function(settings) {
 				if ($("#newProblemBtn").length == 0) {
 					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\" style=\"margin-left:10px;\">Yeni</button>");
 					$("#newProblemBtn").on("click", function() {
-						window.location.href = /*[[@{'/problem/create'}]]*/'';
+						window.location.href = /*[[@{'/problem/create?redirect=software/list'}]]*/'';
 					});
 				}
 			};
@@ -149,11 +152,34 @@
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				if ($(e.target).attr('href') == "#problem") {
-					$('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
+					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
 				} else if ($(e.target).attr('href') == "#process") {
-					$('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
+					tables.processTable = $('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
 				}
 			});
+			
+			// Hook handler for delete confirmation
+			var handleDelete = function(url, tableToRefresh) {
+				$("#deleteConfirmModalBtn").click(function(){
+					$.ajax({
+						type : "POST",
+						contentType : "application/json",
+						url : url,
+						dataType : 'json',
+						cache : false,
+						timeout : 600000,
+						beforeSend: function(xhr) {
+							var token = $('#_csrf').attr('content');
+							var header = $('#_csrf_header').attr('content');
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(result) {
+							if (tables[tableToRefresh]).ajax.reload();
+						}
+					});
+				});
+				$('#deleteConfirmModal').modal('show');
+			};
 		});
 	</script>
 </body>

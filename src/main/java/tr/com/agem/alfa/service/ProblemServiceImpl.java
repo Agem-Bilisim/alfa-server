@@ -28,11 +28,34 @@ public class ProblemServiceImpl implements ProblemService {
 	public Page<Problem> getProblems(Pageable pageable, String search, Integer referenceType) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			return this.problemRepository.findByLabelContainingOrDescriptionContainingAllIgnoringCase(search, search, pageable);
+			return this.problemRepository.findByLabelContainingOrDescriptionContainingAllIgnoringCase(search, search,
+					pageable);
 		} else if (referenceType != null) {
 			return this.problemRepository.findByReferencesReferenceType(referenceType, pageable);
 		}
 		return this.problemRepository.findAll(pageable);
 	}
-	
+
+	@Override
+	public void saveProblem(Problem problem) {
+		Assert.notNull(problem, "Problem must not be null.");
+		Problem p = null;
+		if (problem.getId() != null && (p = problemRepository.findOne(problem.getId())) != null) {
+			// Update
+			p.setLabel(problem.getLabel());
+			p.setDescription(problem.getDescription());
+			p.setSolved(problem.getSolved());
+			this.problemRepository.save(p);
+			return;
+		}
+		// Create
+		this.problemRepository.save(problem);
+	}
+
+	@Override
+	public Problem getProblem(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.problemRepository.findOne(id);
+	}
+
 }

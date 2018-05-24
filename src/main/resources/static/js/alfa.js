@@ -71,7 +71,7 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 		console.log('Cols parameter was null.');
 		return;
 	}
-	this.DataTable({
+	return this.DataTable({
 		"processing": true,
 		"serverSide": true,
 		"ajax": function(data, callback, settings) {
@@ -144,3 +144,27 @@ Alfa = window.Lider || {};
 window.Alfa = Alfa;
 Alfa.options = alfaDefaultOptions;
 
+Alfa.ajax = function(opts, successHandler, errorHandler) {
+	if (!opts) return;
+	if (!opts.url) { console.log("URL must not be empty!"); return; }
+	var _opts = {
+		type : opts.type ? opts.type : "POST",
+		contentType : "application/json",
+		url : opts.url,
+		dataType : 'json',
+		cache : false,
+		timeout : 600000,
+		beforeSend: function(xhr) {
+			var token = $('#_csrf').attr('content');
+			var header = $('#_csrf_header').attr('content');
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, textStatus, jqXHR) {
+			if (successHandler) successHandler(data, textStatus, jqXHR);
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			if (errorHandler) errorHandler(jqXHR, textStatus, errorThrown);
+		}
+	};
+	$.ajax(_opts);
+};
