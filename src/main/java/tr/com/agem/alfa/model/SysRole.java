@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -20,6 +22,7 @@ public class SysRole extends BaseModel {
 	@Column(name = "NAME", nullable = false, updatable = false)
 	private String name;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "role")
 	private Set<SysUser> users = new HashSet<SysUser>(0);
 

@@ -88,6 +88,10 @@ public class SysUser extends BaseModel {
 	public SysRole getRole() {
 		return role;
 	}
+	
+	public String getRoleString() {
+		return role.getName();
+	}
 
 	public void setRole(SysRole role) {
 		this.role = role;
