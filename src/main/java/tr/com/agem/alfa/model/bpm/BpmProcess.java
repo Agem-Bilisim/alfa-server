@@ -22,6 +22,9 @@ public class BpmProcess extends BaseModel {
 	@Column(name = "VERSION", length = 100)
 	private String version;
 
+	@Column(name = "PROCESS_DEF_ID", length = 50)
+	private String processDefId;
+	
     @Lob @Basic(fetch = FetchType.LAZY)
     @Column(name="content", updatable=false)
     private byte[] content;
@@ -42,6 +45,22 @@ public class BpmProcess extends BaseModel {
 		this.version = version;
 	}
 
+	public byte[] getContent() {
+		return content;
+	}
+
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
+
+	public String getProcessDefId() {
+		return processDefId;
+	}
+
+	public void setProcessDefId(String processDefId) {
+		this.processDefId = processDefId;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -66,12 +85,5 @@ public class BpmProcess extends BaseModel {
 		return true;
 	}
 
-	public byte[] getContent() {
-		return content;
-	}
-
-	public void setContent(byte[] content) {
-		this.content = content;
-	}
 
 }
