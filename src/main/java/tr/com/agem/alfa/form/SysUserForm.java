@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tr.com.agem.alfa.model.SysUser;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -97,5 +99,14 @@ public class SysUserForm extends BaseForm {
 	public void setRole(SysRoleForm role) {
 		this.role = role;
 	}
+	
+	/* (non-Javadoc)
+	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
+	 */
+	@Override
+	public Object getCorrespondingModel() {
+		return new SysUser();
+	}
+
 
 }

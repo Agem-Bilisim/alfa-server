@@ -6,6 +6,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import tr.com.agem.alfa.form.SysUserForm;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -102,7 +104,7 @@ public class SysUser extends BaseModel {
 	 */
 	@Override
 	public Object getCorrespondingForm() {
-		return null;
+		return new SysUserForm();
 	}
 
 }

@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import tr.com.agem.alfa.form.SysRoleForm;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -47,7 +49,7 @@ public class SysRole extends BaseModel {
 	 */
 	@Override
 	public Object getCorrespondingForm() {
-		return null;
+		return new SysRoleForm();
 	}
 
 }
