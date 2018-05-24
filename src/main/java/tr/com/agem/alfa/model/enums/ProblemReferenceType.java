@@ -38,4 +38,16 @@ public enum ProblemReferenceType {
 		throw new IllegalArgumentException("No matching type for id: " + id);
 	}
 
+	public static ProblemReferenceType getType(String name) {
+		if (name == null) {
+			return null;
+		}
+		for (ProblemReferenceType type : ProblemReferenceType.values()) {
+			if (name.equalsIgnoreCase(type.toString())) {
+				return type;
+			}
+		}
+		throw new IllegalArgumentException("No matching type for name: " + name);
+	}
+
 }

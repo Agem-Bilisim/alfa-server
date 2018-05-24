@@ -4,7 +4,9 @@
 package tr.com.agem.alfa.util;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -16,37 +18,32 @@ import tr.com.agem.alfa.exception.AlfaException;
 
 /**
  * @author <a href="mailto:ali.ozeren@agem.com.tr">Ali Ozkan Ozeren</a>
- *
  */
-public class AlfaBeanUtils 
-{
+public class AlfaBeanUtils {
 
 	private static final Logger log = LoggerFactory.getLogger(AlfaBeanUtils.class);
-	
+
 	private static AlfaBeanUtils instance = null;
-	
-	private AlfaBeanUtils () {
+
+	private AlfaBeanUtils() {
 	}
-	
-	public static AlfaBeanUtils getInstance() 
-	{
+
+	public static AlfaBeanUtils getInstance() {
 		if (instance == null) {
 			instance = new AlfaBeanUtils();
 		}
-		
+
 		return instance;
 	}
-	
-	public void addConverter(Converter converter, Class<?> clazz) 
-	{
-		assert(converter != null && clazz != null);
-		
+
+	public void addConverter(Converter converter, Class<?> clazz) {
+		assert (converter != null && clazz != null);
+
 		BeanUtilsBean.getInstance().getConvertUtils().register(converter, clazz);
-		
+
 	}
 
-	public void addConverters(Collection<AlfaBeanConverter> converters) 
-	{
+	public void addConverters(Collection<AlfaBeanConverter> converters) {
 		BeanUtilsBean beanUtilsBean = BeanUtilsBean.getInstance();
 
 		for (AlfaBeanConverter c : converters) {
@@ -55,9 +52,8 @@ public class AlfaBeanUtils
 			}
 		}
 	}
-	
-	public void copyProperties(Object src, Object dest) 
-	{
+
+	public void copyProperties(Object src, Object dest) {
 		try {
 			BeanUtils.copyProperties(dest, src);
 		} catch (IllegalAccessException | InvocationTargetException e) {
@@ -65,6 +61,17 @@ public class AlfaBeanUtils
 			throw new AlfaException(e);
 		}
 	}
-	
-	
+
+	public <T> List<T> copyListProperties(List<?> src, Class<T> clazz)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		if (src == null || src.isEmpty()) return null;
+		List<T> list = new ArrayList<>();
+		for (Object o : src) {
+			T t = clazz.newInstance();
+			BeanUtils.copyProperties(t, o);
+			list.add(t);
+		}
+		return list;
+	}
+
 }

@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -112,6 +114,16 @@ public class SoftwareServiceImpl implements SoftwareService {
 	public void deleteProcess(Long id) {
 		Assert.notNull(id, "ID must not be null.");
 		this.processRepository.delete(id);
+	}
+
+	@Override
+	public List<InstalledPackage> getPackages() {
+		return this.packageRepository.findAll();
+	}
+
+	@Override
+	public List<RunningProcess> getProcesses() {
+		return this.processRepository.findAll();
 	}
 
 }

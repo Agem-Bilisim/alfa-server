@@ -1,9 +1,7 @@
 package tr.com.agem.alfa.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -27,7 +25,7 @@ public class ProblemReference extends BaseModel {
 	@Column(name = "REFERENCE_ID", nullable = false)
 	private Long referenceId;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToOne
 	@JoinColumn(name = "PROBLEM_ID", nullable = false)
 	private Problem problem;
 

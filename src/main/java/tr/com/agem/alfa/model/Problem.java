@@ -3,9 +3,9 @@ package tr.com.agem.alfa.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -26,7 +26,7 @@ public class Problem extends BaseModel {
 	@Column(name = "SOLVED")
 	private Boolean solved;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "problem")
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProblemReference> references = new HashSet<ProblemReference>(0);
 
 	public String getLabel() {

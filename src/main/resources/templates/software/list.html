@@ -129,8 +129,10 @@
 			
 			// Software
 			var fnActionBtnsSoftware = function(row, type, val, meta) {
-				return "<div class=\"btn-group\" role=\"group\"><a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/installed-package/" + row['id'] + "/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i></button></div>";
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/installed-package/" + row['id'] + "/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
 			};
 			var drawCallbackSoftware = function(settings) {
 				if ($("#newPackageBtn").length == 0) {
@@ -149,7 +151,10 @@
 			
 			// Process
 			var fnActionBtnsProcess = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+				return "<div class=\"btn-group\" role=\"group\">" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/process/" + row['id'] + "/delete', 'processTable')\"><i class=\"fa fa-trash\"></i></button>" 
+				+ "</div>";
 			};
 			var drawCallbackProcess = function(settings) {
 				if ($("#newProcessBtn").length == 0) {
@@ -166,7 +171,10 @@
 			
 			// Problem
 			var fnActionBtnsProblem = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/problem/" + row["id"] + "?redirect=software/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+				return "<div class=\"btn-group\" role=\"group\">" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i></button>" 
+				+ "</div>";
 			};
 			var drawCallbackProblem = function(settings) {
 				if ($("#newProblemBtn").length == 0) {

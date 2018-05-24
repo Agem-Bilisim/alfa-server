@@ -12,28 +12,16 @@
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
         <li><a th:href="@{/home}"><i class="fa fa-dashboard"></i> <span>Yönetim Paneli</span></a></li>
-        <li><a th:href="@{/installed-package/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
+        <li><a th:href="@{/report/list}"><i class="fa fa-pie-chart"></i> <span>Uyumluluk Analizi</span></a></li>
         <li><a th:href="@{/agent/list}"><i class="fa fa-desktop"></i> <span>Bilgisayar Envanteri</span></a></li>
         <li><a th:href="@{/software/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
         <li><a th:href="@{/hardware/list}"><i class="fa fa-microchip"></i> <span>Donanım Envanteri</span></a></li>
         <li><a th:href="@{/peripheral/list}"><i class="fa fa-print"></i> <span>Çevresel Birimler</span></a></li>
-        <li><a th:href="@{/report/list}"><i class="fa fa-line-chart"></i> <span>Uyumluluk Analizi</span></a></li>
-        
-        <!-- Only for Admin! -->
-        <li class="treeview" sec:authorize="hasRole('ROLE_ADMIN')">
-          <a href="#"><i class="fa fa-server"></i> <span>Sistem Yönetimi</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-right pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a th:href="@{/notification/list}"><i class="fa fa-circle-o"></i> Anket</a></li>
-	        <li><a th:href="@{/bpm-process/list}"><i class="fa fa-circle-o"></i> Süreçler </a></li>
-          </ul>
-        </li>
-        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/user/list}"><i class="fa fa-users"></i> <span>Kullanıcı Yönetimi</span></a></li>
-        <!--  -->
-        
+        <li><a th:href="@{/user/list}"><i class="fa fa-users"></i> <span>Kullanıcılar</span></a></li>
+        <li><a th:href="@{/training/list}"><i class="fa fa-book"></i> <span>Eğitimler</span></a></li>
+		<li><a th:href="@{/survey/list}"><i class="fa fa-clipboard"></i>Anketler</a></li>
+        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/sysuser/list}"><i class="fa fa-user-circle"></i> <span>Sistem Kullanıcıları</span></a></li>
+        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/bpm-process/list}"><i class="fa fa-circle-o"></i> Süreçler </a></li>
         <li><a th:href="@{/help}"><i class="fa fa-question"></i> <span>Yardım</span></a></li>
       </ul>
       <!-- /.sidebar-menu -->

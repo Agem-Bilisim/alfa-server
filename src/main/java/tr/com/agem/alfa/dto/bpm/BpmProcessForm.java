@@ -3,7 +3,7 @@ package tr.com.agem.alfa.dto.bpm;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
-import tr.com.agem.alfa.dto.BaseForm;
+import tr.com.agem.alfa.form.BaseForm;
 
 /**
  * @author <a href="mailto:ali.ozeren@agem.com.tr">Ali Ozkan Ozeren</a>
