@@ -3,9 +3,7 @@ package tr.com.agem.alfa.controller;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -20,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +27,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import tr.com.agem.alfa.form.SysUserForm;
+import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.SysRole;
 import tr.com.agem.alfa.model.SysUser;
 import tr.com.agem.alfa.service.SysUserService;
-import tr.com.agem.alfa.util.AlfaBeanUtils;
 import tr.com.agem.alfa.validator.SysUserFormValidator;
 
 /**
@@ -50,16 +48,18 @@ public class SysUserController {
 	private final SysUserService sysUserService;
 	private final SysUserFormValidator validator;
 	private final BCryptPasswordEncoder encoder;
+	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
 	public SysUserController(SysUserService sysUserService, SysUserFormValidator validator,
-			BCryptPasswordEncoder encoder) {
+			BCryptPasswordEncoder encoder, SysMapper mapper) {
 		this.sysUserService = sysUserService;
 		this.validator = validator;
 		this.encoder = encoder;
+		this.mapper = mapper;
 	}
 
 	@InitBinder("form")
@@ -68,21 +68,20 @@ public class SysUserController {
 	}
 
 	@GetMapping("/sysuser/create")
-	public ModelAndView getCreatePage() {
+	public String getCreatePage(Model model) {
 		log.debug("Getting user create form");
-		List<SysRole> roles = sysUserService.getRoles();
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("roles", roles);
-		model.put("form", new SysUserForm());
-		return new ModelAndView("sysuser/create", model);
+		model.addAttribute("form", new SysUserForm());
+		populateModel(model);
+		return "sysuser/create";
 	}
 
 	@PostMapping("/sysuser/create")
 	public String handleUserCreate(@Valid @ModelAttribute("form") SysUserForm form, BindingResult bindingResult,
-			Authentication authentication) {
+			Model model, Authentication authentication) {
 		log.debug("Processing user create form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
+			populateModel(model);
 			return "sysuser/create";
 		}
 		try {
@@ -99,24 +98,22 @@ public class SysUserController {
 	}
 
 	@GetMapping("/sysuser/{id}")
-	public ModelAndView getUser(@PathVariable Long id) {
+	public String getUser(@PathVariable Long id, Model model) {
 		log.debug("Getting page for user:{}", id);
 		SysUser user = sysUserService.getUser(id);
 		checkNotNull(user, String.format("User:%d not found.", id));
-		List<SysRole> roles = sysUserService.getRoles();
-		checkNotNull(roles, "Roles not found.");
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("form", toUserForm(user));
-		model.put("roles", roles);
-		return new ModelAndView("sysuser/edit", model);
+		model.addAttribute("form", mapper.toSysUserForm(user));
+		populateModel(model);
+		return "sysuser/edit";
 	}
 
 	@PostMapping("/sysuser/{id}")
 	public String handleUserUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") SysUserForm form,
-			BindingResult bindingResult, Authentication authentication) {
+			BindingResult bindingResult, Model model, Authentication authentication) {
 		log.debug("Processing user update form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
+			populateModel(model);
 			return "sysuser/edit";
 		}
 		try {
@@ -154,10 +151,14 @@ public class SysUserController {
 		}
 		return ResponseEntity.ok(result);
 	}
-	
+
+	private void populateModel(Model model) {
+		List<SysRole> roles = sysUserService.getRoles();
+		model.addAttribute("roles", checkNotNull(roles, "Roles must not be null."));
+	}
+
 	private SysUser toUserEntity(SysUserForm form, String username) {
-		SysUser entity = new SysUser();
-		AlfaBeanUtils.getInstance().copyProperties(form, entity);
+		SysUser entity = mapper.toSysUserEntity(form);
 		entity.setPasswordHash(encoder.encode(form.getPassword()));
 		Date date = new Date();
 		entity.setCreatedBy(username);
@@ -165,12 +166,6 @@ public class SysUserController {
 		entity.setLastModifiedBy(username);
 		entity.setLastModifiedDate(date);
 		return entity;
-	}
-	
-	private SysUserForm toUserForm(SysUser entity) {
-		SysUserForm form = new SysUserForm();
-		AlfaBeanUtils.getInstance().copyProperties(entity, form);
-		return form;
 	}
 
 }

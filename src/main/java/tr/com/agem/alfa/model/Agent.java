@@ -317,12 +317,4 @@ public class Agent extends BaseModel {
 		this.gpus.add(gpu);
 	}
 
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
-	 */
-	@Override
-	public Object getCorrespondingForm() {
-		return null;
-	}
-
 }

@@ -37,12 +37,4 @@ public class PeripheralDevice extends BaseModel {
 		this.agentPeripheralDevices = agentPeripheralDevices;
 	}
 
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
-	 */
-	@Override
-	public Object getCorrespondingForm() {
-		return null;
-	}
-
 }

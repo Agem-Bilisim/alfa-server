@@ -2,9 +2,11 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,22 +27,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import tr.com.agem.alfa.form.BaseForm;
 import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProcessForm;
+import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
+import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
+import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.service.HardwareService;
 import tr.com.agem.alfa.service.ProblemService;
 import tr.com.agem.alfa.service.SoftwareService;
-import tr.com.agem.alfa.util.AlfaBeanUtils;
 import tr.com.agem.alfa.util.SelectboxBuilder;
+import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -54,6 +57,7 @@ public class ProblemController {
 	private final SoftwareService softwareService;
 	private final HardwareService hardwareService;
 	private final MessageSource messageSource;
+	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
@@ -63,11 +67,12 @@ public class ProblemController {
 
 	@Autowired
 	public ProblemController(ProblemService problemService, SoftwareService softwareService,
-			HardwareService hardwareService, MessageSource messageSource) {
+			HardwareService hardwareService, MessageSource messageSource, SysMapper mapper) {
 		this.problemService = problemService;
 		this.softwareService = softwareService;
 		this.hardwareService = hardwareService;
 		this.messageSource = messageSource;
+		this.mapper = mapper;
 	}
 
 	@GetMapping("/problem/create")
@@ -78,8 +83,8 @@ public class ProblemController {
 			// @formatter:off
 			SelectboxBuilder builder = SelectboxBuilder
 										.newSelectbox()
-										.add(AlfaBeanUtils.getInstance().copyListProperties(softwareService.getPackages(), PackageForm.class))
-										.add(AlfaBeanUtils.getInstance().copyListProperties(softwareService.getProcesses(), ProcessForm.class));
+										.add(toPackageFormList(softwareService.getPackages()))
+										.add(toProcessFormList(softwareService.getProcesses()));
 			// @formatter:on
 			model.put("possiblerefs", builder.build());
 		} catch (Exception e) {
@@ -119,8 +124,8 @@ public class ProblemController {
 			// @formatter:off
 			SelectboxBuilder builder = SelectboxBuilder
 										.newSelectbox()
-										.add(AlfaBeanUtils.getInstance().copyListProperties(softwareService.getPackages(), PackageForm.class))
-										.add(AlfaBeanUtils.getInstance().copyListProperties(softwareService.getProcesses(), ProcessForm.class));
+										.add(toPackageFormList(softwareService.getPackages()))
+										.add(toProcessFormList(softwareService.getProcesses()));
 			// @formatter:on
 			model.put("possiblerefs", builder.build());
 		} catch (Exception e) {
@@ -128,7 +133,7 @@ public class ProblemController {
 		}
 		Problem problem = problemService.getProblem(id);
 		checkNotNull(problem, String.format("Problem:%d not found.", id));
-		model.put("form", toProblemForm(problem).setRedirect(redirect));
+		model.put("form", mapper.toProblemForm(problem).setRedirect(redirect));
 		model.put("rlabel",
 				messageSource.getMessage(ControllerUtils.getRedirectUrl(redirect, "/problem/list").replace("/", "."),
 						null, Locale.forLanguageTag(locale)));
@@ -195,8 +200,7 @@ public class ProblemController {
 	}
 
 	private Problem toProblemEntity(ProblemForm form, String username) {
-		Problem entity = new Problem();
-		AlfaBeanUtils.getInstance().copyProperties(form, entity);
+		Problem entity = mapper.toProblemEntity(form);
 		Date date = new Date();
 		entity.setCreatedBy(username);
 		entity.setCreatedDate(date);
@@ -212,10 +216,22 @@ public class ProblemController {
 		return entity;
 	}
 
-	private ProblemForm toProblemForm(Problem entity) {
-		ProblemForm form = new ProblemForm();
-		AlfaBeanUtils.getInstance().copyProperties(entity, form);
-		return form;
+	private List<? extends OptionFormConvertable> toProcessFormList(List<RunningProcess> entities) {
+		if (entities == null || entities.isEmpty()) return null;
+		List<ProcessForm> forms = new ArrayList<ProcessForm>();
+		for (RunningProcess entity : entities) {
+			forms.add(mapper.toProcessForm(entity));
+		}
+		return forms;
+	}
+
+	private List<? extends OptionFormConvertable> toPackageFormList(List<InstalledPackage> entities) {
+		if (entities == null || entities.isEmpty()) return null;
+		List<PackageForm> forms = new ArrayList<PackageForm>();
+		for (InstalledPackage entity : entities) {
+			forms.add(mapper.toPackageForm(entity));
+		}
+		return forms;
 	}
 
 }

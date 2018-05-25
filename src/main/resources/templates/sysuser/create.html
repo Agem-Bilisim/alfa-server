@@ -4,7 +4,7 @@
 	layout:decorator="layouts/dashboard">
 <!--/*@thymesVar id="roles" type="java.util.List<tr.com.agem.lider.model.Role>"*/-->
 <head>
-	<title>Create User</title>
+	<title>Kullanıcı Ekle</title>
 	<!-- iCheck -->
 	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
 	<!-- DataTables -->
@@ -14,8 +14,8 @@
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
-		<li><a th:href="@{/user/list}"><i class="fa fa-users"></i> User Management</a></li>
-		<li class="active">Create User</li>
+		<li><a th:href="@{/user/list}"><i class="fa fa-users"></i> Sistem Kullanıcıları Listesi</a></li>
+		<li class="active">Kullanıcı Ekle</li>
 	</th:block>
 
 	<div layout:fragment="content">
@@ -23,78 +23,69 @@
 			<div class="col-xs-12">
 				<div class="box box-info">
 					<div class="box-header">
-						<h3 class="box-title">Create User</h3>
+						<h3 class="box-title">Kullanıcı Ekle</h3>
 					</div>
-					<form role="form" id="userForm" th:action="@{/user/create}" method="post" th:object="${form}">
+					<form role="form" id="sysUserForm" th:action="@{/sysuser/create}" method="post" th:object="${form}">
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+    						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+						</div>
 						<div class="box-body">
 							<div class="form-group" th:classappend="${#fields.hasErrors('userName')} ? 'has-error' : ''">
-								<label for="userName">Username</label>
+								<label for="userName">Kullanıcı adı</label>
 								<input type="text" class="form-control" id="userName"
 									name="userName" placeholder="Username" th:field="*{userName}" />
-								<span class="help-block" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Error</span>
+								<span class="help-block" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error' : ''">
-								<label for="email">E-mail</label>
+								<label for="email">E-posta</label>
 								<input type="text" class="form-control" id="email" name="email"
 									placeholder="E-mail" th:field="*{email}" />
-								<span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error</span>
+								<span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error' : ''">
-								<label for="firstName">First name</label>
+								<label for="firstName">İsim</label>
 								<input type="text" class="form-control" id="firstName"
 									name="firstName" placeholder="First name" th:field="*{firstName}" />
-								<span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Error</span>
+								<span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'has-error' : ''">
-								<label for="lastName">Last name</label>
+								<label for="lastName">Soyisim</label>
 								<input type="text" class="form-control" id="lastName"
 									name="lastName" placeholder="Last name" th:field="*{lastName}" />
-								<span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Error</span>
-							</div>
-							<div class="form-group">
-								<label for="phone">Phone</label>
-								<input type="text" class="form-control" id="phone" name="phone"
-									placeholder="Phone" data-inputmask='"mask": "(999) 999-9999"' 
-									data-mask th:field="*{phone}" />
-							</div>
-							<div class="form-group">
-								<label for="title">Title</label>
-								<input type="text" class="form-control" id="title" name="title"
-									placeholder="Title" th:field="*{title}" />
+								<span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error' : ''">
-								<label for="password">New password</label>
+								<label for="password">Parola</label>
 								<input type="password" class="form-control" id="password"
 									name="password" placeholder="New password" th:field="*{password}" />
-								<span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error</span>
+								<span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('passwordRepeated')} ? 'has-error' : ''">
-								<label for="passwordRepeated">Confirm new password</label>
+								<label for="passwordRepeated">Parolayı doğrulayın</label>
 								<input type="password" class="form-control"
 									id="passwordRepeated" name="passwordRepeated" placeholder="Confirm new password"
 									th:field="*{passwordRepeated}" />
-								<span class="help-block" th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Error</span>
+								<span class="help-block" th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Hata</span>
 							</div>
 							<div class="form-group">
 								<div class="checkbox">
 									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="disabled"
-										id="disabled" th:field="*{disabled}"> Disable
+										id="disabled" th:field="*{disabled}"> Hesabı dondur
 									</label>
 								</div>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'has-error' : ''">
-								<label>Role</label>
+								<label>Rol</label>
 								<select class="form-control select2" id="role" name="role" style="width: 100%;" th:field="*{role.id}" >
 									<option th:each="role : ${roles}" th:text="${role.name}" th:value="${role.id}"></option>
 								</select>
-								<span class="help-block" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Error</span>
+								<span class="help-block" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Hata</span>
 							</div>
 						</div>
 						<div class="box-footer">
-							<button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
+							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
 							<div class="btn-toolbar pull-right">
-								<button type="button" class="btn btn-info" id="openRolesModalBtn">Edit roles</button>
-								<button type="submit" class="btn btn-primary pull-right" id="saveUserBtn">Save Changes</button>
+								<button type="submit" class="btn btn-primary pull-right">Kaydet</button>
 							</div>
 						</div>
 					</form>
@@ -102,59 +93,12 @@
 			</div>
 		</div>
 		
-		<div class="modal fade" tabindex="-1" id="rolesModal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h4 class="modal-title">Edit roles</h4>
-					</div>
-					<div class="modal-body">
-						<table id="roleTable" class="table table-bordered table-striped" style="width: 100%;">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Created</th>
-									<th>Privileges</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody id="roleTableBody">
-								<tr th:each="role : ${roles}" th:attr="roleId=${role.id}">
-									<td th:text="${role.name}"></td>
-									<td th:text="${#dates.format(role.createdDate, 'dd/MM/yyyy')}"></td>
-									<td>
-										<select class="form-control select2 modal-select2">
-											<option th:each="privilege : ${role.privileges}" th:val="${privilege.id}" th:text="${privilege.label}"></option>
-										</select>
-									</td>
-									<td><a class="btn deleteRoleBtn"><i class="fa fa-remove"></i> Delete</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default pull-left"
-							data-dismiss="modal">Cancel</button>
-						<div class="btn-toolbar pull-right">
-							<button type="button" id="newRoleBtn" class="btn btn-info">New</button>
-							<button type="button" id="saveRolesBtn" class="btn btn-primary">Save Changes</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
-		var refreshRoleSelect = false;
-		var roleDataTable = null;
 		$(function() {
 			// Return to user list when cancel button is clicked
 			$('#cancelBtn').click(function() {
-				window.location.href = /*[[@{'/user/list'}]]*/'';
+				window.location.href = /*[[@{'/sysuser/list'}]]*/'';
 			});
 			
 			// Config checkbox
@@ -164,104 +108,6 @@
 			
 			// Config selectbox
 			$('.select2').select2();
-			
-			// Config phone mask
-			$('[data-mask]').inputmask();
-
-			$('#openRolesModalBtn').click(function() {
-				$('#rolesModal').modal('show');
-				roleDataTable = $('#roleTable').DataTable();
-			});
-			
-			$('#newRoleBtn').click(function() {
-				roleDataTable.row.add([
-					'<input type="text" class="form-control" placeholder="Name" style="width: 100%;"/>',
-					'-',
-					'<select class="form-control select2 modal-select2"></select>',
-					'<a class="btn deleteRoleBtn"><i class="fa fa-remove"></i> Delete</a>'
-				]).draw();
-				$('.modal-select2').select2();
-			});
-			
-			// TODO refresh role table!
-			$('#saveRolesBtn').click(function(){
-				var roles = [];
-				$("tr", "#roleTableBody").each(function(){
-					var roleId = $(this).attr("roleid");
-					var roleName = roleId ? $(this).first().text() : $("input", this).val();
-					var privIds = [];
-					$("select option:selected", this).each(function() { privIds.push({ "id": $(this).val() }); });
-					var role = {};
-					if (roleId) {
-						role['id'] = roleId;
-					} else {
-						refreshRoleSelect = true;
-					}
-					role['name'] = roleName;
-					if (privIds) {
-						role['privileges'] = privIds;
-					}
-					roles.push(role);
-				});
-				// Send roles
-				$.ajax({
-					type : "POST",
-					contentType : "application/json",
-					url : "/lider/role/save",
-					data: JSON.stringify(roles),
-					dataType : 'json',
-					cache : false,
-					timeout : 600000,
-					beforeSend: function(xhr) {
-						var token = $('#_csrf').attr('content');
-						var header = $('#_csrf_header').attr('content');
-						xhr.setRequestHeader(header, token);
-					},
-					success : function(result) {
-						alertify.success("Role changes saved successfully.");
-					},
-					error : function(e) {
-						alertify.error("Error occurred when trying to save role(s).");
-						console.log("ERROR : ", e);
-					}
-				});
-				if (refreshRoleSelect) {
-					// Refresh role select box if new role is created or some role is deleted!!!
-					// TODO
-					refreshRoleSelect = false;
-				}
-			});
-			
-			// TODO refresh role table!
-			$('#roleTableBody').on('click', '.deleteRoleBtn', function() {
-				var roleId = $(this).closest('tr').attr('roleid');
-				if (roleId) {
-					// Delete role
-					$.ajax({
-						type : "POST",
-						contentType : "application/json",
-						url : "/lider/role/" + roleId + "/delete",
-						dataType : 'json',
-						cache : false,
-						timeout : 600000,
-						beforeSend: function(xhr) {
-							var token = $('#_csrf').attr('content');
-							var header = $('#_csrf_header').attr('content');
-							xhr.setRequestHeader(header, token);
-						},
-						success : function(result) {
-							alertify.success("Role deleted successfully.");
-						},
-						error : function(e) {
-							alertify.error("Error occurred when trying to delete role.");
-							console.log("ERROR : ", e);
-						}
-					});
-				} else {
-					// Just delete the row
-					roleDataTable.row($(this).closest('tr')).remove().draw();
-				}
-			});
 		});
 	</script>
 </body>

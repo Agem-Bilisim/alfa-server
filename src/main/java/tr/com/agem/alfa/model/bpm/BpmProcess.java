@@ -8,7 +8,6 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import tr.com.agem.alfa.form.bpm.BpmProcessForm;
 import tr.com.agem.alfa.model.BaseModel;
 
 @Entity
@@ -25,11 +24,12 @@ public class BpmProcess extends BaseModel {
 
 	@Column(name = "PROCESS_DEF_ID", length = 50)
 	private String processDefId;
-	
-    @Lob @Basic(fetch = FetchType.LAZY)
-    @Column(name="content", updatable=false)
-    private byte[] content;
-    
+
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name = "content", updatable = false)
+	private byte[] content;
+
 	public String getName() {
 		return name;
 	}
@@ -61,7 +61,7 @@ public class BpmProcess extends BaseModel {
 	public void setProcessDefId(String processDefId) {
 		this.processDefId = processDefId;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -85,14 +85,5 @@ public class BpmProcess extends BaseModel {
 		} else if (!version.equals(other.version)) return false;
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
-	 */
-	@Override
-	public Object getCorrespondingForm() {
-		return new BpmProcessForm();
-	}
-
 
 }

@@ -6,8 +6,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import tr.com.agem.alfa.form.SysUserForm;
-
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -90,21 +88,13 @@ public class SysUser extends BaseModel {
 	public SysRole getRole() {
 		return role;
 	}
-	
+
 	public String getRoleString() {
 		return role.getName();
 	}
 
 	public void setRole(SysRole role) {
 		this.role = role;
-	}
-
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
-	 */
-	@Override
-	public Object getCorrespondingForm() {
-		return new SysUserForm();
 	}
 
 }

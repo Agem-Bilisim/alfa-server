@@ -10,8 +10,6 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import tr.com.agem.alfa.form.ProblemForm;
-
 @Entity
 @Table(name = "c_problem")
 public class Problem extends BaseModel {
@@ -61,14 +59,6 @@ public class Problem extends BaseModel {
 
 	public void setReferences(Set<ProblemReference> references) {
 		this.references = references;
-	}
-
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
-	 */
-	@Override
-	public Object getCorrespondingForm() {
-		return new ProblemForm();
 	}
 
 }

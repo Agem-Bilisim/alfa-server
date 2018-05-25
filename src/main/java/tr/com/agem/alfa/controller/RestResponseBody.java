@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
-
 /**
  * This is used for base response body in RESTful web services.
  * 

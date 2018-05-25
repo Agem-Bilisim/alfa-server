@@ -4,14 +4,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import tr.com.agem.alfa.form.BaseForm;
-import tr.com.agem.alfa.model.bpm.BpmProcess;
 
 /**
  * @author <a href="mailto:ali.ozeren@agem.com.tr">Ali Ozkan Ozeren</a>
- *
  */
-public class BpmProcessForm extends BaseForm 
-{
+public class BpmProcessForm extends BaseForm {
 
 	private static final long serialVersionUID = -4212106777364053291L;
 
@@ -24,7 +21,7 @@ public class BpmProcessForm extends BaseForm
 	private String processDefId;
 
 	MultipartFile file;
-	 
+
 	public String getName() {
 		return name;
 	}
@@ -57,13 +54,4 @@ public class BpmProcessForm extends BaseForm
 		this.processDefId = processDefId;
 	}
 
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
-	 */
-	@Override
-	public Object getCorrespondingModel() {
-		return new BpmProcess();
-	}
-
- 
 }

@@ -9,7 +9,7 @@
 	<packaging>war</packaging>
 
 	<name>alfa-server</name>
-	<description>Alfa :: Göç Yönetim Sistemi</description>
+	<description>Alfa :: Göç Yönetim Bilgi Sistemi</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -26,6 +26,9 @@
 		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
 		<thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 		<thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+		<org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+		<!-- automatically run annotation processors within the incremental compilation -->
+		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 
 	<dependencies>
@@ -138,6 +141,11 @@
 			<version>23.6-jre</version>
 		</dependency>
 		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
 		</dependency>
@@ -170,7 +178,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version><!--$NO-MVN-MAN-VER$ -->
+				<version>3.5.1</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -179,7 +187,16 @@
 					<optimize>true</optimize>
 					<compilerArgs>
 						<arg>-Xlint:all</arg>
+						<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
+						<arg>-Amapstruct.defaultComponentModel=spring</arg>
 					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>

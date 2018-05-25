@@ -10,8 +10,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import tr.com.agem.alfa.form.SysRoleForm;
-
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -42,14 +40,6 @@ public class SysRole extends BaseModel {
 
 	public void setUsers(Set<SysUser> users) {
 		this.users = users;
-	}
-
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.model.BaseModel#getCorrespondingForm()
-	 */
-	@Override
-	public Object getCorrespondingForm() {
-		return new SysRoleForm();
 	}
 
 }

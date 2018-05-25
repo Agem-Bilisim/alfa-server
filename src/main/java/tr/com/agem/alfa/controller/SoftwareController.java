@@ -25,10 +25,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.ProcessForm;
+import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.RunningProcess;
-import tr.com.agem.alfa.util.AlfaBeanUtils;
 import tr.com.agem.alfa.service.SoftwareService;
 
 /**
@@ -40,13 +40,15 @@ public class SoftwareController {
 	private static final Logger log = LoggerFactory.getLogger(SoftwareController.class);
 
 	private final SoftwareService softwareService;
+	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
-	public SoftwareController(SoftwareService softwareService) {
+	public SoftwareController(SoftwareService softwareService, SysMapper mapper) {
 		this.softwareService = softwareService;
+		this.mapper = mapper;
 	}
 
 	@GetMapping("/installed-package/create")
@@ -110,7 +112,7 @@ public class SoftwareController {
 		log.debug("Getting page for the package:{}", id);
 		InstalledPackage _package = softwareService.getPackage(id);
 		checkNotNull(_package, String.format("Package:%d not found.", id));
-		return new ModelAndView("installed-package/edit", "form", toPackageForm(_package));
+		return new ModelAndView("installed-package/edit", "form", mapper.toPackageForm(_package));
 	}
 	
 	@GetMapping("/process/{id}")
@@ -118,7 +120,7 @@ public class SoftwareController {
 		log.debug("Getting page for the process:{}", id);
 		RunningProcess process = softwareService.getProcess(id);
 		checkNotNull(process, String.format("Process:%d not found.", id));
-		return new ModelAndView("process/edit", "form", toProcessForm(process));
+		return new ModelAndView("process/edit", "form", mapper.toProcessForm(process));
 	}
 
 	@PostMapping("/installed-package/{id}")
@@ -236,8 +238,7 @@ public class SoftwareController {
 	}
 
 	private InstalledPackage toPackageEntity(PackageForm form, String username) {
-		InstalledPackage entity = new InstalledPackage();
-		AlfaBeanUtils.getInstance().copyProperties(form, entity);
+		InstalledPackage entity = mapper.toPackageEntity(form);
 		Date date = new Date();
 		entity.setCreatedBy(username);
 		entity.setCreatedDate(date);
@@ -247,26 +248,13 @@ public class SoftwareController {
 	}
 	
 	private RunningProcess toProcessEntity(ProcessForm form, String username) {
-		RunningProcess entity = new RunningProcess();
-		AlfaBeanUtils.getInstance().copyProperties(form, entity);
+		RunningProcess entity = mapper.toProcessEntity(form);
 		Date date = new Date();
 		entity.setCreatedBy(username);
 		entity.setCreatedDate(date);
 		entity.setLastModifiedBy(username);
 		entity.setLastModifiedDate(date);
 		return entity;
-	}
-
-	private PackageForm toPackageForm(InstalledPackage entity) {
-		PackageForm form = new PackageForm();
-		AlfaBeanUtils.getInstance().copyProperties(entity, form);
-		return form;
-	}
-	
-	private ProcessForm toProcessForm(RunningProcess entity) {
-		ProcessForm form = new ProcessForm();
-		AlfaBeanUtils.getInstance().copyProperties(entity, form);
-		return form;
 	}
 
 }

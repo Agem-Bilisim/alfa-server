@@ -32,12 +32,4 @@ public class OptionForm extends BaseForm {
 		this.value = value;
 	}
 
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
-	 */
-	@Override
-	public Object getCorrespondingModel() {
-		return null;
-	}
-
 }

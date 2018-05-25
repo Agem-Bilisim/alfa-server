@@ -1,6 +1,5 @@
 package tr.com.agem.alfa.form;
 
-import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 
 /**
@@ -21,15 +20,19 @@ public class ProblemReferenceForm extends BaseForm {
 		if (ref == null || ref.isEmpty()) return;
 		String[] parts = ref.split("-");
 		setReferenceId(Long.parseLong(parts[1]));
-		setReferenceType(ProblemReferenceType.getType(parts[0]).getId());
+		setReferenceType(ProblemReferenceType.getType(parts[0]));
 	}
 
-	public Integer getReferenceType() {
-		return referenceType;
+	public ProblemReferenceType getReferenceType() {
+		return ProblemReferenceType.getType(referenceType);
 	}
 
-	public void setReferenceType(Integer referenceType) {
-		this.referenceType = referenceType;
+	public void setReferenceType(ProblemReferenceType type) {
+		if (type == null) {
+			this.referenceType = null;
+		} else {
+			this.referenceType = type.getId();
+		}
 	}
 
 	public Long getReferenceId() {
@@ -38,14 +41,6 @@ public class ProblemReferenceForm extends BaseForm {
 
 	public void setReferenceId(Long referenceId) {
 		this.referenceId = referenceId;
-	}
-
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
-	 */
-	@Override
-	public Object getCorrespondingModel() {
-		return new ProblemReference();
 	}
 
 }

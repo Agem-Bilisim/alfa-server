@@ -5,8 +5,6 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import tr.com.agem.alfa.model.Problem;
-
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -23,7 +21,7 @@ public class ProblemForm extends BaseForm {
 	private Boolean solved;
 
 	private String[] strReferences;
-	
+
 	private Set<ProblemReferenceForm> references = new HashSet<ProblemReferenceForm>(0);
 
 	public String getLabel() {
@@ -65,18 +63,10 @@ public class ProblemForm extends BaseForm {
 	public void setStrReferences(String[] strReferences) {
 		this.strReferences = strReferences;
 		if (strReferences != null) {
-			for(String ref : strReferences) {
+			for (String ref : strReferences) {
 				this.references.add(new ProblemReferenceForm(ref));
 			}
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see tr.com.agem.alfa.form.BaseForm#getCorrespondingModel()
-	 */
-	@Override
-	public Object getCorrespondingModel() {
-		return new Problem();
 	}
 
 }
