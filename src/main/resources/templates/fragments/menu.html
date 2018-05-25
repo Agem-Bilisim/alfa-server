@@ -17,7 +17,7 @@
         <li><a th:href="@{/software/list}"><i class="fa fa-cubes"></i> <span>Yazılım Envanteri</span></a></li>
         <li><a th:href="@{/hardware/list}"><i class="fa fa-microchip"></i> <span>Donanım Envanteri</span></a></li>
         <li><a th:href="@{/peripheral/list}"><i class="fa fa-print"></i> <span>Çevresel Birimler</span></a></li>
-        <li><a th:href="@{/user/list}"><i class="fa fa-users"></i> <span>Kullanıcılar</span></a></li>
+        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/ldap/integration/list}"><i class="fa fa-users"></i> <span>Organizasyon</span></a></li>
         <li><a th:href="@{/training/list}"><i class="fa fa-book"></i> <span>Eğitimler</span></a></li>
 		<li><a th:href="@{/survey/list}"><i class="fa fa-clipboard"></i>Anketler</a></li>
         <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/sysuser/list}"><i class="fa fa-user-circle"></i> <span>Sistem Kullanıcıları</span></a></li>

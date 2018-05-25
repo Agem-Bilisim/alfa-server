@@ -20,6 +20,9 @@ import javax.persistence.TemporalType;
 
 import tr.com.agem.alfa.model.enums.AgentType;
 
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
 @Entity
 @Table(name = "c_agent")
 public class Agent extends BaseModel {

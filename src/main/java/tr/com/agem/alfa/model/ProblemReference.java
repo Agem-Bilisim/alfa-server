@@ -29,9 +29,6 @@ public class ProblemReference extends BaseModel {
 	@JoinColumn(name = "PROBLEM_ID", nullable = false)
 	private Problem problem;
 
-	public ProblemReference() {
-	}
-
 	public ProblemReferenceType getReferenceType() {
 		return ProblemReferenceType.getType(referenceType);
 	}

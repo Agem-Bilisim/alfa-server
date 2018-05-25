@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
-import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.repository.AgentRepository;
 
 @Component("agentService")
