@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author emre
  */
@@ -111,5 +113,6 @@ public abstract class BaseModel implements Serializable {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
+	@JsonIgnore
 	public abstract Object getCorrespondingForm();
 }
