@@ -41,4 +41,13 @@ public class ControllerUtils {
 		return "redirect:" + (url.startsWith("/") ? url : "/" + url);
 	}
 
+	public static String getRedirectMapping(String redirectUrl, String orElse) {
+		String url = redirectUrl != null && !redirectUrl.isEmpty() ? redirectUrl : orElse;
+		return "redirect:" + (url.startsWith("/") ? url : "/" + url);
+	}
+
+	public static String getRedirectUrl(String redirectUrl, String orElse) {
+		return redirectUrl != null && !redirectUrl.isEmpty() ? redirectUrl : orElse;
+	}
+
 }

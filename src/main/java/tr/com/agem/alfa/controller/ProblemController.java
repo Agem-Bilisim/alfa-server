@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import tr.com.agem.alfa.form.BaseForm;
 import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProcessForm;
@@ -50,20 +53,25 @@ public class ProblemController {
 	private final ProblemService problemService;
 	private final SoftwareService softwareService;
 	private final HardwareService hardwareService;
+	private final MessageSource messageSource;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
+	@Value("${sys.locale}")
+	private String locale;
+
 	@Autowired
 	public ProblemController(ProblemService problemService, SoftwareService softwareService,
-			HardwareService hardwareService) {
+			HardwareService hardwareService, MessageSource messageSource) {
 		this.problemService = problemService;
 		this.softwareService = softwareService;
 		this.hardwareService = hardwareService;
+		this.messageSource = messageSource;
 	}
 
 	@GetMapping("/problem/create")
-	public ModelAndView getCreatePage(@RequestAttribute(name = "redirect", required = false) String redirect) {
+	public ModelAndView getCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
 		log.debug("Getting problem create form");
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
@@ -104,11 +112,27 @@ public class ProblemController {
 
 	@GetMapping("/problem/{id}")
 	public ModelAndView getProblem(@PathVariable Long id,
-			@RequestAttribute(name = "redirect", required = false) String redirect) {
+			@RequestParam(name = "redirect", required = false) String redirect) {
 		log.debug("Getting page for the problem:{}", id);
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			// @formatter:off
+			SelectboxBuilder builder = SelectboxBuilder
+										.newSelectbox()
+										.add(AlfaBeanUtils.getInstance().copyListProperties(softwareService.getPackages(), PackageForm.class))
+										.add(AlfaBeanUtils.getInstance().copyListProperties(softwareService.getProcesses(), ProcessForm.class));
+			// @formatter:on
+			model.put("possiblerefs", builder.build());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 		Problem problem = problemService.getProblem(id);
 		checkNotNull(problem, String.format("Problem:%d not found.", id));
-		return new ModelAndView("problem/edit", "form", toProblemForm(problem, redirect));
+		model.put("form", toProblemForm(problem).setRedirect(redirect));
+		model.put("rlabel",
+				messageSource.getMessage(ControllerUtils.getRedirectUrl(redirect, "/problem/list").replace("/", "."),
+						null, Locale.forLanguageTag(locale)));
+		return new ModelAndView("problem/edit", model);
 	}
 
 	@PostMapping("/problem/{id}")
@@ -188,10 +212,9 @@ public class ProblemController {
 		return entity;
 	}
 
-	private ProblemForm toProblemForm(Problem entity, String redirect) {
+	private ProblemForm toProblemForm(Problem entity) {
 		ProblemForm form = new ProblemForm();
 		AlfaBeanUtils.getInstance().copyProperties(entity, form);
-		form.setRedirect(redirect);
 		return form;
 	}
 

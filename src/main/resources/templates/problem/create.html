@@ -14,7 +14,7 @@
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
-		<li><a th:href="@{/software/list}"><i class="fa fa-cubes"></i> TODO</a></li>
+		<li><a th:href="${'alfa/' + form.redirect}"><i class="fa fa-cubes"></i> <span th:text="${rlabel}"></span></a></li>
 		<li class="active">Sorun Ekle</li>
 	</th:block>
 
@@ -29,7 +29,7 @@
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>
-						<input type="hidden" id="redirect" name="redirect" th:field="*{redirect}" />
+						<input type="text" id="redirect" style="display:none;" name="redirect" th:field="*{redirect}" />
 						<div class="box-body">
 							<div class="form-group" th:classappend="${#fields.hasErrors('label')} ? 'has-error' : ''">
 								<label for="label">Kısa tanım</label>
@@ -74,8 +74,7 @@
 		$(function() {
 			// Return to list when cancel button is clicked
 			$('#cancelBtn').click(function() {
-				// TODO
-				window.location.href = /*[[@{'/software/list'}]]*/'';
+				window.location.href = /*[[${'alfa/' + form.redirect}]]*/'';
 			});
 			
 			// Config checkbox
