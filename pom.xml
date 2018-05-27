@@ -142,8 +142,21 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId> <!-- use mapstruct-jdk8 for Java 8 or higher -->
+			<version>${org.mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-jdk8</artifactId>
 			<version>${org.mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${org.mapstruct.version}</version>
+			<!-- IntelliJ does not pick up the processor if it is not in the dependencies. 
+				There is already an open issue for IntelliJ see https://youtrack.jetbrains.com/issue/IDEA-150621 -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -178,7 +191,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version><!--$NO-MVN-MAN-VER$ -->
+				<version>3.6.0</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -186,7 +199,6 @@
 					<encoding>UTF-8</encoding>
 					<optimize>true</optimize>
 					<compilerArgs>
-						<arg>-Xlint:all</arg>
 						<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
 						<arg>-Amapstruct.defaultComponentModel=spring</arg>
 					</compilerArgs>
@@ -199,6 +211,53 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- 			<plugin> -->
+<!-- 				<groupId>org.bsc.maven</groupId> -->
+<!-- 				<artifactId>maven-processor-plugin</artifactId> -->
+<!-- 				<version>2.2.4</version> -->
+<!-- 				<configuration> -->
+<!-- 					<defaultOutputDirectory> -->
+<!-- 						${project.build.directory}/generated-sources -->
+<!-- 					</defaultOutputDirectory> -->
+<!-- 					<processors> -->
+<!-- 						<processor>org.mapstruct.ap.MappingProcessor</processor> -->
+<!-- 					</processors> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>process</id> -->
+<!-- 						<phase>generate-sources</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>process</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 				<dependencies> -->
+<!-- 					<dependency> -->
+<!-- 						<groupId>org.mapstruct</groupId> -->
+<!-- 						<artifactId>mapstruct-processor</artifactId> -->
+<!-- 						<version>${org.mapstruct.version}</version> -->
+<!-- 					</dependency> -->
+<!-- 				</dependencies> -->
+<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/annotations/</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -210,5 +269,56 @@
 		</plugins>
 	</build>
 
+<!-- 	<profiles> -->
+<!-- 		<profile> -->
+<!-- 			<id>m2e</id> -->
+<!-- 			<activation> -->
+<!-- 				<property> -->
+<!-- 					<name>m2e.version</name> -->
+<!-- 				</property> -->
+<!-- 			</activation> -->
+<!-- 			<build> -->
+<!-- 				<pluginManagement> -->
+<!-- 					<plugins> -->
+<!-- 						<plugin> -->
+<!-- 							<groupId>org.eclipse.m2e</groupId> -->
+<!-- 							<artifactId>lifecycle-mapping</artifactId> -->
+<!-- 							<version>1.0.0</version> -->
+<!-- 							<configuration> -->
+<!-- 								<lifecycleMappingMetadata> -->
+<!-- 									<pluginExecutions> -->
+<!-- 										<pluginExecution> -->
+<!-- 											<pluginExecutionFilter> -->
+<!-- 												<groupId>org.bsc.maven</groupId> -->
+<!-- 												<artifactId>maven-processor-plugin</artifactId> -->
+<!-- 												<goals> -->
+<!-- 													<goal>process</goal> -->
+<!-- 												</goals> -->
+<!-- 											</pluginExecutionFilter> -->
+<!-- 											<action> -->
+<!-- 												<execute /> -->
+<!-- 											</action> -->
+<!-- 										</pluginExecution> -->
+<!-- 										<pluginExecution> -->
+<!-- 											<pluginExecutionFilter> -->
+<!-- 												<groupId>org.codehaus.mojo</groupId> -->
+<!-- 												<artifactId>build-helper-maven-plugin</artifactId> -->
+<!-- 												<goals> -->
+<!-- 													<goal>add-source</goal> -->
+<!-- 												</goals> -->
+<!-- 											</pluginExecutionFilter> -->
+<!-- 											<action> -->
+<!-- 												<execute /> -->
+<!-- 											</action> -->
+<!-- 										</pluginExecution> -->
+<!-- 									</pluginExecutions> -->
+<!-- 								</lifecycleMappingMetadata> -->
+<!-- 							</configuration> -->
+<!-- 						</plugin> -->
+<!-- 					</plugins> -->
+<!-- 				</pluginManagement> -->
+<!-- 			</build> -->
+<!-- 		</profile> -->
+<!-- 	</profiles> -->
 
 </project>

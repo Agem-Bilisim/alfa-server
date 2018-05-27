@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Anket Ekle</title>
+	<!-- iCheck -->
+	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+	<!-- Select2 -->
+	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
+	<style type="text/css">
+	</style>
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li><a th:href="@{/survey/list}"><i class="fa fa-clipboard"></i> Anket Listesi</a></li>
+		<li class="active">Anket Ekle</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">Anket Ekle</h3>
+					</div>
+					<form role="form" id="surveyForm" th:action="@{/survey/create}" method="post" th:object="${form}">
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+    						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+						</div>
+						<input type="text" style="display: none;" id="surveyJson" name="surveyJson" />
+						<div class="box-body">
+							<div class="form-group" th:classappend="${#fields.hasErrors('label')} ? 'has-error' : ''">
+								<label for="label">Tanım</label>
+								<input type="text" class="form-control" id="label"
+									name="label" placeholder="Tanım" th:field="*{label}" />
+								<span class="help-block" th:if="${#fields.hasErrors('label')}" th:errors="*{label}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'has-error' : ''">
+								<label for="description">Açıklama</label>
+								<input type="text" class="form-control" id="description" name="description"
+									placeholder="Açıklama" th:field="*{description}" />
+								<span class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Hata</span>
+							</div>
+							<div class="form-group" id="surveyContainer">
+								<div id="editorElement"></div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			SurveyEditor.editorLocalization.currentLocale = "tr";
+			SurveyEditor.StylesManager.applyTheme("bootstrap");
+			var editor = new SurveyEditor.SurveyEditor("editorElement", {
+				questionTypes: ["text", "checkbox", "radiogroup", "dropdown", "rating"],
+				showJSONEditorTabValue: false,
+				showPagesToolbox: false,
+				showTestSurveyTabValue: false,
+				showPropertyGrid: false,
+				isAutoSave: false,
+			});
+			editor.saveSurveyFunc = function (saveNo, callback) {
+				if (!editor || !editor.text) {
+					alertify.error('Lütfen kaydetmek için bir anket oluşturun.');
+					return;
+				}
+				$("#surveyJson").val(editor.text);
+				$("#surveyForm").submit();
+			};
+			$(".svd_commercial_container").remove();
+		});
+	</script>
+</body>
+</html>

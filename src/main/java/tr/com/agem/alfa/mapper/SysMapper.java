@@ -7,12 +7,14 @@ import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProblemReferenceForm;
 import tr.com.agem.alfa.form.ProcessForm;
+import tr.com.agem.alfa.form.SurveyForm;
 import tr.com.agem.alfa.form.SysRoleForm;
 import tr.com.agem.alfa.form.SysUserForm;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.RunningProcess;
+import tr.com.agem.alfa.model.Survey;
 import tr.com.agem.alfa.model.SysRole;
 import tr.com.agem.alfa.model.SysUser;
 
@@ -50,4 +52,8 @@ public interface SysMapper {
 	ProblemReference toProblemReferenceEntity(ProblemReferenceForm form);
 
 	ProblemReferenceForm toProblemReferenceForm(ProblemReference entity);
+
+	SurveyForm toSurveyForm(Survey entity);
+
+	Survey toSurveyEntity(SurveyForm form);
 }
