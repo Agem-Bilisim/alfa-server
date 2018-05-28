@@ -12,7 +12,9 @@ import tr.com.agem.alfa.model.LdapUser;
  */
 public interface LdapUserRepository extends JpaRepository<LdapUser, Long> {
 
-	@Query("SELECT u from LdapUser u INNER JOIN u.ldapIntegration i WHERE i.id = ?1 ORDER BY u.dn DESC")
+	@Query("SELECT u from LdapUser u INNER JOIN u.ldapIntegration i WHERE i.id = ?1")
 	Page<LdapUser> findByIntegrationId(Long integrationId, Pageable pageable);
+
+	void deleteByLdapIntegrationId(Long id);
 
 }

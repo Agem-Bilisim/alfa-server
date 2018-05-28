@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Organizasyon</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Organizasyon</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">LDAP Entegrasyon Listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="integrationTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Sunucu Adres</th>
+									<th>Tür</th>
+									<th>UID Özniteliği</th>
+									<th>Oluşturulma Tarihi</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy';
+			
+			var fnActionBtns = function(row, type, val, meta) {
+				var buttons = "<a class=\"btn\" href=\"/alfa/ldap/integration/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Edit</a>";
+				buttons += "<a class=\"btn\" href=\"/alfa/ldap/user/list?integrationId=" + row["id"] + "\"><i class=\"fa fa-users\"></i> Organization</a>";
+				buttons += "<a class=\"btn ldap-sync-btn\" integrationId=\"" + row["id"] + "\"><i class=\"fa fa-refresh\"></i> Sync</a>";
+				return buttons;
+			};
+			
+			var drawCallback = function(settings) {
+				if ($("#newIntegrationBtn").length == 0) {
+					$("#integrationTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newIntegrationBtn\" style=\"margin-left:10px;\">Yeni</button>");
+					$("#newIntegrationBtn").on("click", function() {
+						window.location.href = /*[[@{'/ldap/integration/create'}]]*/'';
+					});
+				}
+				
+				// Add sync button handler
+				$(".ldap-sync-btn").click(function() {
+					var id = $(this).attr("integrationId");
+					Alfa.addEventQueue(id);
+					$.ajax({
+						type: "GET",
+						contentType: "application/json",
+						url: "/alfa/ldap/integration/{id}/snyc".replace("{id}", id),
+						cache: false,
+						timeout: 600000,
+						success: function(result) {
+							alertify.success(result.message);
+						}
+					});
+				});
+			};
+			
+			const cols = [
+				{"data": "ipAddress", "property": "ipAddress", "name": "Sunucu Adres", "searchable": true, "orderable": true }, 
+				{"data": "ldapTypeEnum", "property": "ldapTypeEnum", "name": "Tür", "searchable": true, "orderable": true }, 
+				{"data": "userIdentifierAttribute", "property": "user_identifier_attribute", "name": "UID Özniteliği", "searchable": true, "orderable": true }, 
+				{"data": function(row) { return moment(row["createdDate"], "YYYY-MM-DD").format(dateFormat); }, "property": "created_date", "name": "Oluşturulma Tarihi", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+			];
+			
+			$('#integrationTable').paginatedTable("/alfa/ldap/integration/list-paginated", "integrations", cols, drawCallback);
+		});
+	</script>
+</body>
+</html>

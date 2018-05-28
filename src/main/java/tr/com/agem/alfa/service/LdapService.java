@@ -27,4 +27,6 @@ public interface LdapService {
 
 	void save(LdapIntegration integration);
 
+	void deleteUsers(Long id);
+
 }

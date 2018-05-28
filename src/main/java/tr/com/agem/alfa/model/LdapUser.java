@@ -32,7 +32,7 @@ public class LdapUser extends BaseModel {
 	 * Unique identifier to match LDAP entry with local user Usually this is TCK no
 	 * or some other identification value.
 	 */
-	@Column(name = "USER_IDENTIFIER", nullable = false)
+	@Column(name = "USER_IDENTIFIER", nullable = false, unique = true)
 	private String userIdentifier;
 
 	@Column(name = "NAME", nullable = false)
@@ -86,7 +86,28 @@ public class LdapUser extends BaseModel {
 	}
 
 	public void addAttribute(LdapUserAttribute attr) {
+		attr.setLdapUser(this);
 		attributes.add(attr);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((userIdentifier == null) ? 0 : userIdentifier.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		LdapUser other = (LdapUser) obj;
+		if (userIdentifier == null) {
+			if (other.userIdentifier != null) return false;
+		} else if (!userIdentifier.equals(other.userIdentifier)) return false;
+		return true;
 	}
 
 }

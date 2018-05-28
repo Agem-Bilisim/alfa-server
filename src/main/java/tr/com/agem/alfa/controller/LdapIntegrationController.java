@@ -1,8 +1,6 @@
 package tr.com.agem.alfa.controller;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
 import java.security.GeneralSecurityException;
@@ -38,10 +36,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tr.com.agem.alfa.form.LdapIntegrationForm;
 import tr.com.agem.alfa.ldap.LdapSyncService;
 import tr.com.agem.alfa.ldap.util.LdapUtils;
+import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.LdapIntegration;
-import tr.com.agem.alfa.model.enums.LdapEncryptionType;
-import tr.com.agem.alfa.model.enums.LdapType;
 import tr.com.agem.alfa.security.EncryptionService;
 import tr.com.agem.alfa.service.LdapService;
 import tr.com.agem.alfa.validator.LdapIntegrationFormValidator;
@@ -59,6 +56,7 @@ public class LdapIntegrationController {
 	private final LdapSyncService ldapSyncService;
 	private final EncryptionService encryptionService;
 	private final LdapIntegrationFormValidator validator;
+	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
@@ -71,11 +69,12 @@ public class LdapIntegrationController {
 
 	@Autowired
 	public LdapIntegrationController(LdapService ldapService, LdapSyncService ldapSyncService,
-			EncryptionService encryptionService, LdapIntegrationFormValidator validator) {
+			EncryptionService encryptionService, LdapIntegrationFormValidator validator, SysMapper mapper) {
 		this.ldapService = ldapService;
 		this.ldapSyncService = ldapSyncService;
 		this.encryptionService = encryptionService;
 		this.validator = validator;
+		this.mapper = mapper;
 	}
 
 	@InitBinder("form")
@@ -122,7 +121,7 @@ public class LdapIntegrationController {
 		log.info("Getting page for integration:{}", id);
 		LdapIntegration integration = ldapService.getIntegration(id);
 		checkNotNull(integration, String.format("Integration:%d not found.", id));
-		return new ModelAndView("ldap/integration/edit", "form", toIntegrationForm(integration));
+		return new ModelAndView("ldap/integration/edit", "form", mapper.toIntegrationForm(integration));
 	}
 
 	@PostMapping("/ldap/integration/{id}")
@@ -167,7 +166,7 @@ public class LdapIntegrationController {
 			Thread thread = new Thread(new LdapSyncHandler(integration, user.getUsername()));
 			thread.start();
 			result.setMessage(
-					String.format("Synchronizing LDAP server: %s. A notification will be sent upon completion.",
+					String.format("LDAP: %s senkronize ediliyor. Tamamlandığında bildirim gönderilecek.",
 							integration.getIpAddress()));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to sync LDAP users", e);
@@ -202,9 +201,9 @@ public class LdapIntegrationController {
 				try {
 					RestResponseBody data = new RestResponseBody();
 					data.setMessage(
-							success ? "LDAP sync finished successfully." : "Error occurred while syncing LDAP users.");
+							success ? "LDAP senkronizasyonu başarıyla tamamlandı." : "LDAP kullanıcıları senkronize edilirken hata oluştu.");
 					data.add("success", success);
-					emitter.send(event().reconnectTime(500).name("ldap-sync-status").id(date.getTime() + "").data(data,
+					emitter.send(event().reconnectTime(500).name("ldap-sync-status").id(integration.getId() + "-" + date.getTime()).data(data,
 							MediaType.APPLICATION_JSON_UTF8));
 				} catch (Exception e) {
 					deadEmitters.add(emitter);
@@ -262,56 +261,14 @@ public class LdapIntegrationController {
 
 	private LdapIntegration toIntegrationEntity(LdapIntegrationForm form, String username)
 			throws GeneralSecurityException {
-		checkArgument(form != null, "Form cannot be null.");
-		checkArgument(!isNullOrEmpty(username), "Username cannot be null or empty.");
-		LdapIntegration integration = new LdapIntegration();
+		LdapIntegration entity = mapper.toIntegrationEntity(form);
+		entity.setEncryptedSearchPassword(encryptionService.encode(form.getPassword()));
 		Date date = new Date();
-		integration.setId(form.getId());
-		integration.setCreatedBy(form.getCreatedBy() != null ? form.getCreatedBy() : username);
-		integration.setCreatedDate(form.getCreatedDate() != null ? form.getCreatedDate() : date);
-		integration.setLastModifiedBy(username);
-		integration.setLastModifiedDate(date);
-		integration.setIpAddress(form.getIpAddress());
-		integration.setPort(form.getPort());
-		integration.setLdapType(LdapType.getType(form.getLdapType()));
-		integration.setTimeout(form.getTimeout());
-		integration.setEncryptionType(LdapEncryptionType.getType(form.getEncryptionType()));
-		integration.setValidateServerCert(form.getValidateServerCert());
-		integration.setSslCertFilePath(form.getSslCertFilePath());
-		integration.setSearchDn(form.getSearchDn());
-		integration.setEncryptedSearchPassword(encryptionService.encode(form.getPassword()));
-		integration.setUserDnPattern(form.getUserDnPattern());
-		integration.setSearchForDn(form.getSearchForDn());
-		integration.setSearchFilter(form.getSearchFilter());
-		integration.setSearchContexts(form.getSearchContexts());
-		integration.setAllowEmptyPasswords(form.getAllowEmptyPasswords());
-		integration.setUserIdentifierAttribute(form.getUserIdentifierAttribute());
-		return integration;
-	}
-
-	private LdapIntegrationForm toIntegrationForm(LdapIntegration integration) {
-		LdapIntegrationForm form = new LdapIntegrationForm();
-		form.setId(integration.getId());
-		form.setAllowEmptyPasswords(integration.getAllowEmptyPasswords());
-		form.setCreatedBy(integration.getCreatedBy());
-		form.setCreatedDate(integration.getCreatedDate());
-		form.setEncryptionType(integration.getEncryptionType().getId());
-		form.setIpAddress(integration.getIpAddress());
-		form.setLastModifiedBy(integration.getLastModifiedBy());
-		form.setLastModifiedDate(integration.getLastModifiedDate());
-		form.setLdapType(integration.getLdapType().getId());
-		form.setPort(integration.getPort());
-		form.setSearchContexts(integration.getSearchContexts());
-		form.setSearchDn(integration.getSearchDn());
-		form.setSearchFilter(integration.getSearchFilter());
-		form.setSearchForDn(integration.getSearchForDn());
-		form.setSslCertFilePath(integration.getSslCertFilePath());
-		form.setTimeout(integration.getTimeout());
-		form.setUserDnPattern(integration.getUserDnPattern());
-		form.setUserIdentifierAttribute(integration.getUserIdentifierAttribute());
-		form.setValidateServerCert(integration.getValidateServerCert());
-		// We omit password field intentionally
-		return form;
+		entity.setCreatedBy(username);
+		entity.setCreatedDate(date);
+		entity.setLastModifiedBy(username);
+		entity.setLastModifiedDate(date);
+		return entity;
 	}
 
 }

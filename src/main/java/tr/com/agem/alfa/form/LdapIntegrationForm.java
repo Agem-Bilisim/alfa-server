@@ -41,7 +41,7 @@ public class LdapIntegrationForm extends BaseForm {
 	@NotEmpty
 	private String passwordRepeated;
 
-	private String userDnPattern;
+	private String userDnPattern = "cn=%u,dc=agem,dc=com,dc=tr";
 
 	private Boolean searchForDn;
 

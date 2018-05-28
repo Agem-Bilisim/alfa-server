@@ -57,12 +57,11 @@
 			SurveyEditor.editorLocalization.currentLocale = "tr";
 			SurveyEditor.StylesManager.applyTheme("bootstrap");
 			var editor = new SurveyEditor.SurveyEditor("editorElement", {
-				questionTypes: ["text", "checkbox", "radiogroup", "dropdown", "rating"],
-				showJSONEditorTabValue: false,
-				showPagesToolbox: false,
-				showTestSurveyTabValue: false,
-				showPropertyGrid: false,
+				questionTypes: ["text", "checkbox", "radiogroup", "dropdown", "rating", "multipletext"],
+				showJSONEditorTab: true,
 				isAutoSave: false,
+				showTestSurveyTab:false,
+				showTestSurveyTabValue:false,
 			});
 			editor.text = /*[[${form.surveyJson}]]*/'';
 			editor.saveSurveyFunc = function (saveNo, callback) {
