@@ -16,14 +16,14 @@ public class BpmProcess extends BaseModel {
 
 	private static final long serialVersionUID = 4744508001062587676L;
 
-	@Column(name = "NAME", length = 100)
+	@Column(name = "NAME", length = 100, nullable=false)
 	private String name;
 
-	@Column(name = "VERSION", length = 100)
+	@Column(name = "VERSION", length = 100, nullable=false)
 	private String version;
 
-	@Column(name = "PROCESS_DEF_ID", length = 50)
-	private String processDefId;
+	@Column(name = "PROCESS_DEPLOYMENT_ID", length = 50)
+	private String processDeploymentId;
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
@@ -46,20 +46,8 @@ public class BpmProcess extends BaseModel {
 		this.version = version;
 	}
 
-	public byte[] getContent() {
-		return content;
-	}
-
 	public void setContent(byte[] content) {
 		this.content = content;
-	}
-
-	public String getProcessDefId() {
-		return processDefId;
-	}
-
-	public void setProcessDefId(String processDefId) {
-		this.processDefId = processDefId;
 	}
 
 	@Override
@@ -84,6 +72,19 @@ public class BpmProcess extends BaseModel {
 			if (other.version != null) return false;
 		} else if (!version.equals(other.version)) return false;
 		return true;
+	}
+	
+	 
+	public byte[] getContent() {
+	    return this.content;
+	}
+	 
+	public String getProcessDeploymentId() {
+		return processDeploymentId;
+	}
+
+	public void setProcessDeploymentId(String processDeploymentId) {
+		this.processDeploymentId = processDeploymentId;
 	}
 
 }

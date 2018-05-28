@@ -30,7 +30,7 @@
 						</div>
 						<div class="box-body">
 							<div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'has-error' : ''">
-								<label for="name">Ad</label>
+								<label for="name">Süreç Adı</label>
 								<input type="text" class="form-control" id="name"
 									name="name" placeholder="Ad" th:field="*{name}" />
 								<span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</span>
@@ -41,11 +41,6 @@
 									placeholder="Sürüm" th:field="*{version}" />
 								<span class="help-block" th:if="${#fields.hasErrors('version')}" th:errors="*{version}">Error</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('file')} ? 'has-error' : ''">
-								<label for="version">BPMN 2.0 Dosya </label>
-								<input type="file" class="form-control" id="file" name="file" placeholder="BPMN 2.0 dosya" th:field="*{file}" />
-								<span class="help-block" th:if="${#fields.hasErrors('file')}" th:errors="*{file}">Error</span>
-							</div>
 						</div>
 						<div class="box-footer">
 							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
@@ -53,11 +48,14 @@
 								<button type="submit" class="btn btn-primary pull-right" id="saveProcessBtn">Değişiklikleri Kaydet</button>
 							</div>
 						</div>
+						<input type="hidden" id="processDeploymentId" name="processDeploymentId" th:field="processDeploymentId" />
 					</form>
+					
+					<img th:src="@{'/bpm-process/image' + form.processDeploymentId}" />
+					
 				</div>
 			</div>
 		</div>
-		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {

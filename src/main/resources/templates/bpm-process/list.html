@@ -39,7 +39,8 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/bpm-process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+				return "<a class=\"btn\" href=\"/alfa/bpm-process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a> &nbsp;&nbsp;"
+				       +  (!row.processDeploymentId ? "<a class=\"btn\" href=\"/alfa/bpm-process/deploy/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Deploy</a>" : "");
 			};
 			
 			var drawCallback = function(settings) {

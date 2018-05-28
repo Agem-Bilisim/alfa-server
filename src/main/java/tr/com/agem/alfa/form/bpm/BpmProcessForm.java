@@ -3,6 +3,8 @@ package tr.com.agem.alfa.form.bpm;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import tr.com.agem.alfa.form.BaseForm;
 
 /**
@@ -18,7 +20,7 @@ public class BpmProcessForm extends BaseForm {
 	@NotEmpty
 	private String version;
 
-	private String processDefId;
+	private String processDeploymentId;
 
 	MultipartFile file;
 
@@ -38,6 +40,7 @@ public class BpmProcessForm extends BaseForm {
 		this.version = version;
 	}
 
+	@JsonIgnore
 	public MultipartFile getFile() {
 		return file;
 	}
@@ -46,12 +49,12 @@ public class BpmProcessForm extends BaseForm {
 		this.file = file;
 	}
 
-	public String getProcessDefId() {
-		return processDefId;
+	public String getProcessDeploymentId() {
+		return processDeploymentId;
 	}
 
-	public void setProcessDefId(String processDefId) {
-		this.processDefId = processDefId;
+	public void setProcessDeploymentId(String processDeploymentId) {
+		this.processDeploymentId = processDeploymentId;
 	}
 
 }

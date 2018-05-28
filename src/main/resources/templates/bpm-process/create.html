@@ -30,7 +30,7 @@
 						</div>
 						<div class="box-body">
 							<div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'has-error' : ''">
-								<label for="name">Ad</label>
+								<label for="name">Süreç Adı</label>
 								<input type="text" class="form-control" id="name"
 									name="name" placeholder="Ad" th:field="*{name}" />
 								<span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</span>

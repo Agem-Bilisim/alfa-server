@@ -2,17 +2,25 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.activiti.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -22,9 +30,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import tr.com.agem.alfa.bpmn.AlfaBpmnProcessEngine;
 import tr.com.agem.alfa.form.bpm.BpmProcessForm;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.bpm.BpmProcess;
@@ -74,12 +84,37 @@ public class ProcessConfigController {
 	}
 
 	@GetMapping("/bpm-process/{id}")
-	public ModelAndView getPackage(@PathVariable Long id) {
+	public ModelAndView getProcess(@PathVariable Long id) {
 		log.debug("Getting page for the bpm process:{}", id);
 		BpmProcess _bpmProcess = bpmProcessService.getBpmProcess(id);
-		checkNotNull(_bpmProcess, String.format("Package:%d not found.", id));
+		checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
 		return new ModelAndView("bpm-process/edit", "form", toBpmProcessForm(_bpmProcess));
 	}
+
+	@GetMapping("/bpm-process/deploy/{id}")
+	public ModelAndView deploy(@PathVariable Long id, Authentication authentication) {
+
+		log.debug("Deploying the bpm process : {}", id);
+		
+		BpmProcess _bpmProcess = bpmProcessService.getBpmProcess(id);
+		
+		checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
+		
+		ProcessDefinition deployment = AlfaBpmnProcessEngine.getInstance().deployModel( _bpmProcess.getName(), new String(_bpmProcess.getContent()));
+
+		CurrentUser user = (CurrentUser) authentication.getPrincipal();
+		_bpmProcess.setProcessDeploymentId(deployment.getDeploymentId());
+		_bpmProcess.setLastModifiedBy(user.getUsername());
+		_bpmProcess.setLastModifiedDate(new Date());
+		
+		bpmProcessService.save(_bpmProcess);
+
+		log.debug("The bpm process is deployed: {} ", id);
+		
+		
+		return new ModelAndView("bpm-process/edit", "form", toBpmProcessForm(_bpmProcess));
+	}
+	
 
 	@PostMapping("/bpm-process/{id}")
 	public String handleUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") BpmProcessForm form,
@@ -102,7 +137,7 @@ public class ProcessConfigController {
 		// everything fine redirect to list
 		return "redirect:/bpm-process/list";
 	}
-
+	
 	@GetMapping("/bpm-process/list")
 	public String getListPage() {
 		log.debug("Getting installed bpm process list page");
@@ -117,7 +152,7 @@ public class ProcessConfigController {
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<BpmProcess> processes = bpmProcessService.getBpmProcesses(pageable, search);
-			result.add("processes", checkNotNull(processes, "Packages not found."));
+			result.add("processes", checkNotNull(processes, "Process not found."));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find bpm processs, assuming invalid parameters", e);
 			result.setMessage(e.getMessage());
@@ -126,6 +161,37 @@ public class ProcessConfigController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping(value="/bpm-process/image/{processDeploymentId}", produces = "image/png")
+	@ResponseBody
+	public ResponseEntity<byte[]> image(HttpServletRequest request, HttpServletResponse response, @PathVariable String processDeploymentId) 
+	{
+		 final HttpHeaders httpHeaders= new HttpHeaders();
+		 httpHeaders.setContentType(MediaType.IMAGE_PNG);
+
+		try {
+			InputStream data = AlfaBpmnProcessEngine.getInstance().getProcessDiagramById(processDeploymentId);
+			
+			log.debug("image is retrieved for process : " + processDeploymentId);
+			
+			ByteArrayOutputStream bos=new ByteArrayOutputStream();
+			int b;
+			byte[] buffer = new byte[1024];
+			while((b=data.read(buffer))!=-1){
+				bos.write(buffer,0,b);
+			}
+			byte[] fileBytes=bos.toByteArray();
+			data.close();
+			bos.close();
+			
+			 return new ResponseEntity<byte[]>(fileBytes, httpHeaders, HttpStatus.OK);
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<byte[]>(new byte[]{}, httpHeaders, HttpStatus.NOT_FOUND);
+	}
+	
 	private BpmProcess toBpmProcessEntity(BpmProcessForm form, String username) {
 		
 		BpmProcess entity = new BpmProcess();
@@ -135,8 +201,9 @@ public class ProcessConfigController {
 		entity.setId(form.getId());
 		entity.setName(form.getName());
 		entity.setVersion(form.getVersion());
+		entity.setProcessDeploymentId(form.getProcessDeploymentId());
 		
-		if (form.getFile() != null) {
+		if (form.getId() == null && form.getFile() != null) {
 			try {
 				entity.setContent(multipartFile.getBytes());
 			} catch (IOException e) {
@@ -159,6 +226,7 @@ public class ProcessConfigController {
 		form.setId(entity.getId());
 		form.setName(entity.getName());
 		form.setVersion(entity.getVersion());
+		form.setProcessDeploymentId(entity.getProcessDeploymentId());
 		form.setCreatedBy(entity.getCreatedBy());
 		form.setCreatedDate(entity.getCreatedDate());
 		form.setLastModifiedBy(entity.getLastModifiedBy());

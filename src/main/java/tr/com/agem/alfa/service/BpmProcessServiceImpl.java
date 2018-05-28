@@ -56,6 +56,7 @@ public class BpmProcessServiceImpl implements BpmProcessService {
 			// Update
 			p.setName(_bpmProcess.getName());
 			p.setVersion(_bpmProcess.getVersion());
+			p.setProcessDeploymentId(_bpmProcess.getProcessDeploymentId());
 			this.bpmProcessRepository.save(p);
 			return;
 		}
