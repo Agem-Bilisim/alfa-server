@@ -114,9 +114,13 @@ public class LdapSyncService {
 
 		if (users != null) {
 			log.info("Found user in the LDAP server: {}", intgr.getIpAddress());
+			ldapService.deleteUsers(intgr.getId());
 			for (LdapUser user : users) {
-				log.debug("Saving LDAP user with identifier: {}", user.getUserIdentifier());
-				ldapService.save(user);
+				try {
+					log.debug("Saving LDAP user with identifier: {}", user.getUserIdentifier());
+					ldapService.save(user);
+				} catch(Exception e) {
+				}
 			}
 		}
 	}

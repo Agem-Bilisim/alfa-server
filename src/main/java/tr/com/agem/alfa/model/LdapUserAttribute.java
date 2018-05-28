@@ -5,12 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Entity
-@Table(name = "c_ldap_user_attribute")
+@Table(name = "c_ldap_user_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "LDAP_USER_ID", "NAME", "VALUE" }) })
 public class LdapUserAttribute extends BaseModel {
 
 	private static final long serialVersionUID = -7661468503413681022L;

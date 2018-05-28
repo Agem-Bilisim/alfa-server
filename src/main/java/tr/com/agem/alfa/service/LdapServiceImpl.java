@@ -93,4 +93,10 @@ public class LdapServiceImpl implements LdapService {
 		this.ldapIntegrationRepository.save(integration);
 	}
 
+	@Override
+	public void deleteUsers(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		this.ldapUserRepository.deleteByLdapIntegrationId(id);
+	}
+
 }
