@@ -3,6 +3,7 @@ package tr.com.agem.alfa.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import tr.com.agem.alfa.form.LdapIntegrationForm;
 import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProblemReferenceForm;
@@ -11,6 +12,7 @@ import tr.com.agem.alfa.form.SurveyForm;
 import tr.com.agem.alfa.form.SysRoleForm;
 import tr.com.agem.alfa.form.SysUserForm;
 import tr.com.agem.alfa.model.InstalledPackage;
+import tr.com.agem.alfa.model.LdapIntegration;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.RunningProcess;
@@ -56,4 +58,8 @@ public interface SysMapper {
 	SurveyForm toSurveyForm(Survey entity);
 
 	Survey toSurveyEntity(SurveyForm form);
+
+	LdapIntegrationForm toIntegrationForm(LdapIntegration entity);
+
+	LdapIntegration toIntegrationEntity(LdapIntegrationForm form);
 }

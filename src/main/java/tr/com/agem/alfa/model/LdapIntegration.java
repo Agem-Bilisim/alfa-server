@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import tr.com.agem.alfa.model.enums.LdapEncryptionType;
@@ -134,18 +133,44 @@ public class LdapIntegration extends BaseModel {
 	public void setPort(Integer port) {
 		this.port = port;
 	}
-
-	@Transient
-	public LdapType getLdapType() {
+	
+	public Integer getLdapType() {
+		return ldapType;
+	}
+	
+	public LdapType getLdapTypeEnum() {
 		return LdapType.getType(ldapType);
 	}
 
-	@Transient
+	public void setLdapType(Integer ldapType) {
+		this.ldapType = ldapType;
+	}
+	
 	public void setLdapType(LdapType ldapType) {
 		if (ldapType == null) {
 			this.ldapType = null;
 		} else {
 			this.ldapType = ldapType.getId();
+		}
+	}
+
+	public Integer getEncryptionType() {
+		return encryptionType;
+	}
+	
+	public LdapEncryptionType getEncryptionTypeEnum() {
+		return LdapEncryptionType.getType(encryptionType);
+	}
+
+	public void setEncryptionType(Integer encryptionType) {
+		this.encryptionType = encryptionType;
+	}
+	
+	public void setEncryptionType(LdapEncryptionType encryptionType) {
+		if (encryptionType == null) {
+			this.encryptionType = null;
+		} else {
+			this.encryptionType = encryptionType.getId();
 		}
 	}
 
@@ -155,20 +180,6 @@ public class LdapIntegration extends BaseModel {
 
 	public void setTimeout(Integer timeout) {
 		this.timeout = timeout;
-	}
-
-	@Transient
-	public LdapEncryptionType getEncryptionType() {
-		return LdapEncryptionType.getType(encryptionType);
-	}
-
-	@Transient
-	public void setEncryptionType(LdapEncryptionType encryptionType) {
-		if (encryptionType == null) {
-			this.encryptionType = null;
-		} else {
-			this.encryptionType = encryptionType.getId();
-		}
 	}
 
 	public Boolean getValidateServerCert() {
@@ -249,14 +260,6 @@ public class LdapIntegration extends BaseModel {
 
 	public void setUserIdentifierAttribute(String userIdentifierAttribute) {
 		this.userIdentifierAttribute = userIdentifierAttribute;
-	}
-
-	public void setLdapType(Integer ldapType) {
-		this.ldapType = ldapType;
-	}
-
-	public void setEncryptionType(Integer encryptionType) {
-		this.encryptionType = encryptionType;
 	}
 
 	public Set<LdapUser> getUsers() {

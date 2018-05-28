@@ -79,7 +79,7 @@ public class LdapUtils {
 
 	private static String buildUrl(LdapIntegration config) {
 		StringBuilder url = new StringBuilder();
-		url.append(config.getEncryptionType() == LdapEncryptionType.NONE ? "ldap://" : "ldaps://");
+		url.append(config.getEncryptionTypeEnum() == LdapEncryptionType.NONE ? "ldap://" : "ldaps://");
 		url.append(config.getIpAddress()).append(":").append(config.getPort()).append("/");
 		return url.toString();
 	}

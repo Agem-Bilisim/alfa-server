@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>LDAP Entegrasyon Oluştur</title>
+	<!-- iCheck -->
+	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+	<!-- Select2 -->
+	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li><a th:href="@{/ldap/integration/list}"><i class="fa fa-server"></i> Organizasyon</a></li>
+		<li class="active">LDAP Entegrasyon Oluştur</li>
+	</th:block>
+	
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">LDAP Entegrasyon Oluştur</h3>
+					</div>
+					<form role="form" id="integrationForm" th:action="@{/ldap/integration/create}" method="post" th:object="${form}">
+						<div class="box-body">
+							<div class="form-group" th:classappend="${#fields.hasErrors('ipAddress')} ? 'has-error' : ''">
+								<label for="ipAddress">Sunucu adresi</label>
+								<input type="text" class="form-control" id="ipAddress"
+									name="ipAddress" placeholder="Sunucu adresi" th:field="*{ipAddress}" />
+								<span class="help-block" th:if="${#fields.hasErrors('ipAddress')}" th:errors="*{ipAddress}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('port')} ? 'has-error' : ''">
+								<label for="port">Port</label>
+								<input type="text" class="form-control" id="port"
+									name="port" placeholder="Port" th:field="*{port}" />
+								<span class="help-block" th:if="${#fields.hasErrors('port')}" th:errors="*{port}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('ldapType')} ? 'has-error' : ''">
+								<label>Tür</label>
+								<select class="form-control select2" id="ldapType" name="ldapType" style="width: 100%;" th:field="*{ldapType}" >
+									<option th:each="ldapType : ${T(tr.com.agem.alfa.model.enums.LdapType).values()}" th:text="${ldapType}" th:value="${ldapType.id}"></option>
+								</select>
+								<span class="help-block" th:if="${#fields.hasErrors('ldapType')}" th:errors="*{ldapType}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('timeout')} ? 'has-error' : ''">
+								<label for="timeout">Zamanaşımı (sn)</label>
+								<input type="text" class="form-control" id="timeout"
+									name="timeout" placeholder="Zamanaşımı (sn)" th:field="*{timeout}" />
+								<span class="help-block" th:if="${#fields.hasErrors('timeout')}" th:errors="*{timeout}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('encryptionType')} ? 'has-error' : ''">
+								<label>Şifreleme türü</label>
+								<select class="form-control select2" id="encryptionType" name="encryptionType" style="width: 100%;" th:field="*{encryptionType}" >
+									<option th:each="encryptionType : ${T(tr.com.agem.alfa.model.enums.LdapEncryptionType).values()}" th:text="${encryptionType}" th:value="${encryptionType.id}"></option>
+								</select>
+								<span class="help-block" th:if="${#fields.hasErrors('encryptionType')}" th:errors="*{encryptionType}">Hata</span>
+							</div>
+							<div class="form-group">
+								<div class="checkbox">
+									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="validateServerCert"
+										id="validateServerCert" th:field="*{validateServerCert}"> Sertifikayı doğrula
+									</label>
+								</div>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('sslCertFilePath')} ? 'has-error' : ''">
+								<label for="sslCertFilePath">SSL sertifika dizini</label>
+								<input type="text" class="form-control" id="sslCertFilePath"
+									name="sslCertFilePath" placeholder="SSL sertifika dizini" th:field="*{sslCertFilePath}" />
+								<span class="help-block" th:if="${#fields.hasErrors('sslCertFilePath')}" th:errors="*{sslCertFilePath}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('searchDn')} ? 'has-error' : ''">
+								<label for="searchDn">Aramada kullanılacak DN</label>
+								<input type="text" class="form-control" id="searchDn"
+									name="searchDn" placeholder="Aramada kullanılacak DN" th:field="*{searchDn}" />
+								<span class="help-block" th:if="${#fields.hasErrors('searchDn')}" th:errors="*{searchDn}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error' : ''">
+								<label for="password">Arama DN parolası</label>
+								<input type="password" class="form-control" id="password"
+									name="password" placeholder="Arama DN parolası" th:field="*{password}" />
+								<span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('passwordRepeated')} ? 'has-error' : ''">
+								<label for="passwordRepeated">Arama DN parola tekrarı</label>
+								<input type="password" class="form-control"
+									id="passwordRepeated" name="passwordRepeated" placeholder="DN parola doğrula"
+									th:field="*{passwordRepeated}" />
+								<span class="help-block" th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('userDnPattern')} ? 'has-error' : ''">
+								<label for="userDnPattern">Kullanıcı DN şablonu</label>
+								<input type="text" class="form-control"
+									id="userDnPattern" name="userDnPattern" placeholder="örn. cn=%u,dc=agem,dc=com,dc=tr"
+									th:field="*{userDnPattern}" />
+								<span class="help-block" th:if="${#fields.hasErrors('userDnPattern')}" th:errors="*{userDnPattern}">Hata</span>
+							</div>
+							<div class="form-group">
+								<div class="checkbox">
+									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="searchForDn"
+										id="searchForDn" th:field="*{searchForDn}"> Arama filtresi kullanarak ara
+									</label>
+								</div>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('searchFilter')} ? 'has-error' : ''">
+								<label for="searchFilter">Arama filtresi</label>
+								<input type="text" class="form-control"
+									id="searchFilter" name="searchFilter" placeholder="Arama filtresi"
+									th:field="*{searchFilter}" />
+								<span class="help-block" th:if="${#fields.hasErrors('searchFilter')}" th:errors="*{searchFilter}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('searchContexts')} ? 'has-error' : ''">
+								<label for="searchContexts">Aranacak alt ağaçlar</label>
+								<input type="text" class="form-control"
+									id="searchContexts" name="searchContexts" placeholder="Aranacak alt ağaçlar"
+									th:field="*{searchContexts}" />
+								<span class="help-block" th:if="${#fields.hasErrors('searchContexts')}" th:errors="*{searchContexts}">Hata</span>
+							</div>
+							<div class="form-group">
+								<div class="checkbox">
+									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="allowEmptyPasswords"
+										id="allowEmptyPasswords" th:field="*{allowEmptyPasswords}"> Boş parolaya izin ver
+									</label>
+								</div>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('userIdentifierAttribute')} ? 'has-error' : ''">
+								<label for="userIdentifierAttribute">UID özniteliği</label>
+								<input type="text" class="form-control"
+									id="userIdentifierAttribute" name="userIdentifierAttribute" placeholder="UID özniteliği"
+									th:field="*{userIdentifierAttribute}" />
+								<span class="help-block" th:if="${#fields.hasErrors('userIdentifierAttribute')}" th:errors="*{userIdentifierAttribute}">Hata</span>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
+							<div class="btn-toolbar pull-right">
+								<button type="submit" class="btn btn-primary pull-right">Kaydet</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			// Return to integration list when cancel button is clicked
+			$('#cancelBtn').click(function() {
+				window.location.href = /*[[@{'/ldap/integration/list'}]]*/'';
+			});
+			
+			// Config checkbox
+			$('input[type="checkbox"].minimal').iCheck({
+		      checkboxClass: 'icheckbox_minimal-blue'
+		    });
+			
+			// Config selectbox
+			$('.select2').select2();
+		});	
+	</script>
+</body>
+</html>

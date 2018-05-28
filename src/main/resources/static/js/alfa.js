@@ -162,9 +162,10 @@ $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
 });
 
 alfaDefaultOptions = {
+	eventQueueSize: 50	
 };
 
-Alfa = window.Lider || {};
+Alfa = window.Alfa || {};
 window.Alfa = Alfa;
 Alfa.options = alfaDefaultOptions;
 
@@ -221,7 +222,7 @@ var trStrings = {
     paneldynamic: "Panel (dinamik paneller)",
     radiogroup: "Radyo kutu",
     rating: "Reyting",
-    text: "Tekli Girdi",
+    text: "Metin",
     boolean: "Doğru-Yanlış",
     expression: "İfade"
   },
@@ -245,7 +246,7 @@ var trStrings = {
     embedSurvey: "Gömülü Anket",
     saveSurvey: "Anketi Kaydet",
     designer: "Anket Tasarımcısı",
-    jsonEditor: "JSON Editor",
+    jsonEditor: "JSON Editörü",
     undo: "Geri Al",
     redo: "İleri Al",
     options: "Seçenekler",
@@ -274,10 +275,10 @@ var trStrings = {
     close: "Kapat",
     delete: "Sil",
     addNew: "Yeni Ekle",
-    addItem: "Kalem eklemek için tıklayın...",
+    addItem: "Eklemek için tıklayın...",
     removeAll: "Hepsini Kaldır",
     edit: "Düzenle",
-    itemValueEdit: "Visible If",
+    itemValueEdit: "Koşullu Görünürlük",
     editChoices: "Edit Choices",
     move: "Move",
     empty: "<boş>",
@@ -344,35 +345,35 @@ var trStrings = {
     qEditorTitle: "Edit: {0}",
 
     //survey
-    showTitle: "Show/hide title",
-    locale: "Default language",
-    mode: "Mode (edit/read only)",
-    clearInvisibleValues: "Clear invisible values",
+    showTitle: "Başlık göster/gizle",
+    locale: "Varsayılan dil",
+    mode: "Mod (Düzenle/salt-okunur)",
+    clearInvisibleValues: "Görünür olmayan değerleri temizle",
     cookieName: "Cookie name (to disable run survey two times locally)",
     sendResultOnPageNext: "Send survey results on page next",
     storeOthersAsComment: "Store 'others' value in separate field",
-    showPageTitles: "Show page titles",
-    showPageNumbers: "Show page numbers",
+    showPageTitles: "Sayfa başlıklarını göster",
+    showPageNumbers: "Sayfa numaralarını göster",
     pagePrevText: "Page previous button text",
     pageNextText: "Page next button text",
-    completeText: "Complete button text",
-    startSurveyText: "Start button text",
+    completeText: "Tamamla butonu metni",
+    startSurveyText: "Başlat butonu metni",
     showNavigationButtons: "Show navigation buttons (default navigation)",
     showPrevButton: "Show previous button (user may return on previous page)",
     firstPageIsStarted: "The first page in the survey is a started page.",
     showCompletedPage: "Show the completed page at the end (completedHtml)",
     goNextPageAutomatic:
       "On answering all questions, go to the next page automatically",
-    showProgressBar: "Show progress bar",
-    questionTitleLocation: "Question title location",
+    showProgressBar: "İlerleme barı göster",
+    questionTitleLocation: "Soru başlığı konumu",
     requiredText: "The question required symbol(s)",
-    questionStartIndex: "Question start index (1, 2 or 'A', 'a')",
+    questionStartIndex: "Soru başlangıç indisi (1, 2 or 'A', 'a')",
     showQuestionNumbers: "Show question numbers",
     questionTitleTemplate:
       "Question title template, default is: '{no}. {require} {title}'",
-    questionErrorLocation: "Question error location",
+    questionErrorLocation: "Soru hata konumu",
     focusFirstQuestionAutomatic: "Focus first question on changing the page",
-    questionsOrder: "Elements order on the page",
+    questionsOrder: "Soru sıralaması",
     maxTimeToFinish: "Maximum time to finish the survey",
     maxTimeToFinishPage: "Maximum time to finish a page in the survey",
     showTimerPanel: "Show timer panel",
@@ -385,14 +386,14 @@ var trStrings = {
     isSinglePage: "Show all elements on one page",
 
     tabs: {
-      general: "General",
-      fileOptions: "Options",
-      html: "Html Editor",
-      columns: "Columns",
-      rows: "Rows",
-      choices: "Choices",
+      general: "Genel",
+      fileOptions: "Seçenekler",
+      html: "Html Editör",
+      columns: "Sütunlar",
+      rows: "Satılar",
+      choices: "Seçimler",
       items: "Items",
-      visibleIf: "Visible If",
+      visibleIf: "Koşullu Görünürlük",
       enableIf: "Enable If",
       rateValues: "Rate Values",
       choicesByUrl: "Choices from Web",
@@ -407,14 +408,14 @@ var trStrings = {
       triggers: "Triggers",
       templateTitle: "Template title"
     },
-    editProperty: "Edit property '{0}'",
+    editProperty: "Nitelik Düzenle '{0}'",
     items: "[ Items: {0} ]",
 
-    enterNewValue: "Please, enter the value.",
-    noquestions: "There is no any question in the survey.",
-    createtrigger: "Please create a trigger",
-    triggerOn: "On ",
-    triggerMakePagesVisible: "Make pages visible:",
+    enterNewValue: "Lütfen, değer giriniz.",
+    noquestions: "Ankette herhangi bir soru mevcut değil.",
+    createtrigger: "Lütfen tetikleyici oluşturun",
+    triggerOn: "Açık ",
+    triggerMakePagesVisible: "Sayfaları görünür yap:",
     triggerMakeQuestionsVisible: "Make elements visible:",
     triggerCompleteText: "Complete the survey if succeed.",
     triggerNotSet: "The trigger is not set",
@@ -425,23 +426,23 @@ var trStrings = {
   },
   //Property values
   pv: {
-    true: "true",
-    false: "false",
+    true: "doğru",
+    false: "yanlış",
     inherit: "inherit",
-    show: "show",
-    hide: "hide",
-    default: "default",
+    show: "göster",
+    hide: "gizle",
+    default: "varsayılan",
     initial: "initial",
-    random: "random",
+    random: "rastgele",
     collapsed: "collapsed",
     expanded: "expanded",
     none: "none",
-    asc: "ascending",
-    desc: "descending",
-    indeterminate: "indeterminate",
-    decimal: "decimal",
+    asc: "artan sırada",
+    desc: "azalan sırada",
+    indeterminate: "belirsiz",
+    decimal: "ondalık",
     currency: "currency",
-    percent: "percent",
+    percent: "oran",
     firstExpanded: "firstExpanded",
     off: "off",
     onPanel: "onPanel",
@@ -450,33 +451,33 @@ var trStrings = {
     progressTop: "progressTop",
     progressBottom: "progressBottom",
     progressTopBottom: "progressTopBottom",
-    top: "top",
-    bottom: "bottom",
-    left: "left",
-    color: "color",
-    date: "date",
-    datetime: "datetime",
+    top: "üst",
+    bottom: "alt",
+    left: "sol",
+    color: "renk",
+    date: "tarih",
+    datetime: "tarih-zaman",
     "datetime-local": "datetime-local",
-    email: "email",
-    month: "month",
-    number: "number",
-    password: "password",
+    email: "eposta",
+    month: "ay",
+    number: "sayı",
+    password: "parola",
     range: "range",
     tel: "tel",
-    text: "text",
-    time: "time",
+    text: "metin",
+    time: "zaman",
     url: "url",
-    week: "week",
-    hidden: "hidden",
+    week: "hafta",
+    hidden: "gizli",
     on: "on",
     onPage: "onPage",
-    edit: "edit",
-    display: "display",
+    edit: "düzenle",
+    display: "göster",
     onComplete: "onComplete",
     onHidden: "onHidden",
-    all: "all",
-    page: "page",
-    survey: "survey",
+    all: "hepsi",
+    page: "sayfa",
+    survey: "anket",
     onNextPage: "onNextPage",
     onValueChanged: "onValueChanged"
   },
@@ -514,12 +515,12 @@ var trStrings = {
     selectPage: "Test etmek için sayfayı seçin:"
   },
   validators: {
-    answercountvalidator: "answer count",
-    emailvalidator: "e-mail",
-    expressionvalidator: "expression",
-    numericvalidator: "numeric",
+    answercountvalidator: "Cevap sayısı",
+    emailvalidator: "e-posta",
+    expressionvalidator: "ifade",
+    numericvalidator: "sayısal",
     regexvalidator: "regex",
-    textvalidator: "text"
+    textvalidator: "metin"
   },
   triggers: {
     completetrigger: "anketi tamamla",
@@ -548,16 +549,16 @@ var trStrings = {
     requiredErrorText: "requiredErrorText",
     startWithNewLine: "startWithNewLine",
     innerIndent: "innerIndent",
-    page: "page",
+    page: "Sayfa",
 
-    width: "width",
+    width: "Genişlik",
 
-    commentText: "commentText",
+    commentText: "Yorum metni",
     valueName: "valueName",
     enableIf: "enableIf",
     defaultValue: "defaultValue",
     correctAnswer: "correctAnswer",
-    readOnly: "readOnly",
+    readOnly: "Salt-okunur",
     validators: "validators",
     titleLocation: "titleLocation",
 
@@ -587,7 +588,7 @@ var trStrings = {
     currency: "currency",
     useGrouping: "useGrouping",
 
-    showPreview: "showPreview",
+    showPreview: "Önizleme göster",
     allowMultiple: "allowMultiple",
     imageHeight: "imageHeight",
     imageWidth: "imageWidth",
@@ -646,43 +647,43 @@ var trStrings = {
     inputType: "inputType",
     size: "size",
 
-    locale: "locale",
-    focusFirstQuestionAutomatic: "focusFirstQuestionAutomatic",
+    locale: "dil",
+    focusFirstQuestionAutomatic: "İlk soruya otomatik odaklan",
     completedHtml: "completedHtml",
     completedBeforeHtml: "completedBeforeHtml",
     loadingHtml: "loadingHtml",
-    triggers: "triggers",
+    triggers: "Tetikleyiciler",
     cookieName: "cookieName",
     sendResultOnPageNext: "sendResultOnPageNext",
     showNavigationButtons: "showNavigationButtons",
-    showPrevButton: "showPrevButton",
-    showPageTitles: "showPageTitles",
+    showPrevButton: "Önceki butonu göster",
+    showPageTitles: "Sayfa başlıklarını göster",
     showCompletedPage: "showCompletedPage",
-    showPageNumbers: "showPageNumbers",
-    questionErrorLocation: "questionErrorLocation",
-    showProgressBar: "showProgressBar",
-    mode: "mode",
-    goNextPageAutomatic: "goNextPageAutomatic",
+    showPageNumbers: "Sayfa numaralarını göster",
+    questionErrorLocation: "Soru hata konumu",
+    showProgressBar: "İlerleme barı göster",
+    mode: "Mod",
+    goNextPageAutomatic: "Sonraki sayfaya otomatik geç",
     checkErrorsMode: "checkErrorsMode",
-    clearInvisibleValues: "clearInvisibleValues",
-    startSurveyText: "startSurveyText",
-    pagePrevText: "pagePrevText",
-    pageNextText: "pageNextText",
+    clearInvisibleValues: "Görünür olmayan değerleri temizle",
+    startSurveyText: "Anket başlangıç metni",
+    pagePrevText: "Önceki sayfa metni",
+    pageNextText: "Sonraki sayfa metni",
     completeText: "completeText",
-    requiredText: "requiredText",
-    questionStartIndex: "questionStartIndex",
-    questionTitleTemplate: "questionTitleTemplate",
+    requiredText: "Zorunlu alan metni",
+    questionStartIndex: "Soru başlangıç indisi",
+    questionTitleTemplate: "Soru başlık şablonu",
     firstPageIsStarted: "firstPageIsStarted",
-    isSinglePage: "isSinglePage",
+    isSinglePage: "Tek sayfalı",
     maxTimeToFinishPage: "maxTimeToFinishPage",
     showTimerPanel: "showTimerPanel",
     showTimerPanelMode: "showTimerPanelMode",
 
-    text: "text",
-    minValue: "minimum value",
-    maxValue: "maximum value",
-    minLength: "minumum length",
-    maxLength: "maximum length",
+    text: "metin",
+    minValue: "minimum değer",
+    maxValue: "maksimum değer",
+    minLength: "minimum uzunluk",
+    maxLength: "maksimum uzunluk",
     allowDigits: "allow digits",
     minCount: "minumum count",
     maxCount: "maximum count",
@@ -691,3 +692,84 @@ var trStrings = {
 };
 SurveyEditor.editorLocalization.locales["tr"] = trStrings;
 SurveyEditor.editorLocalization.currentLocale = "tr";
+
+/**
+ * Adds event id to the event queue. 
+ * 
+ * This will be used in SSE connection in order to notify user when related message received.
+ */
+Alfa.addEventQueue = function(eventId) {
+	if (typeof eventId === 'undefined') {
+		console.log('Event ID cannot be null.');
+		return;
+	}
+	var eventIdQueue = localStorage.getItem('event-id-queue');
+	// Init array
+	if (typeof eventIdQueue === 'undefined' || eventIdQueue === null || eventIdQueue.length == 0) {
+		eventIdQueue = [];
+	} else {
+		// Be aware that this is an array of strings, not numbers.
+		eventIdQueue = eventIdQueue.split(',');
+	}
+	
+	// Limit size!
+	if (eventIdQueue.length > Alfa.options.eventQueueSize) {
+		eventIdQueue.splice(0, eventIdQueue.length - Alfa.options.eventQueueSize);
+	}
+	// Append task id
+	eventIdQueue.push(eventId.toString());
+
+	// Save the queue back to the storage
+	localStorage.setItem('event-id-queue', eventIdQueue.toString());
+};
+
+Alfa.checkEventQueue = function(eventId) {
+	if (typeof eventId === 'undefined') {
+		console.log('Event ID cannot be null.');
+		return false;
+	}
+	var eventIdQueue = localStorage.getItem('event-id-queue');
+	if (typeof eventIdQueue === 'undefined' || eventIdQueue === null || eventIdQueue.length == 0) {
+		return false;
+	}
+	return eventIdQueue.indexOf(eventId) > -1;
+};
+
+/**
+ * SSE event listener/handler.
+ * 
+ * This is used to notify user about LDAP sync messages in real time.
+ */
+(function(){
+	if (window.location.pathname == '/alfa/login') {
+		return;
+	}
+	// SSE event source
+	const eventSource = new EventSource('/alfa/sync/status');
+	eventSource.addEventListener('ldap-sync-status', function(event) {
+		if (event && event.data && event.lastEventId) {
+			var integrationId = event.lastEventId.split('-')[0];
+			console.log(JSON.parse(event.data));
+			if (Alfa.checkEventQueue(integrationId)) {
+				const result = JSON.parse(event.data);
+				var success = result.data.success;
+				if (success) {
+					alertify.success(result.message);
+				} else {
+					aletfiy.error(result.message);
+				}
+			}
+		}
+	}, false);
+	eventSource.onopen = function(event) {
+		console.log('SSE connection established.');
+	};
+	eventSource.onerror = function(event) {
+		// We do not need to do anything. It will automatically try to reconnect.
+		if (event.readyState == EventSource.CLOSED) {
+			console.log('SSE connection closed.');
+		} else {
+			console.log(event);
+		}
+	};
+})();
