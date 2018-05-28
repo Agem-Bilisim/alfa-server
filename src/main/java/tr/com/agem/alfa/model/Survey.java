@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import tr.com.agem.alfa.model.enums.SurveyType;
+
 /**
- * 
  * @author emre
- *
  */
 @Entity
 @Table(name = "c_survey")
@@ -25,6 +25,9 @@ public class Survey extends BaseModel {
 	@Lob
 	@Column(name = "SURVEY_JSON", nullable = false)
 	private String surveyJson;
+
+	@Column(name = "SURVEY_TYPE")
+	private Integer surveyType;
 
 	public String getLabel() {
 		return label;
@@ -48,6 +51,26 @@ public class Survey extends BaseModel {
 
 	public void setSurveyJson(String surveyJson) {
 		this.surveyJson = surveyJson;
+	}
+
+	public Integer getSurveyType() {
+		return surveyType;
+	}
+
+	public SurveyType getLdapTypeEnum() {
+		return SurveyType.getType(surveyType);
+	}
+
+	public void setSurveyType(Integer surveyType) {
+		this.surveyType = surveyType;
+	}
+
+	public void setSurveyType(SurveyType surveyType) {
+		if (surveyType == null) {
+			this.surveyType = null;
+		} else {
+			this.surveyType = surveyType.getId();
+		}
 	}
 
 }
