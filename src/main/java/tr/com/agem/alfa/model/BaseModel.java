@@ -28,7 +28,7 @@ public abstract class BaseModel implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID", unique = true, nullable = false)
+	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -47,7 +47,7 @@ public class Agent extends BaseModel {
 	@Column(name = "IP_ADDRESSES", nullable = false)
 	private String ipAddresses; // network.ip_addresses
 
-	@Column(name = "MAC_ADDRESSES", nullable = false)
+	@Column(name = "MAC_ADDRESSES", nullable = false, unique = true)
 	private String macAddresses; // network.mac_addresses
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -69,6 +69,12 @@ public class Agent extends BaseModel {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "NETWORK_INTERFACE_ID", nullable = false, updatable = false) })
 	private Set<NetworkInterface> networkInterfaces = new HashSet<NetworkInterface>(0);
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "c_agent_tag_agent", joinColumns = {
+			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "TAG_ID", nullable = false, updatable = false) })
+	private Set<Tag> tags = new HashSet<Tag>(0);
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_package_agent", joinColumns = {
@@ -210,6 +216,14 @@ public class Agent extends BaseModel {
 
 	public void setAgentRunningProcesses(Set<AgentRunningProcess> agentRunningProcesses) {
 		this.agentRunningProcesses = agentRunningProcesses;
+	}
+
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
 	}
 
 	public Set<InstalledPackage> getInstalledPackages() {

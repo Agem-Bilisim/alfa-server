@@ -12,6 +12,9 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
 @Entity
 @Table(name = "c_agent_package", uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME", "VERSION" }) })
 public class InstalledPackage extends BaseModel {
@@ -23,6 +26,12 @@ public class InstalledPackage extends BaseModel {
 
 	@Column(name = "VERSION", length = 100)
 	private String version;
+
+	@Column(name = "INSTITUTIONAL")
+	private Boolean institutional; // Kurumsal
+
+	@Column(name = "SHOW_IN_SURVEY")
+	private Boolean showInSurvey;
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "installedPackages")
@@ -42,6 +51,22 @@ public class InstalledPackage extends BaseModel {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public Boolean getInstitutional() {
+		return institutional;
+	}
+
+	public void setInstitutional(Boolean institutional) {
+		this.institutional = institutional;
+	}
+
+	public Boolean getShowInSurvey() {
+		return showInSurvey;
+	}
+
+	public void setShowInSurvey(Boolean showInSurvey) {
+		this.showInSurvey = showInSurvey;
 	}
 
 	public void addAgent(Agent agent) {
