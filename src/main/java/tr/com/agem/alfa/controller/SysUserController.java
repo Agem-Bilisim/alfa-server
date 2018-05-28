@@ -69,7 +69,6 @@ public class SysUserController {
 
 	@GetMapping("/sysuser/create")
 	public String getCreatePage(Model model) {
-		log.debug("Getting user create form");
 		model.addAttribute("form", new SysUserForm());
 		populateModel(model);
 		return "sysuser/create";
@@ -78,7 +77,6 @@ public class SysUserController {
 	@PostMapping("/sysuser/create")
 	public String handleUserCreate(@Valid @ModelAttribute("form") SysUserForm form, BindingResult bindingResult,
 			Model model, Authentication authentication) {
-		log.debug("Processing user create form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			populateModel(model);
@@ -99,7 +97,6 @@ public class SysUserController {
 
 	@GetMapping("/sysuser/{id}")
 	public String getUser(@PathVariable Long id, Model model) {
-		log.debug("Getting page for user:{}", id);
 		SysUser user = sysUserService.getUser(id);
 		checkNotNull(user, String.format("User:%d not found.", id));
 		model.addAttribute("form", mapper.toSysUserForm(user));
@@ -110,7 +107,6 @@ public class SysUserController {
 	@PostMapping("/sysuser/{id}")
 	public String handleUserUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") SysUserForm form,
 			BindingResult bindingResult, Model model, Authentication authentication) {
-		log.debug("Processing user update form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			populateModel(model);
@@ -131,15 +127,12 @@ public class SysUserController {
 
 	@GetMapping("/sysuser/list")
 	public String getListPage() {
-		log.debug("Getting user list page");
 		return "sysuser/list";
 	}
 
 	@GetMapping("/sysuser/list-paginated")
 	public ResponseEntity<?> handleUserList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting user page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<SysUser> users = sysUserService.getUsers(pageable, search);

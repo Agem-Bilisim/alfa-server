@@ -12,13 +12,11 @@ public class HomeController {
 
 	@GetMapping(path = { "/", "index" })
 	public String getIndexPage() {
-		log.info("Getting home page");
 		return "redirect:/home";
 	}
 
 	@GetMapping("/home")
 	public String getHomePage() {
-		log.info("Getting home page");
 		return "home";
 	}
 

@@ -58,14 +58,12 @@ public class ProcessConfigController {
 
 	@GetMapping("/bpm-process/create")
 	public ModelAndView getCreatePage() {
-		log.debug("Getting previously saved bpm process create form");
 		return new ModelAndView("bpm-process/create", "form", new BpmProcessForm());
 	}
 
 	@PostMapping("/bpm-process/create")
 	public String handleCreate(@Valid @ModelAttribute("form") BpmProcessForm form, BindingResult bindingResult,
 			Authentication authentication) {
-		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "bpm-process/create";
@@ -85,7 +83,6 @@ public class ProcessConfigController {
 
 	@GetMapping("/bpm-process/{id}")
 	public ModelAndView getProcess(@PathVariable Long id) {
-		log.debug("Getting page for the bpm process:{}", id);
 		BpmProcess _bpmProcess = bpmProcessService.getBpmProcess(id);
 		checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
 		return new ModelAndView("bpm-process/edit", "form", toBpmProcessForm(_bpmProcess));
@@ -93,9 +90,6 @@ public class ProcessConfigController {
 
 	@GetMapping("/bpm-process/deploy/{id}")
 	public ModelAndView deploy(@PathVariable Long id, Authentication authentication) {
-
-		log.debug("Deploying the bpm process : {}", id);
-		
 		BpmProcess _bpmProcess = bpmProcessService.getBpmProcess(id);
 		
 		checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
@@ -120,7 +114,6 @@ public class ProcessConfigController {
 	@PostMapping("/bpm-process/{id}")
 	public String handleUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") BpmProcessForm form,
 			BindingResult bindingResult, Authentication authentication) {
-		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "bpm-process/edit";
@@ -141,15 +134,12 @@ public class ProcessConfigController {
 	
 	@GetMapping("/bpm-process/list")
 	public String getListPage() {
-		log.debug("Getting installed bpm process list page");
 		return "bpm-process/list";
 	}
 
 	@GetMapping("/bpm-process/list-paginated")
 	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting bpm process page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<BpmProcess> processes = bpmProcessService.getBpmProcesses(pageable, search);

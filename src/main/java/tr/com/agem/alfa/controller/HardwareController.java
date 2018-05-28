@@ -29,7 +29,6 @@ public class HardwareController {
 
 	@GetMapping("/hardware/list")
 	public String getListPage() {
-		log.debug("Getting hardware list page");
 		return "hardware/list";
 	}
 

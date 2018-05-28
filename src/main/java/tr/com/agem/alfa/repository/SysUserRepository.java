@@ -11,8 +11,10 @@ import tr.com.agem.alfa.model.SysUser;
  */
 public interface SysUserRepository extends JpaRepository<SysUser, Long> {
 
-	SysUser findByUserNameOrEmail(String userName, String email);
-
 	Page<SysUser> findByUserNameContainingOrEmailContainingAllIgnoringCase(String search, Pageable pageable);
+
+	SysUser findByEmail(String email);
+
+	SysUser findByUserName(String userName);
 
 }

@@ -53,20 +53,17 @@ public class SoftwareController {
 
 	@GetMapping("/installed-package/create")
 	public ModelAndView getPackageCreatePage() {
-		log.debug("Getting installed package create form");
 		return new ModelAndView("installed-package/create", "form", new PackageForm());
 	}
 	
 	@GetMapping("/process/create")
 	public ModelAndView getProcessCreatePage() {
-		log.debug("Getting process create form");
 		return new ModelAndView("process/create", "form", new ProcessForm());
 	}
 
 	@PostMapping("/installed-package/create")
 	public String handlePackageCreate(@Valid @ModelAttribute("form") PackageForm form, BindingResult bindingResult,
 			Authentication authentication) {
-		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "installed-package/create";
@@ -88,7 +85,6 @@ public class SoftwareController {
 	@PostMapping("/process/create")
 	public String handleProcessCreate(@Valid @ModelAttribute("form") ProcessForm form, BindingResult bindingResult,
 			Authentication authentication) {
-		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "process/create";
@@ -109,7 +105,6 @@ public class SoftwareController {
 
 	@GetMapping("/installed-package/{id}")
 	public ModelAndView getPackage(@PathVariable Long id) {
-		log.debug("Getting page for the package:{}", id);
 		InstalledPackage _package = softwareService.getPackage(id);
 		checkNotNull(_package, String.format("Package:%d not found.", id));
 		return new ModelAndView("installed-package/edit", "form", mapper.toPackageForm(_package));
@@ -117,7 +112,6 @@ public class SoftwareController {
 	
 	@GetMapping("/process/{id}")
 	public ModelAndView getProcess(@PathVariable Long id) {
-		log.debug("Getting page for the process:{}", id);
 		RunningProcess process = softwareService.getProcess(id);
 		checkNotNull(process, String.format("Process:%d not found.", id));
 		return new ModelAndView("process/edit", "form", mapper.toProcessForm(process));
@@ -126,7 +120,6 @@ public class SoftwareController {
 	@PostMapping("/installed-package/{id}")
 	public String handlePackageUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") PackageForm form,
 			BindingResult bindingResult, Authentication authentication) {
-		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "installed-package/edit";
@@ -149,7 +142,6 @@ public class SoftwareController {
 	@PostMapping("/process/{id}")
 	public String handleProcessUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") ProcessForm form,
 			BindingResult bindingResult, Authentication authentication) {
-		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "process/edit";
@@ -171,7 +163,6 @@ public class SoftwareController {
 	
 	@PostMapping("/installed-package/{id}/delete")
 	public ResponseEntity<?> handlePackageDelete(@PathVariable Long id) {
-		log.debug("Processing delete for package:{}}", id);
 		RestResponseBody result = new RestResponseBody();
 		try {
 			softwareService.deletePackage(checkNotNull(id, "ID not found."));
@@ -185,7 +176,6 @@ public class SoftwareController {
 	
 	@PostMapping("/process/{id}/delete")
 	public ResponseEntity<?> handleProcessDelete(@PathVariable Long id) {
-		log.debug("Processing delete for running process:{}}", id);
 		RestResponseBody result = new RestResponseBody();
 		try {
 			softwareService.deleteProcess(checkNotNull(id, "ID not found."));
@@ -199,15 +189,12 @@ public class SoftwareController {
 
 	@GetMapping("/software/list")
 	public String getListPage() {
-		log.debug("Getting list page");
 		return "software/list";
 	}
 
 	@GetMapping("/installed-package/list-paginated")
 	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting package page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<InstalledPackage> packages = softwareService.getPackages(pageable, search);
@@ -223,8 +210,6 @@ public class SoftwareController {
 	@GetMapping("/process/list-paginated")
 	public ResponseEntity<?> handleProcessList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting process page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<RunningProcess> processes = softwareService.getProcesses(pageable, search);

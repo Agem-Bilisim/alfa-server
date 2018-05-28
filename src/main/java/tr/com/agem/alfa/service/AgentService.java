@@ -1,16 +1,51 @@
 package tr.com.agem.alfa.service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.repository.AgentRepository;
 
-public interface AgentService {
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
+@Component
+@Transactional
+public class AgentService {
 
-	Agent getAgentByMessagingId(String messagingId);
+	@PersistenceContext
+	private EntityManager em;
 
-	Agent saveOrUpdate(Agent agent);
+	@Autowired
+	private AgentRepository agentRepository;
+
+	public Agent saveOrUpdate(Agent agent) {
+		Assert.notNull(agent, "Agent must not be null.");
+		if (agent.getId() != null) {
+			return this.em.merge(agent);
+		}
+		return this.agentRepository.save(agent);
+	}
+
+	public Agent getAgentByMessagingId(String messagingId) {
+		Assert.notNull(messagingId, "Messaging ID must not be null.");
+		return this.agentRepository.getAgentByMessagingId(messagingId);
+	}
 	
-	Page<Agent> getAgents(Pageable pageable, String search);
+	public Page<Agent> getAgents(Pageable pageable, String search) {
+		Assert.notNull(pageable, "Pageable must not be null.");
+		if (search != null && !search.isEmpty()) {
+			// TODO
+			return null;
+		}
+		return this.agentRepository.findAll(pageable);
+	}
 
 }

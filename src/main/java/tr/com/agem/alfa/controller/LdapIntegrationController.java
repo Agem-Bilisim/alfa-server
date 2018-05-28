@@ -84,14 +84,12 @@ public class LdapIntegrationController {
 
 	@GetMapping("/ldap/integration/create")
 	public ModelAndView getIntegrationCreatePage() {
-		log.info("Getting integration create form");
 		return new ModelAndView("ldap/integration/create", "form", new LdapIntegrationForm());
 	}
 
 	@PostMapping("/ldap/integration/create")
 	public String handleIntegrationCreateForm(@Valid @ModelAttribute("form") LdapIntegrationForm form,
 			BindingResult bindingResult, Authentication authentication) {
-		log.info("Processing integration create form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "ldap/integration/create";
@@ -118,7 +116,6 @@ public class LdapIntegrationController {
 
 	@GetMapping("/ldap/integration/{id}")
 	public ModelAndView getIntegrationEditPage(@PathVariable Long id) {
-		log.info("Getting page for integration:{}", id);
 		LdapIntegration integration = ldapService.getIntegration(id);
 		checkNotNull(integration, String.format("Integration:%d not found.", id));
 		return new ModelAndView("ldap/integration/edit", "form", mapper.toIntegrationForm(integration));
@@ -128,7 +125,6 @@ public class LdapIntegrationController {
 	public String handleIntegrationUpdate(@PathVariable Long id,
 			@Valid @ModelAttribute("form") LdapIntegrationForm form, BindingResult bindingResult,
 			Authentication authentication) {
-		log.info("Processing integration update form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "ldap/integration/edit";
@@ -155,7 +151,6 @@ public class LdapIntegrationController {
 
 	@GetMapping("/ldap/integration/{id}/snyc")
 	public ResponseEntity<?> handleLdapSync(@PathVariable Long id, Authentication authentication) {
-		log.info("Syncing integration:{}", id);
 		RestResponseBody result = new RestResponseBody();
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
@@ -218,7 +213,6 @@ public class LdapIntegrationController {
 
 	@GetMapping("/ldap/sync/status")
 	public SseEmitter handleDashboardEmitter() {
-		log.info("Getting SSE emitter for LDAP sync.");
 		final SseEmitter emitter = new SseEmitter(60000L);
 		emitter.onCompletion(new Runnable() {
 			@Override
@@ -238,15 +232,12 @@ public class LdapIntegrationController {
 
 	@GetMapping("/ldap/integration/list")
 	public String getIntegrationPage() {
-		log.info("Getting integration list page.");
 		return "ldap/integration/list";
 	}
 
 	@GetMapping("/ldap/integration/list-paginated")
 	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting package page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<LdapIntegration> integrations = ldapService.getIntegrations(pageable, search);

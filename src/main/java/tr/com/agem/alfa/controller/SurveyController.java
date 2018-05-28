@@ -51,7 +51,6 @@ public class SurveyController {
 
 	@GetMapping("/survey/create")
 	public String getCreatePage(Model model) {
-		log.debug("Getting survey create form");
 		model.addAttribute("form", new SurveyForm());
 		return "survey/create";
 	}
@@ -59,7 +58,6 @@ public class SurveyController {
 	@PostMapping("/survey/create")
 	public String handleSurveyCreate(@Valid @ModelAttribute("form") SurveyForm form, BindingResult bindingResult,
 			Model model, Authentication authentication) {
-		log.debug("Processing survey create form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "survey/create";
@@ -79,7 +77,6 @@ public class SurveyController {
 
 	@GetMapping("/survey/{id}")
 	public String getSurvey(@PathVariable Long id, Model model) {
-		log.debug("Getting page for survey:{}", id);
 		Survey survey = surveyService.getSurvey(id);
 		checkNotNull(survey, String.format("Survey:%d not found.", id));
 		model.addAttribute("form", mapper.toSurveyForm(survey));
@@ -89,7 +86,6 @@ public class SurveyController {
 	@PostMapping("/survey/{id}")
 	public String handleSurveyUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") SurveyForm form,
 			BindingResult bindingResult, Model model, Authentication authentication) {
-		log.debug("Processing survey update form:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "survey/edit";
@@ -109,15 +105,12 @@ public class SurveyController {
 
 	@GetMapping("/survey/list")
 	public String getListPage() {
-		log.debug("Getting survey list page");
 		return "survey/list";
 	}
 
 	@GetMapping("/survey/list-paginated")
 	public ResponseEntity<?> handleSurveyList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting survey page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<Survey> surveys = surveyService.getSurveys(pageable, search);

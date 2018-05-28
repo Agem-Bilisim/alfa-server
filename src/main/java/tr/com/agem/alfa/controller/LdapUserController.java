@@ -41,7 +41,6 @@ public class LdapUserController {
 
 	@GetMapping("/ldap/user/list")
 	public ModelAndView getUserListPage(@RequestParam Long integrationId) {
-		log.info("Getting user list page.");
 		return new ModelAndView("ldap/user/list", "integrationId", integrationId);
 	}
 
@@ -49,8 +48,6 @@ public class LdapUserController {
 	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "integrationId", required = false) Long integrationId,
 			Pageable pageable) {
-		log.info("Getting package page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<LdapUser> users = ldapService.getUsers(pageable, integrationId, search);
@@ -65,7 +62,6 @@ public class LdapUserController {
 
 	@GetMapping("/ldap/user/{userId}/detail")
 	public @ResponseBody ResponseEntity<?> getUserDetails(@PathVariable Long userId) {
-		log.info("Getting details for user with id:{}", userId);
 		RestResponseBody result = new RestResponseBody();
 		try {
 			LdapUser user = ldapService.getUser(userId);

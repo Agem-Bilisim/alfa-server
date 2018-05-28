@@ -52,7 +52,6 @@ public class AgentController {
 	@PostMapping("/agent/sysinfo-result")
 	public @ResponseBody ResponseEntity<?> handleSysInfoResult(@Valid @RequestBody SysInfoResultMessage message,
 			BindingResult bindingResult) {
-		log.info("Processing system info from agent:{}", message.getFrom());
 		RestResponseBody result = new RestResponseBody();
 		if (bindingResult.hasErrors()) {
 			String error = ControllerUtils.toErrorMessage(bindingResult);
@@ -180,15 +179,12 @@ public class AgentController {
 
 	@GetMapping("/agent/list")
 	public String getListPage() {
-		log.debug("Getting agent list page");
 		return "agent/list";
 	}
 
 	@GetMapping("/agent/list-paginated")
 	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
-		log.info("Getting agent page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<Agent> agents = agentService.getAgents(pageable, search);

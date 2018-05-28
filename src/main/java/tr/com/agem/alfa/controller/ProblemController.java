@@ -77,7 +77,6 @@ public class ProblemController {
 
 	@GetMapping("/problem/create")
 	public ModelAndView getCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
-		log.debug("Getting problem create form");
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
 			// @formatter:off
@@ -97,7 +96,6 @@ public class ProblemController {
 	@PostMapping("/problem/create")
 	public String handleProblemCreate(@Valid @ModelAttribute("form") ProblemForm form, BindingResult bindingResult,
 			Authentication authentication) {
-		log.debug("Processing create:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "problem/create";
@@ -118,7 +116,6 @@ public class ProblemController {
 	@GetMapping("/problem/{id}")
 	public ModelAndView getProblem(@PathVariable Long id,
 			@RequestParam(name = "redirect", required = false) String redirect) {
-		log.debug("Getting page for the problem:{}", id);
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
 			// @formatter:off
@@ -143,7 +140,6 @@ public class ProblemController {
 	@PostMapping("/problem/{id}")
 	public String handleProcessUpdate(@PathVariable Long id, @Valid @ModelAttribute("form") ProblemForm form,
 			BindingResult bindingResult, Authentication authentication) {
-		log.debug("Processing update:{}, bindingResult:{}", form, bindingResult);
 		if (bindingResult.hasErrors()) {
 			// failed validation
 			return "problem/edit";
@@ -164,7 +160,6 @@ public class ProblemController {
 
 	@PostMapping("/problem/{id}/delete")
 	public ResponseEntity<?> handleProcessDelete(@PathVariable Long id) {
-		log.debug("Processing delete for problem:{}}", id);
 		RestResponseBody result = new RestResponseBody();
 		try {
 			problemService.deleteProblem(checkNotNull(id, "ID not found."));
@@ -178,15 +173,12 @@ public class ProblemController {
 
 	@GetMapping("/problem/list")
 	public String getListPage() {
-		log.debug("Getting list page");
 		return "problem/list";
 	}
 
 	@GetMapping("/problem/list-paginated")
 	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "referenceType", required = false) Integer referenceType, Pageable pageable) {
-		log.info("Getting problem page with page number:{} and size: {}", pageable.getPageNumber(),
-				pageable.getPageSize());
 		RestResponseBody result = new RestResponseBody();
 		try {
 			Page<Problem> packages = problemService.getProblems(pageable, search, referenceType);
