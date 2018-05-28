@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Organizasyon</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li th:href="@{/ldap/integration/list}">Organizasyon</li>
+		<li class="active">Kullanıcı Listesi</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Kullanıcı Listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="userTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Kullanıcı ID</th>
+									<th>Ad Soyad</th>
+									<th>DN</th>
+									<th>Oluşturulma Tarihi</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- User details modal -->
+		<div
+			layout:insert="layouts/info-modal :: modal(modalId='userDetailModal', modalHeader='User Details', modalButton='Close')"
+			th:remove="tag">
+			<div class="nav-tabs-custom" layout:fragment="modal-content">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab_1" data-toggle="tab">Genel</a></li>
+              		<li><a href="#tab_2" data-toggle="tab">Öznitelikler</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_1">
+						<dl class="dl-horizontal">
+							<dt>Kullanıcı ID</dt>
+							<dd id="userIdentifier"></dd>
+							<dt>DN</dt>
+							<dd id="userDn"></dd>
+							<dt>Ad Soyad</dt>
+							<dd id="userName"></dd>
+							<dt>LDAP sunucusu</dt>
+							<dd id="ldapIpAddress"></dd>
+							<dd id="ldapType"></dd>
+							<dt>Oluşturulma Tarihi</dt>
+							<dd id="userCreatedDate"></dd>
+						</dl>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<table id="userAttributesTable" class="table table-bordered table-striped" style="width: 100%;">
+							<thead>
+								<tr>
+									<th>Öznitelik</th>
+									<th>Değer</th>
+								</tr>
+							</thead>
+							<tbody id="userAttributesTableBody"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy';
+			var userAttrTable = null;
+			
+			var fnActionBtns = function(row, type, val, meta) {
+				var buttons = "<a class=\"btn user-detail-btn\" userid=\"" + row["id"] + "\"><i class=\"fa fa-info\"></i> Detay</a>";
+				return buttons;
+			};
+			
+			var drawCallback = function(settings) {
+				// Add details button handler
+				$(".user-detail-btn").click(function() {
+					var id = $(this).attr("userid");
+					$.ajax({
+						type: "GET",
+						contentType: "application/json",
+						url: "/alfa/ldap/user/{id}/detail".replace("{id}", id),
+						cache: false,
+						timeout: 600000,
+						success: function(result) {
+							if (result && result.data && result.data.user) {
+								// General
+								$("#userIdentifier").html(result.data.user['userIdentifier']);
+								$("#userDn").html(result.data.user['userIdentifier']);
+								$("#userName").html(result.data.user['userIdentifier']);
+								$("#ldapIpAddress").html(result.data.user['ldapIpAddress']);
+								$("#ldapType").html(result.data.user['ldapType']);
+								$("#userCreatedDate").html(result.data.user['createdDate']);
+
+								// Attributes
+								$("#userAttributesTableBody").html("");
+								if (result.data.user.attributes) {
+									for (var index in result.data.user['attributes']) {
+										var attr = result.data.user['attributes'][index];
+										$('#userAttributesTableBody').append('<tr><td>' + attr['name'] + '</td><td>' + attr['value'] + '</td></tr>');
+									}
+									if (userAttrTable) {
+										userAttrTable.draw('full-reset');
+									} else {
+										userAttrTable = $('#userAttributesTable').DataTable();
+									}
+								}
+								
+								// Show modal
+								$('#userDetailModal').modal('show');
+							}
+						}
+					});
+				});
+			};
+			
+			const cols = [
+				{"data": "userIdentifier", "property": "user_identifier", "name": "User ID", "searchable": true, "orderable": true }, 
+				{"data": "name", "property": "name", "name": "Name", "searchable": true, "orderable": true }, 
+				{"data": "dn", "property": "dn", "name": "DN", "searchable": true, "orderable": true }, 
+				{"data": "createdDate", "property": "created_date", "name": "Created", "format": dateFormat, "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "name": "Action", "searchable": false, "orderable": false }
+			];
+			
+			var integrationId = /*[[${integrationId}]]*/ "";
+			$('#userTable').paginatedTable("/alfa/ldap/user/list-paginated?integrationId=" + integrationId, "users", cols, drawCallback);
+		});
+	</script>
+</body>
+</html>

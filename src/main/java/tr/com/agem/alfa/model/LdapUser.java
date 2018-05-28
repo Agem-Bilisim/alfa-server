@@ -86,6 +86,7 @@ public class LdapUser extends BaseModel {
 	}
 
 	public void addAttribute(LdapUserAttribute attr) {
+		attr.setLdapUser(this);
 		attributes.add(attr);
 	}
 

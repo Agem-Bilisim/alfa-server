@@ -75,9 +75,9 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 		"processing": true,
 		"serverSide": true,
 		"ajax": function(data, callback, settings) {
-			var finalUrl = url + (url.indexOf('?') > -1 ? "&" : "?") + "pageNumber=" + (data.start / data.length);
+			var finalUrl = url + (url.indexOf('?') > -1 ? "&" : "?") + "page=" + (data.start / data.length);
 			if (data.length) {
-				finalUrl += "&pageSize=" + data.length;
+				finalUrl += "&size=" + data.length;
 			}
 			if (data.order) {
 				for (index in data.order) {
@@ -745,7 +745,7 @@ Alfa.checkEventQueue = function(eventId) {
 		return;
 	}
 	// SSE event source
-	const eventSource = new EventSource('/alfa/sync/status');
+	const eventSource = new EventSource('/alfa/ldap/sync/status');
 	eventSource.addEventListener('ldap-sync-status', function(event) {
 		if (event && event.data && event.lastEventId) {
 			var integrationId = event.lastEventId.split('-')[0];
