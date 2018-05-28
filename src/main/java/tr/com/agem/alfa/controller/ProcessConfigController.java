@@ -100,16 +100,17 @@ public class ProcessConfigController {
 		
 		checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
 		
-		ProcessDefinition deployment = AlfaBpmnProcessEngine.getInstance().deployModel( _bpmProcess.getName(), new String(_bpmProcess.getContent()));
+		ProcessDefinition deployment = AlfaBpmnProcessEngine.getInstance()
+				.deployModelProcessDefinition(_bpmProcess.getName(), "process_" + _bpmProcess.getId() + ".bpmn20.xml", new String(_bpmProcess.getContent()));
 
 		CurrentUser user = (CurrentUser) authentication.getPrincipal();
-		_bpmProcess.setProcessDeploymentId(deployment.getDeploymentId());
+		_bpmProcess.setProcessDeploymentId(deployment.getId());
 		_bpmProcess.setLastModifiedBy(user.getUsername());
 		_bpmProcess.setLastModifiedDate(new Date());
 		
 		bpmProcessService.save(_bpmProcess);
 
-		log.debug("The bpm process is deployed: {} ", id);
+		log.debug("The bpm process is deployed: {} ", deployment.getId());
 		
 		
 		return new ModelAndView("bpm-process/edit", "form", toBpmProcessForm(_bpmProcess));

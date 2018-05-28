@@ -48,10 +48,10 @@
 								<button type="submit" class="btn btn-primary pull-right" id="saveProcessBtn">Değişiklikleri Kaydet</button>
 							</div>
 						</div>
-						<input type="hidden" id="processDeploymentId" name="processDeploymentId" th:field="processDeploymentId" />
+						<input type="hidden" id="processDeploymentId" name="processDeploymentId" th:field="*{processDeploymentId}" />
+						
+						<img th:src="@{'/bpm-process/image/' + *{processDeploymentId}}" title="process" />
 					</form>
-					
-					<img th:src="@{'/bpm-process/image' + form.processDeploymentId}" />
 					
 				</div>
 			</div>
