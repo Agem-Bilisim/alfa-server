@@ -48,7 +48,7 @@
 // 				if ($("#newAgentBtn").length == 0) {
 // 					$("#agentTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newAgentBtn\" style=\"margin-left:10px;\">Yeni</button>");
 // 					$("#newAgentBtn").on("click", function() {
-// 						window.location.href = /*[[@{'/agent/create'}]]*/'';
+// 						window.location.href = '/alfa/agent/create';
 // 					});
 // 				}
 // 			};
@@ -60,15 +60,6 @@
 				{"data": fnActionBtnsAgent, "name": "İşlem", "searchable": false, "orderable": false }
 			];
 			$('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, null);
-			
-			// Handle table init
-// 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-// 				if ($(e.target).attr('href') == "#problem") {
-// 					$('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
-// 				} else if ($(e.target).attr('href') == "#process") {
-// 					$('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
-// 				}
-// 			});
 		});
 	</script>
 </body>

@@ -43,8 +43,7 @@
 			var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy';
 			
 			var fnActionBtns = function(row, type, val, meta) {
-				var buttons = "<a class=\"btn\" href=\"" + /*[[@{'/ldap/integration/'}]]*/'' 
-			    + row["id"] + "\"><i class=\"fa fa-edit\"></i> Edit</a>";
+				var buttons = "<a class=\"btn\" href=\"/alfa/ldap/integration/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Edit</a>";
 				buttons += "<a class=\"btn\" href=\"/alfa/ldap/user/list?integrationId=" + row["id"] + "\"><i class=\"fa fa-users\"></i> Organization</a>";
 				buttons += "<a class=\"btn ldap-sync-btn\" integrationId=\"" + row["id"] + "\"><i class=\"fa fa-refresh\"></i> Sync</a>";
 				return buttons;
@@ -54,7 +53,7 @@
 				if ($("#newIntegrationBtn").length == 0) {
 					$("#integrationTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newIntegrationBtn\" style=\"margin-left:10px;\">Yeni</button>");
 					$("#newIntegrationBtn").on("click", function() {
-						window.location.href = /*[[@{'/ldap/integration/create'}]]*/'';
+						window.location.href = '/alfa/ldap/integration/create';
 					});
 				}
 				

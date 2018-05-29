@@ -138,7 +138,7 @@
 				if ($("#newPackageBtn").length == 0) {
 					$("#packageTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPackageBtn\">Yeni</button>");
 					$("#newPackageBtn").on("click", function() {
-						window.location.href = /*[[@{'/installed-package/create'}]]*/'';
+						window.location.href = '/alfa/installed-package/create';
 					});
 				}
 			};
@@ -160,7 +160,7 @@
 				if ($("#newProcessBtn").length == 0) {
 					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\">Yeni</button>");
 					$("#newProcessBtn").on("click", function() {
-						window.location.href = /*[[@{'/process/create'}]]*/'';
+						window.location.href = '/alfa/process/create';
 					});
 				}
 			};
@@ -180,7 +180,7 @@
 				if ($("#newProblemBtn").length == 0) {
 					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
 					$("#newProblemBtn").on("click", function() {
-						window.location.href = /*[[@{'/problem/create?redirect=software/list'}]]*/'';
+						window.location.href = '/alfa/problem/create?redirect=software/list';
 					});
 				}
 			};
