@@ -143,9 +143,9 @@
 				}
 			};
 			const colsSoftware = [
-				{"data": "name", "property": "name", "name": "Paket Adı", "searchable": true, "orderable": true }, 
-				{"data": "version", "property": "version", "name": "Paket Sürümü", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtnsSoftware, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "name", "searchable": true, "orderable": true }, 
+				{"data": "version", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsSoftware, "searchable": false, "orderable": false }
 			];
 			tables.packageTable = $('#packageTable').paginatedTable("/alfa/installed-package/list-paginated", "packages", colsSoftware, drawCallbackSoftware);
 			
@@ -165,8 +165,8 @@
 				}
 			};
 			const colsProcess = [
-				{"data": "name", "property": "name", "name": "Hizmet Adı", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtnsProcess, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "name", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsProcess, "searchable": false, "orderable": false }
 			];
 			
 			// Problem
@@ -185,10 +185,10 @@
 				}
 			};
 			const colsProblem = [
-				{"data": "label", "property": "label", "name": "Kısa Tanım", "searchable": true, "orderable": true }, 
-				{"data": "description", "property": "description", "name": "Açıklama", "searchable": true, "orderable": true }, 
-				{"data": "solved", "property": "solved", "name": "Durum", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtnsProblem, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "label", "searchable": true, "orderable": true }, 
+				{"data": "description", "searchable": true, "orderable": true }, 
+				{"data": "solved", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 			
 			// Handle table init

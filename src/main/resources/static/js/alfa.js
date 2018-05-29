@@ -45,11 +45,29 @@ $.fn.serializeObject = function(ignoreList) {
 };
 
 /**
- * Hook paginatedTable() function tu jQuery object to easily generate DataTables with server-side processing...
+ * Hook paginatedTable() function to jQuery object to easily generate DataTables with server-side processing...
  * 
  * url: Ajax URL for GET request
  * resultingProp: Property name for the resulting list
- * cols: Columns in the format of DataTable columns array. See https://datatables.net/reference/option/columns.data
+ * cols: Columns in the format of DataTable columns array.
+ * (Column options:
+ *	cellType,
+ *	className,
+ *	contentPadding,
+ *	data,
+ *	defaultContent,
+ *	name,
+ *	orderable,
+ *	orderData,
+ *	orderDataType,
+ *	render,
+ *	searchable,
+ *	title,
+ *	type,
+ *	visible,
+ *	width 
+ * )
+ * See https://datatables.net/reference/option/columns.data for option definitions
  * drawCallback: Callback function to trigger after table is drawn.
  * 
  */
@@ -82,7 +100,7 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 			if (data.order) {
 				for (index in data.order) {
 					var o = data.order[index];
-					var prop = cols[o.column]["property"];
+					var prop = cols[o.column].hasOwnProperty("property") ? cols[o.column]["property"] : cols[o.column]["data"];
 					var dir = o.dir.toUpperCase();
 					
 					finalUrl += "&sort.orders[" + index + "].property=" + prop;
@@ -103,6 +121,8 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 				},
 				success: function(result) {
 					if (result && result.data) {
+						console.log("GET Response [" + finalUrl + "]");
+						console.log(JSON.stringify(result))
 						callback({
 							"draw": drawCount,
 							"recordsTotal": result.data[resultingProp].totalElements,

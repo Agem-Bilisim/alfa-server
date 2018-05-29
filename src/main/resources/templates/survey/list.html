@@ -52,9 +52,9 @@
 			};
 			
 			const cols = [
-				{"data": "label", "property": "label", "name": "Tanım", "searchable": true, "orderable": true }, 
-				{"data": "description", "property": "description", "name": "Açıklama", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "label", "searchable": true, "orderable": true }, 
+				{"data": "description", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
 			$('#surveyTable').paginatedTable("/alfa/survey/list-paginated", "surveys", cols, drawCallback);

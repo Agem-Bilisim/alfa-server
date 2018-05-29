@@ -54,10 +54,10 @@
 // 			};
 			// TODO cols'un içeriğini düzelt
 			const colsAgent = [
-				{"data": "hostName", "property": "hostName", "name": "Host Name", "searchable": true, "orderable": true }, 
-				{"data": "ipAddresses", "property": "ipAddresses", "name": "IP Adresleri", "searchable": true, "orderable": true }, 
-				{"data": "macAddresses", "property": "macAddresses", "name": "MAC Adresleri", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtnsAgent, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "hostName", "searchable": true, "orderable": true }, 
+				{"data": "ipAddresses", "searchable": true, "orderable": true }, 
+				{"data": "macAddresses", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsAgent, "searchable": false, "orderable": false }
 			];
 			$('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, null);
 		});

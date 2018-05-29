@@ -55,12 +55,12 @@
 			};
 			
 			const cols = [
-				{"data": "userName", "property": "userName", "name": "Kullanıcı Adı", "searchable": true, "orderable": true }, 
-				{"data": "firstName", "property": "firstName", "name": "İsim", "searchable": true, "orderable": true }, 
-				{"data": "lastName", "property": "lastName", "name": "Soyisim", "searchable": true, "orderable": true }, 
-				{"data": "email", "property": "email", "name": "E-posta", "searchable": true, "orderable": true }, 
-				{"data": "roleString", "property": "role.name", "name": "Rol", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "userName", "searchable": true, "orderable": true }, 
+				{"data": "firstName", "searchable": true, "orderable": true }, 
+				{"data": "lastName", "searchable": true, "orderable": true }, 
+				{"data": "email", "searchable": true, "orderable": true }, 
+				{"data": "roleString", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
 			$('#userTable').paginatedTable("/alfa/sysuser/list-paginated", "users", cols, drawCallback);

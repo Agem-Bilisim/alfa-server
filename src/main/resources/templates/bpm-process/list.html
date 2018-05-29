@@ -53,9 +53,9 @@
 			};
 			
 			const cols = [
-				{"data": "name", "property": "name", "name": "Paket Adı", "searchable": true, "orderable": true }, 
-				{"data": "version", "property": "version", "name": "Paket Sürümü", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtns, "name": "Action", "searchable": false, "orderable": false }
+				{"data": "name", "searchable": true, "orderable": true }, 
+				{"data": "version", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
 			$('#processTable').paginatedTable("/alfa/bpm-process/list-paginated", "processes", cols, drawCallback);

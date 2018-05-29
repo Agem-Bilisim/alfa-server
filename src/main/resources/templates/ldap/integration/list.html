@@ -75,11 +75,11 @@
 			};
 			
 			const cols = [
-				{"data": "ipAddress", "property": "ipAddress", "name": "Sunucu Adres", "searchable": true, "orderable": true }, 
-				{"data": "ldapTypeEnum", "property": "ldapTypeEnum", "name": "Tür", "searchable": true, "orderable": true }, 
-				{"data": "userIdentifierAttribute", "property": "user_identifier_attribute", "name": "UID Özniteliği", "searchable": true, "orderable": true }, 
-				{"data": function(row) { return moment(row["createdDate"], "YYYY-MM-DD").format(dateFormat); }, "property": "created_date", "name": "Oluşturulma Tarihi", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtns, "name": "İşlem", "searchable": false, "orderable": false }
+				{"data": "ipAddress", "searchable": true, "orderable": true }, 
+				{"data": "ldapTypeEnum", "searchable": true, "orderable": true }, 
+				{"data": "userIdentifierAttribute", "searchable": true, "orderable": true }, 
+				{"data": function(row) { return moment(row["createdDate"], "YYYY-MM-DD").format(dateFormat); }, "property": "created_date", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
 			$('#integrationTable').paginatedTable("/alfa/ldap/integration/list-paginated", "integrations", cols, drawCallback);
