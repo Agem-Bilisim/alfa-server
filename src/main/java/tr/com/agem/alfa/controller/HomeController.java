@@ -1,14 +1,13 @@
 package tr.com.agem.alfa.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
 @Controller
 public class HomeController {
-
-	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
 	@GetMapping(path = { "/", "index" })
 	public String getIndexPage() {

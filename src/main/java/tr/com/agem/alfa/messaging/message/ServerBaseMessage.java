@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class AgentBaseMessage implements Serializable {
+public abstract class ServerBaseMessage implements Serializable {
 
-	private static final long serialVersionUID = -783778297126872499L;
+	private static final long serialVersionUID = -3367855278447922663L;
 
 	/**
-	 * @return message sender
+	 * @return message recipient
 	 */
-	public abstract String getFrom();
+	public abstract String getTo();
 
 }
