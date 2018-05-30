@@ -2,16 +2,15 @@ package tr.com.agem.alfa.model;
 
 import java.io.Serializable;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Cross-table for c_agent and c_agent_running_process
@@ -20,15 +19,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "c_agent_process_agent")
-@AssociationOverrides({ @AssociationOverride(name = "pk.agent", joinColumns = @JoinColumn(name = "AGENT_ID")),
-		@AssociationOverride(name = "pk.runningProcess", joinColumns = @JoinColumn(name = "RUNNING_PROCESS_ID")) })
 public class AgentRunningProcess implements Serializable {
 
 	private static final long serialVersionUID = 6844159583081268836L;
-	
-	@JsonIgnore
-	@EmbeddedId
-	private AgentRunningProcessId pk = new AgentRunningProcessId();
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "AGENT_PROCESS_AGENT_ID", unique = true, nullable = false, updatable = false)
+	private Long id;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "AGENT_ID")
+	private Agent agent;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "PROCESS_ID")
+	private RunningProcess runningProcess;
 
 	@Column(name = "CPU_TIMES", length = 100)
 	private String cpuTimes;
@@ -44,32 +50,6 @@ public class AgentRunningProcess implements Serializable {
 
 	@Column(name = "MEMORY_INFO", length = 100)
 	private String memoryInfo;
-
-	public AgentRunningProcessId getPk() {
-		return pk;
-	}
-
-	@Transient
-	public Agent getAgent() {
-		return getPk().getAgent();
-	}
-
-	public void setAgent(Agent agent) {
-		getPk().setAgent(agent);
-	}
-
-	@Transient
-	public RunningProcess getRunningProcess() {
-		return getPk().getRunningProcess();
-	}
-
-	public void setRunningProcess(RunningProcess runningProcess) {
-		getPk().setRunningProcess(runningProcess);
-	}
-
-	public void setPk(AgentRunningProcessId pk) {
-		this.pk = pk;
-	}
 
 	public String getCpuTimes() {
 		return cpuTimes;
@@ -111,19 +91,28 @@ public class AgentRunningProcess implements Serializable {
 		this.memoryInfo = memoryInfo;
 	}
 
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		AgentRunningProcess that = (AgentRunningProcess) o;
-
-		if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
-
-		return true;
+	public Long getId() {
+		return id;
 	}
 
-	public int hashCode() {
-		return (getPk() != null ? getPk().hashCode() : 0);
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+
+	public RunningProcess getRunningProcess() {
+		return runningProcess;
+	}
+
+	public void setRunningProcess(RunningProcess runningProcess) {
+		this.runningProcess = runningProcess;
 	}
 
 }

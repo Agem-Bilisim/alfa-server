@@ -33,7 +33,6 @@ import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.AgentRunningProcess;
-import tr.com.agem.alfa.model.AgentRunningProcessId;
 import tr.com.agem.alfa.model.AgentUser;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
@@ -184,22 +183,20 @@ public class AgentController {
 		//
 		if (message.getProcesses() != null) {
 			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
+				
 				RunningProcess process = new RunningProcess();
 				process.setName(p.getName());
+				
 				AgentRunningProcess cross = new AgentRunningProcess();
 				cross.setCpuPercent(p.getCpuPercent() != null ? p.getCpuPercent().toString() : null);
 				cross.setCpuTimes(p.getCpuTimes() != null ? p.getCpuTimes().toArray(new Float[p.getCpuTimes().size()]).toString() : null);
 				cross.setMemoryInfo(p.getMemoryInfo() != null ? p.getMemoryInfo().toArray(new Integer[p.getMemoryInfo().size()]).toString() : null);
 				cross.setPid(p.getPid() != null ? p.getPid().toString() : null);
-				cross.setRunningProcess(process);
-				cross.setUsername(p.getUsername());
+				cross.setUsername(p.getUsername() != null ? p.getUsername() : "SYSTEM");
 				cross.setAgent(agent);
-				process.getAgentRunningProcesses().add(cross);
+				cross.setRunningProcess(process);
+				
 				agent.getAgentRunningProcesses().add(cross);
-				AgentRunningProcessId pk = new AgentRunningProcessId();
-				pk.setAgent(agent);
-				pk.setRunningProcess(process);
-				cross.setPk(pk);
 			}
 		}
 		// TODO cpus, peripheral
