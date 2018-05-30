@@ -32,11 +32,15 @@ import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.AgentRunningProcess;
+import tr.com.agem.alfa.model.AgentRunningProcessId;
+import tr.com.agem.alfa.model.AgentUser;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.Platform;
+import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.util.CommonUtils;
@@ -61,7 +65,7 @@ public class AgentController {
 		}
 		try {
 			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
-			agent = toAgentEntity(message, "SYSTEM", agent);
+			agent = toAgentEntity(message, agent);
 			agentService.saveOrUpdate(agent);
 			log.info("Agent and its system info created/updated successfully.");
 		} catch (Exception e) {
@@ -73,8 +77,7 @@ public class AgentController {
 		return ResponseEntity.ok(result);
 	}
 
-	private Agent toAgentEntity(SysInfoResultMessage message, String principal, Agent origAgent)
-			throws JsonProcessingException {
+	private Agent toAgentEntity(SysInfoResultMessage message, Agent origAgent) throws JsonProcessingException {
 		Agent agent = origAgent != null ? origAgent : new Agent();
 		//
 		// Agent
@@ -143,7 +146,9 @@ public class AgentController {
 			Gpu gpu = new Gpu();
 			gpu.setSubsystem(d.getSubsystem());
 			gpu.setKernel(d.getKernel());
-			gpu.setMemory(d.getKernel());
+			gpu.setMemory(d.getMemory());
+			gpu.setDriverDate(d.getDriverDate());
+			gpu.setDriverVersion(d.getDriverVersion());
 			agent.addGpu(gpu);
 		}
 		//
@@ -164,12 +169,46 @@ public class AgentController {
 		pl.setSystem(message.getPlatform().getSystem());
 		pl.setMachine(message.getPlatform().getMachine());
 		agent.setPlatform(pl);
-		// TODO users, processes, cpus, peripheral
+		//
+		// Users
+		//
+		if (message.getUsers() != null) {
+			for (String u : message.getUsers()) {
+				AgentUser user = new AgentUser();
+				user.setName(u);
+				agent.addUser(user);
+			}
+		}
+		// 
+		// Processes
+		//
+		if (message.getProcesses() != null) {
+			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
+				RunningProcess process = new RunningProcess();
+				process.setName(p.getName());
+				AgentRunningProcess cross = new AgentRunningProcess();
+				cross.setCpuPercent(p.getCpuPercent() != null ? p.getCpuPercent().toString() : null);
+				cross.setCpuTimes(p.getCpuTimes() != null ? p.getCpuTimes().toArray(new Float[p.getCpuTimes().size()]).toString() : null);
+				cross.setMemoryInfo(p.getMemoryInfo() != null ? p.getMemoryInfo().toArray(new Integer[p.getMemoryInfo().size()]).toString() : null);
+				cross.setPid(p.getPid() != null ? p.getPid().toString() : null);
+				cross.setRunningProcess(process);
+				cross.setUsername(p.getUsername());
+				cross.setAgent(agent);
+				process.getAgentRunningProcesses().add(cross);
+				agent.getAgentRunningProcesses().add(cross);
+				AgentRunningProcessId pk = new AgentRunningProcessId();
+				pk.setAgent(agent);
+				pk.setRunningProcess(process);
+				cross.setPk(pk);
+			}
+		}
+		// TODO cpus, peripheral
 		return agent;
 
 	}
 
 	private String toCapabilityString(Map<String, String> capabilities) {
+		if (capabilities == null || capabilities.isEmpty()) return null;
 		StringBuilder cap = new StringBuilder();
 		for (Entry<String, String> e : capabilities.entrySet()) {
 			cap.append(e.getKey()).append(":").append(e.getValue()).append(",");

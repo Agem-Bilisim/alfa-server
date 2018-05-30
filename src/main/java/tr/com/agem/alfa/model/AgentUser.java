@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,7 +21,7 @@ public class AgentUser extends BaseModel {
 	@Column(name = "NAME", nullable = false, length = 255, unique = true)
 	private String name;
 
-	@Column(name = "GROUPS", nullable = false, length = 255)
+	@Column(name = "GROUPS", length = 255)
 	private String commaSeparatedGroups;
 
 	@JsonIgnore
