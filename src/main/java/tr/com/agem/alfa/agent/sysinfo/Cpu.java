@@ -4,234 +4,270 @@ package tr.com.agem.alfa.agent.sysinfo;
 import java.io.Serializable;
 import java.util.List;
 
-public class Cpu implements Serializable
-{
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private String hzAdvertised;
-    private String processor;
-    private String rawArchString;
-    private Integer model;
-    private List<Long> stats = null;
-    private List<Float> cpuTimes = null;
-    private String arch;
-    private Integer extendedModel;
-    private List<String> flags = null;
-    private String l2CacheAssociativity;
-    private Integer bits;
-    private List<Integer> cpuinfoVersion = null;
-    private Integer l2CacheLineSize;
-    private List<Integer> hzAdvertisedRaw = null;
-    private Integer family;
-    private Integer logicalCoreCount;
-    private String l2CacheSize;
-    private Integer count;
-    private Integer stepping;
-    private String brand;
-    private String hzActual;
-    private Integer extendedFamily;
-    private String vendorId;
-    private Integer pyhsicalCoreCount;
-    private List<Integer> hzActualRaw = null;
-    private final static long serialVersionUID = 2285250068081656743L;
+public class Cpu implements Serializable {
 
-    public String getHzAdvertised() {
-        return hzAdvertised;
-    }
+	private final static long serialVersionUID = 2285250068081656743L;
 
-    public void setHzAdvertised(String hzAdvertised) {
-        this.hzAdvertised = hzAdvertised;
-    }
+	@JsonProperty("hz_advertised")
+	private String hzAdvertised;
 
-    public String getProcessor() {
-        return processor;
-    }
+	private String processor;
 
-    public void setProcessor(String processor) {
-        this.processor = processor;
-    }
+	@JsonProperty("raw_arch_string")
+	private String rawArchString;
 
-    public String getRawArchString() {
-        return rawArchString;
-    }
+	private Integer model;
 
-    public void setRawArchString(String rawArchString) {
-        this.rawArchString = rawArchString;
-    }
+	private List<Long> stats = null;
 
-    public Integer getModel() {
-        return model;
-    }
+	@JsonProperty("cpu-times")
+	private List<Float> cpuTimes = null;
 
-    public void setModel(Integer model) {
-        this.model = model;
-    }
+	private String arch;
 
-    public List<Long> getStats() {
-        return stats;
-    }
+	private Integer extendedModel;
 
-    public void setStats(List<Long> stats) {
-        this.stats = stats;
-    }
+	private List<String> flags = null;
 
-    public List<Float> getCpuTimes() {
-        return cpuTimes;
-    }
+	private String l2CacheAssociativity;
 
-    public void setCpuTimes(List<Float> cpuTimes) {
-        this.cpuTimes = cpuTimes;
-    }
+	private Integer bits;
 
-    public String getArch() {
-        return arch;
-    }
+	@JsonProperty("cpuinfo_version")
+	private List<Integer> cpuinfoVersion = null;
 
-    public void setArch(String arch) {
-        this.arch = arch;
-    }
+	private Integer l2CacheLineSize;
 
-    public Integer getExtendedModel() {
-        return extendedModel;
-    }
+	@JsonProperty("hz_advertised_raw")
+	private List<String> hzAdvertisedRaw = null;
 
-    public void setExtendedModel(Integer extendedModel) {
-        this.extendedModel = extendedModel;
-    }
+	private Integer family;
 
-    public List<String> getFlags() {
-        return flags;
-    }
+	@JsonProperty("logical-core-count")
+	private Integer logicalCoreCount;
 
-    public void setFlags(List<String> flags) {
-        this.flags = flags;
-    }
+	private String l2CacheSize;
 
-    public String getL2CacheAssociativity() {
-        return l2CacheAssociativity;
-    }
+	private Integer count;
 
-    public void setL2CacheAssociativity(String l2CacheAssociativity) {
-        this.l2CacheAssociativity = l2CacheAssociativity;
-    }
+	private Integer stepping;
 
-    public Integer getBits() {
-        return bits;
-    }
+	private String brand;
 
-    public void setBits(Integer bits) {
-        this.bits = bits;
-    }
+	@JsonProperty("hz_actual")
+	private String hzActual;
 
-    public List<Integer> getCpuinfoVersion() {
-        return cpuinfoVersion;
-    }
+	private Integer extendedFamily;
 
-    public void setCpuinfoVersion(List<Integer> cpuinfoVersion) {
-        this.cpuinfoVersion = cpuinfoVersion;
-    }
+	@JsonProperty("vendor_id")
+	private String vendorId;
 
-    public Integer getL2CacheLineSize() {
-        return l2CacheLineSize;
-    }
+	@JsonProperty("pyhsical-core-count")
+	private Integer pyhsicalCoreCount;
 
-    public void setL2CacheLineSize(Integer l2CacheLineSize) {
-        this.l2CacheLineSize = l2CacheLineSize;
-    }
+	@JsonProperty("hz_actual_raw")
+	private List<String> hzActualRaw = null;
 
-    public List<Integer> getHzAdvertisedRaw() {
-        return hzAdvertisedRaw;
-    }
+	public String getHzAdvertised() {
+		return hzAdvertised;
+	}
 
-    public void setHzAdvertisedRaw(List<Integer> hzAdvertisedRaw) {
-        this.hzAdvertisedRaw = hzAdvertisedRaw;
-    }
+	public void setHzAdvertised(String hzAdvertised) {
+		this.hzAdvertised = hzAdvertised;
+	}
 
-    public Integer getFamily() {
-        return family;
-    }
+	public String getProcessor() {
+		return processor;
+	}
 
-    public void setFamily(Integer family) {
-        this.family = family;
-    }
+	public void setProcessor(String processor) {
+		this.processor = processor;
+	}
 
-    public Integer getLogicalCoreCount() {
-        return logicalCoreCount;
-    }
+	public String getRawArchString() {
+		return rawArchString;
+	}
 
-    public void setLogicalCoreCount(Integer logicalCoreCount) {
-        this.logicalCoreCount = logicalCoreCount;
-    }
+	public void setRawArchString(String rawArchString) {
+		this.rawArchString = rawArchString;
+	}
 
-    public String getL2CacheSize() {
-        return l2CacheSize;
-    }
+	public Integer getModel() {
+		return model;
+	}
 
-    public void setL2CacheSize(String l2CacheSize) {
-        this.l2CacheSize = l2CacheSize;
-    }
+	public void setModel(Integer model) {
+		this.model = model;
+	}
 
-    public Integer getCount() {
-        return count;
-    }
+	public List<Long> getStats() {
+		return stats;
+	}
 
-    public void setCount(Integer count) {
-        this.count = count;
-    }
+	public void setStats(List<Long> stats) {
+		this.stats = stats;
+	}
 
-    public Integer getStepping() {
-        return stepping;
-    }
+	public List<Float> getCpuTimes() {
+		return cpuTimes;
+	}
 
-    public void setStepping(Integer stepping) {
-        this.stepping = stepping;
-    }
+	public void setCpuTimes(List<Float> cpuTimes) {
+		this.cpuTimes = cpuTimes;
+	}
 
-    public String getBrand() {
-        return brand;
-    }
+	public String getArch() {
+		return arch;
+	}
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+	public void setArch(String arch) {
+		this.arch = arch;
+	}
 
-    public String getHzActual() {
-        return hzActual;
-    }
+	public Integer getExtendedModel() {
+		return extendedModel;
+	}
 
-    public void setHzActual(String hzActual) {
-        this.hzActual = hzActual;
-    }
+	public void setExtendedModel(Integer extendedModel) {
+		this.extendedModel = extendedModel;
+	}
 
-    public Integer getExtendedFamily() {
-        return extendedFamily;
-    }
+	public List<String> getFlags() {
+		return flags;
+	}
 
-    public void setExtendedFamily(Integer extendedFamily) {
-        this.extendedFamily = extendedFamily;
-    }
+	public void setFlags(List<String> flags) {
+		this.flags = flags;
+	}
 
-    public String getVendorId() {
-        return vendorId;
-    }
+	public String getL2CacheAssociativity() {
+		return l2CacheAssociativity;
+	}
 
-    public void setVendorId(String vendorId) {
-        this.vendorId = vendorId;
-    }
+	public void setL2CacheAssociativity(String l2CacheAssociativity) {
+		this.l2CacheAssociativity = l2CacheAssociativity;
+	}
 
-    public Integer getPyhsicalCoreCount() {
-        return pyhsicalCoreCount;
-    }
+	public Integer getBits() {
+		return bits;
+	}
 
-    public void setPyhsicalCoreCount(Integer pyhsicalCoreCount) {
-        this.pyhsicalCoreCount = pyhsicalCoreCount;
-    }
+	public void setBits(Integer bits) {
+		this.bits = bits;
+	}
 
-    public List<Integer> getHzActualRaw() {
-        return hzActualRaw;
-    }
+	public List<Integer> getCpuinfoVersion() {
+		return cpuinfoVersion;
+	}
 
-    public void setHzActualRaw(List<Integer> hzActualRaw) {
-        this.hzActualRaw = hzActualRaw;
-    }
+	public void setCpuinfoVersion(List<Integer> cpuinfoVersion) {
+		this.cpuinfoVersion = cpuinfoVersion;
+	}
+
+	public Integer getL2CacheLineSize() {
+		return l2CacheLineSize;
+	}
+
+	public void setL2CacheLineSize(Integer l2CacheLineSize) {
+		this.l2CacheLineSize = l2CacheLineSize;
+	}
+
+	public List<String> getHzAdvertisedRaw() {
+		return hzAdvertisedRaw;
+	}
+
+	public void setHzAdvertisedRaw(List<String> hzAdvertisedRaw) {
+		this.hzAdvertisedRaw = hzAdvertisedRaw;
+	}
+
+	public Integer getFamily() {
+		return family;
+	}
+
+	public void setFamily(Integer family) {
+		this.family = family;
+	}
+
+	public Integer getLogicalCoreCount() {
+		return logicalCoreCount;
+	}
+
+	public void setLogicalCoreCount(Integer logicalCoreCount) {
+		this.logicalCoreCount = logicalCoreCount;
+	}
+
+	public String getL2CacheSize() {
+		return l2CacheSize;
+	}
+
+	public void setL2CacheSize(String l2CacheSize) {
+		this.l2CacheSize = l2CacheSize;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public Integer getStepping() {
+		return stepping;
+	}
+
+	public void setStepping(Integer stepping) {
+		this.stepping = stepping;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public String getHzActual() {
+		return hzActual;
+	}
+
+	public void setHzActual(String hzActual) {
+		this.hzActual = hzActual;
+	}
+
+	public Integer getExtendedFamily() {
+		return extendedFamily;
+	}
+
+	public void setExtendedFamily(Integer extendedFamily) {
+		this.extendedFamily = extendedFamily;
+	}
+
+	public String getVendorId() {
+		return vendorId;
+	}
+
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
+	}
+
+	public Integer getPyhsicalCoreCount() {
+		return pyhsicalCoreCount;
+	}
+
+	public void setPyhsicalCoreCount(Integer pyhsicalCoreCount) {
+		this.pyhsicalCoreCount = pyhsicalCoreCount;
+	}
+
+	public List<String> getHzActualRaw() {
+		return hzActualRaw;
+	}
+
+	public void setHzActualRaw(List<String> hzActualRaw) {
+		this.hzActualRaw = hzActualRaw;
+	}
 
 }

@@ -102,10 +102,10 @@ public class Agent extends BaseModel {
 	@OneToMany(mappedBy = "agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
-	@OneToMany(mappedBy = "pk.agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentCpu> agentCpus = new HashSet<AgentCpu>(0);
 
-	@OneToMany(mappedBy = "pk.agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentPeripheralDevice> agentPeripheralDevices = new HashSet<AgentPeripheralDevice>(0);
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
