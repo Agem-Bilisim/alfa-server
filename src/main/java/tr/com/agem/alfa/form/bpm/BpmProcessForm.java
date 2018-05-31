@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.form.bpm;
 
+import java.util.Date;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +23,8 @@ public class BpmProcessForm extends BaseForm {
 	private String version;
 
 	private String processDeploymentId;
+	
+	private Date test;
 
 	MultipartFile file;
 
@@ -55,6 +59,14 @@ public class BpmProcessForm extends BaseForm {
 
 	public void setProcessDeploymentId(String processDeploymentId) {
 		this.processDeploymentId = processDeploymentId;
+	}
+
+	public Date getTest() {
+		return test;
+	}
+
+	public void setTest(Date test) {
+		this.test = test;
 	}
 
 }

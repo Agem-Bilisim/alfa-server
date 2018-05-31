@@ -21,3 +21,6 @@ build/
 nbbuild/
 nbdist/
 .nb-gradle/
+
+##
+.xml/

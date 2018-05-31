@@ -16,7 +16,7 @@
 		<property name="mailServerPassword" value="PASSWORD" />
 
  		<property name="formTypes">
-			<bean class="tr.com.agem.alfa.bpmn.html.HtmlCustomFormTypes" />
+			<bean class="tr.com.agem.alfa.bpmn.inputs.HtmlCustomFormTypes" />
 		</property>
 
 		<property name="customMybatisMappers">
