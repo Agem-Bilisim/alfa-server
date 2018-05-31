@@ -1,6 +1,7 @@
 package tr.com.agem.alfa.bpmn.inputs;
 
 import org.activiti.engine.form.FormProperty;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import tr.com.agem.alfa.bpmn.types.AbstractPasswordFormType;
 
@@ -30,7 +31,7 @@ public class HtmlPasswordFormType extends AbstractPasswordFormType
 		str.append("\" ");
 
 		if (property.getValue() != null) {
-			str.append(" value=\"").append(property.getValue()).append("\" ");
+			str.append(" value=\"").append(StringEscapeUtils.escapeHtml4(property.getValue())).append("\" ");
 		}
 		
 		str.append(HTMLInputUtils.getInstance().prepareAttributes(this, super.getMap()));

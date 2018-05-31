@@ -9,10 +9,12 @@ import tr.com.agem.alfa.bpmn.types.AbstractCheckboxFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractComboboxFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractCurrencyFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractDateFormType;
+import tr.com.agem.alfa.bpmn.types.AbstractDecimalFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractIntegerFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractNumericFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractPasswordFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractPercentageFormType;
+import tr.com.agem.alfa.bpmn.types.AbstractTextareaFormType;
 import tr.com.agem.alfa.bpmn.types.AbstractTextboxFormType;
 import tr.com.agem.alfa.bpmn.types.ActivitiFormTypeInterface;
 import tr.com.agem.alfa.bpmn.types.AlfaFormTypeException;
@@ -39,15 +41,19 @@ public class HtmlFormTypeFactory implements FormTypeFactoryInterface
 		formTypes.put("string", HtmlTextboxFormType.class);
 		formTypes.put("long", HtmlDecimalFormType.class);
 		
-		formTypes.put(AbstractComboboxFormType.NAME, HtmlSelectFormType.class);
 		formTypes.put(AbstractIntegerFormType.NAME, HtmlIntegerFormType.class);
 		formTypes.put(AbstractNumericFormType.NAME, HtmlNumericFormType.class);
 		formTypes.put(AbstractCurrencyFormType.NAME, HtmlCurrencyFormType.class);
 		formTypes.put(AbstractPercentageFormType.NAME, HtmlPercentageFormType.class);
+		formTypes.put(AbstractDecimalFormType.NAME, HtmlDecimalFormType.class);
+		formTypes.put(AbstractComboboxFormType.NAME, HtmlSelectFormType.class);
+		formTypes.put(AbstractTextareaFormType.NAME, HtmlTextareaFormType.class);
 		formTypes.put(AbstractTextboxFormType.NAME, HtmlTextboxFormType.class);
 		formTypes.put(AbstractDateFormType.NAME, HtmlDateFormType.class);
 		formTypes.put(AbstractPasswordFormType.NAME, HtmlPasswordFormType.class);
 		formTypes.put(AbstractCheckboxFormType.NAME, HtmlCheckboxFormType.class);
+		formTypes.put(HtmlRoleFormType.NAME, HtmlRoleFormType.class);
+		formTypes.put(HtmlUserFormType.NAME, HtmlUserFormType.class);
 	}
 	
 	public ActivitiFormTypeInterface getFormTypeInstance(String name)

@@ -1,6 +1,7 @@
 package tr.com.agem.alfa.bpmn.inputs;
 
 import org.activiti.engine.form.FormProperty;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import tr.com.agem.alfa.bpmn.types.AbstractNumericFormType;
 
@@ -29,7 +30,7 @@ public class HtmlCurrencyFormType extends AbstractNumericFormType
 		str.append("\" ");
 
 		if (property.getValue() != null) {
-			str.append(" value=\"").append(property.getValue()).append("\" ");
+			str.append(" value=\"").append(StringEscapeUtils.escapeHtml4(property.getValue())).append("\" ");
 		}
 		
 		

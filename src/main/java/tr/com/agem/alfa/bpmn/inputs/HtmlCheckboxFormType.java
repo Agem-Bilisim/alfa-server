@@ -1,6 +1,7 @@
 package tr.com.agem.alfa.bpmn.inputs;
 
 import org.activiti.engine.form.FormProperty;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import tr.com.agem.alfa.bpmn.types.AbstractCheckboxFormType;
 
@@ -27,7 +28,7 @@ public class HtmlCheckboxFormType extends AbstractCheckboxFormType
 		str.append("\" ");
 		if ( super.getCheckedValue() != null) {
 			str.append(" value=\"");
-			str.append(super.getCheckedValue());
+			str.append(StringEscapeUtils.escapeHtml4(property.getValue()));
 			str.append("\" ");
 			
 			if (super.getCheckedValue().equals(property.getValue())) {

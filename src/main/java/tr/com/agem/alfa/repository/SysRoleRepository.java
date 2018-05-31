@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import tr.com.agem.alfa.model.SysRole;
@@ -9,6 +11,6 @@ import tr.com.agem.alfa.model.SysRole;
  */
 public interface SysRoleRepository extends JpaRepository<SysRole, Long> {
 	
-	
+	List<SysRole> findByNameContainingAllIgnoringCase(String search);
 
 }
