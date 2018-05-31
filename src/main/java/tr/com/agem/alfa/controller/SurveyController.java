@@ -25,8 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import tr.com.agem.alfa.form.SurveyForm;
 import tr.com.agem.alfa.mapper.SysMapper;
+import tr.com.agem.alfa.messaging.factory.MessageFactory;
+import tr.com.agem.alfa.messaging.message.ServerBaseMessage;
+import tr.com.agem.alfa.messaging.service.MessagingService;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Survey;
+import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.SurveyService;
 
 /**
@@ -38,14 +42,19 @@ public class SurveyController {
 	private static final Logger log = LoggerFactory.getLogger(SurveyController.class);
 
 	private final SurveyService surveyService;
+	private final AgentService agentService;
+	private final MessagingService messagingService;
 	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
-	public SurveyController(SurveyService surveyService, SysMapper mapper) {
+	public SurveyController(SurveyService surveyService, AgentService agentService, MessagingService messagingService,
+			SysMapper mapper) {
 		this.surveyService = surveyService;
+		this.agentService = agentService;
+		this.messagingService = messagingService;
 		this.mapper = mapper;
 	}
 
@@ -73,6 +82,23 @@ public class SurveyController {
 		}
 		// everything fine redirect to list
 		return "redirect:/survey/list";
+	}
+
+	@PostMapping("/survey/{surveyId}/send/{messagingId}")
+	public ResponseEntity<?> handleSurveySend(@PathVariable(name = "surveyId") Long surveyId,
+			@PathVariable(name = "messagingId") String messagingId) {
+		RestResponseBody result = new RestResponseBody();
+		Survey survey = surveyService.getSurvey(surveyId);
+		checkNotNull(survey, String.format("Survey:%d not found.", surveyId));
+		try {
+			ServerBaseMessage message = MessageFactory.newSurveyMessage(messagingId, survey);
+			messagingService.send(message);
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to send survey, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/survey/{id}")

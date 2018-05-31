@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
@@ -115,6 +116,9 @@ public class Agent extends BaseModel {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "PLATFORM_ID", nullable = false)
 	private Platform platform;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "survey")
+	private Set<SurveyResult> surveyResults = new HashSet<SurveyResult>(0);
 
 	public Agent() {
 	}
@@ -293,6 +297,14 @@ public class Agent extends BaseModel {
 		this.messagingId = messagingId;
 	}
 
+	public Set<SurveyResult> getSurveyResults() {
+		return surveyResults;
+	}
+
+	public void setSurveyResults(Set<SurveyResult> surveyResults) {
+		this.surveyResults = surveyResults;
+	}
+
 	public void addDisk(Disk disk) {
 		if (this.disks == null) {
 			this.disks = new HashSet<Disk>();
@@ -332,7 +344,7 @@ public class Agent extends BaseModel {
 		gpu.addAgent(this);
 		this.gpus.add(gpu);
 	}
-	
+
 	public void addUser(AgentUser user) {
 		if (this.users == null) {
 			this.users = new HashSet<AgentUser>();
