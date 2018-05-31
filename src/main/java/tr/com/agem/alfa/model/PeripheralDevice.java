@@ -9,6 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
 @Entity
 @Table(name = "c_agent_peripheral")
 public class PeripheralDevice extends BaseModel {
@@ -21,7 +26,8 @@ public class PeripheralDevice extends BaseModel {
 	@Column(name = "SHOW_IN_SURVEY")
 	private Boolean showInSurvey;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.peripheralDevice")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "peripheralDevice")
 	private Set<AgentPeripheralDevice> agentPeripheralDevices = new HashSet<AgentPeripheralDevice>(0);
 
 	public String getTag() {

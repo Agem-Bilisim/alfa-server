@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_process")
 public class RunningProcess extends BaseModel {
@@ -18,7 +20,8 @@ public class RunningProcess extends BaseModel {
 	@Column(name = "NAME", nullable = false, length = 100, unique = true)
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.runningProcess")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "runningProcess")
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
 	public String getName() {

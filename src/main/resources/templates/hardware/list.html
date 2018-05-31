@@ -22,7 +22,7 @@
 			    	<li role="presentation"><a href="#disk" aria-controls="disk" role="tab" data-toggle="tab">Disk</a></li>
 			    	<li role="presentation"><a href="#memory" aria-controls="memory" role="tab" data-toggle="tab">RAM Bellek</a></li>
 			    	<li role="presentation"><a href="#bios" aria-controls="bios" role="tab" data-toggle="tab">BIOS</a></li>
-			    	<li role="presentation"><a href="#ethernet" aria-controls="ethernet" role="tab" data-toggle="tab">Ethernet</a></li>
+			    	<li role="presentation"><a href="#networkInterface" aria-controls="networkInterface" role="tab" data-toggle="tab">Ağ</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -33,7 +33,7 @@
 								<h3 class="box-title">İşlemci listesi</h3>
 							</div>
 							<div class="box-body">
-								<table id="packageTable" class="table table-bordered table-striped">
+								<table id="cpuTable" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th>Marka</th>
@@ -42,6 +42,7 @@
 											<th>Hız (Hz)</th>
 											<th>Üretici Firma</th>
 											<th>Mimari</th>
+											<th>İşlemler</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -50,18 +51,278 @@
 							</div>
 						</div>
 					</div>
-					<div role="tabpanel" class="tab-pane" id="gpu">...</div>
-					<div role="tabpanel" class="tab-pane" id="disk">...</div>
-					<div role="tabpanel" class="tab-pane" id="memory">...</div>
-					<div role="tabpanel" class="tab-pane" id="bios">...</div>
-					<div role="tabpanel" class="tab-pane" id="ethernet">...</div>
+					<div role="tabpanel" class="tab-pane" id="gpu">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Ekran Kartı listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="gpuTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Altsistem</th>
+											<th>Bellek</th>
+											<th>Kernel</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="disk">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Disk listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="diskTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Marka</th>
+											<th>Açıklama</th>
+											<th>Versiyon</th>
+											<th>Ürün</th>
+											<th>Serial</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="memory">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Bellek listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="memoryTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Marka</th>
+											<th>Hız</th>
+											<th>Boyut</th>
+											<th>Tip</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="bios">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">BIOS listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="biosTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Marka</th>
+											<th>Versiyon</th>
+											<th>Çıkış Tarihi</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="networkInterface">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Network Listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="networkInterfaceTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Marka</th>
+											<th>Versiyon</th>
+											<th>Ürün</th>
+											<th>Yetenekler</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		var tables = {};
 		$(function() {
+			// CPU
+			var fnActionBtnsCpu = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/cpu/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/cpu/" + row['id'] + "/delete', 'cpuTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackCpu = function(settings) {
+				if ($("#newCpuBtn").length == 0) {
+					$("#cpuTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newCpuBtn\">Yeni</button>");
+					$("#newCpuBtn").on("click", function() {
+						window.location.href = '/alfa/hardware/cpu/create';
+					});
+				}
+			};
+			const colsCpu = [
+				{"data": "brand", "searchable": true, "orderable": true }, 
+				{"data": "model", "searchable": true, "orderable": true }, 
+				{"data": "pyhsicalCoreCount", "searchable": true, "orderable": true }, 
+				{"data": "hzAdvertised", "searchable": true, "orderable": true }, 
+				{"data": "vendorId", "searchable": true, "orderable": true }, 
+				{"data": "arch", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsCpu, "searchable": false, "orderable": false }
+			];
+			tables.cpuTable = $('#cpuTable').paginatedTable("/alfa/hardware/cpu/list-paginated", "cpus", colsCpu, drawCallbackCpu);
+
+			// GPU
+			var fnActionBtnsGpu = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/gpu/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/gpu/" + row['id'] + "/delete', 'gpuTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackGpu = function(settings) {
+				if ($("#newGpuBtn").length == 0) {
+					$("#gpuTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newGpuBtn\">Yeni</button>");
+					$("#newGpuBtn").on("click", function() {
+						window.location.href = '/alfa/hardware/gpu/create';
+					});
+				}
+			};
+			const colsGpu = [
+				{"data": "subsystem", "searchable": true, "orderable": true }, 
+				{"data": "kernel", "searchable": true, "orderable": true }, 
+				{"data": "memory", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsGpu, "searchable": false, "orderable": false }
+			];
+			
+			// Disk
+			var fnActionBtnsDisk = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/disk/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/disk/" + row['id'] + "/delete', 'diskTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackDisk = function(settings) {
+				if ($("#newDiskBtn").length == 0) {
+					$("#diskTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newDiskBtn\">Yeni</button>");
+					$("#newDiskBtn").on("click", function() {
+						window.location.href = '/alfa/hardware/disk/create';
+					});
+				}
+			};
+			const colsDisk = [
+				{"data": "vendor", "searchable": true, "orderable": true }, 
+				{"data": "description", "searchable": true, "orderable": true }, 
+				{"data": "version", "searchable": true, "orderable": true }, 
+				{"data": "product", "searchable": true, "orderable": true }, 
+				{"data": "serial", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsDisk, "searchable": false, "orderable": false }
+			];
+
+			// Memory
+			var fnActionBtnsMemory = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/memory/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/memory/" + row['id'] + "/delete', 'memoryTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackMemory = function(settings) {
+				if ($("#newMemoryBtn").length == 0) {
+					$("#memoryTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newMemoryBtn\">Yeni</button>");
+					$("#newMemoryBtn").on("click", function() {
+						window.location.href = '/alfa/hardware/memory/create';
+					});
+				}
+			};
+			const colsMemory = [
+				{"data": "manufacturer", "searchable": true, "orderable": true }, 
+				{"data": "speed", "searchable": true, "orderable": true }, 
+				{"data": "size", "searchable": true, "orderable": true }, 
+				{"data": "type", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsMemory, "searchable": false, "orderable": false }
+			];
+
+			// BIOS
+			var fnActionBtnsBios = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/bios/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/bios/" + row['id'] + "/delete', 'biosTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackBios = function(settings) {
+				if ($("#newBiosBtn").length == 0) {
+					$("#biosTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newBiosBtn\">Yeni</button>");
+					$("#newBiosBtn").on("click", function() {
+						window.location.href = '/alfa/hardware/bios/create';
+					});
+				}
+			};
+			const colsBios = [
+				{"data": "vendor", "searchable": true, "orderable": true }, 
+				{"data": "version", "searchable": true, "orderable": true }, 
+				{"data": "releaseDate", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsBios, "searchable": false, "orderable": false }
+			];
+
+			// NetworkInterface
+			var fnActionBtnsNetworkInterface = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/networkInterface/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/networkinterface/" + row['id'] + "/delete', 'networkInterfaceTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackNetworkInterface = function(settings) {
+				if ($("#newNetworkInterfaceBtn").length == 0) {
+					$("#networkInterfaceTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newNetworkInterfaceBtn\">Yeni</button>");
+					$("#newNetworkInterfaceBtn").on("click", function() {
+						window.location.href = '/alfa/hardware/networkInterface/create';
+					});
+				}
+			};
+			const colsNetworkInterface = [
+				{"data": "vendor", "searchable": true, "orderable": true }, 
+				{"data": "version", "searchable": true, "orderable": true }, 
+				{"data": "product", "searchable": true, "orderable": true }, 
+				{"data": "capabilities", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsNetworkInterface, "searchable": false, "orderable": false }
+			];
+
+			// Handle table init
+			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				if ($(e.target).attr('href') == "#gpu") {
+					tables.gpuTable = $('#gpuTable').paginatedTable("/alfa/hardware/gpu/list-paginated", "gpus", colsGpu, drawCallbackGpu);
+				} else if ($(e.target).attr('href') == "#disk") {
+					tables.diskTable = $('#diskTable').paginatedTable("/alfa/hardware/disk/list-paginated", "disks", colsDisk, drawCallbackDisk);			
+				} else if ($(e.target).attr('href') == "#memory") {
+					tables.memoryTable = $('#memoryTable').paginatedTable("/alfa/hardware/memory/list-paginated", "memories", colsMemory, drawCallbackMemory);			
+				} else if ($(e.target).attr('href') == "#bios") {
+					tables.biosTable = $('#biosTable').paginatedTable("/alfa/hardware/bios/list-paginated", "bioss", colsBios, drawCallbackBios);			
+				} else if ($(e.target).attr('href') == "#networkInterface") {
+					tables.networkInterface = $('#networkInterfaceTable').paginatedTable("/alfa/hardware/networkInterface/list-paginated", "networkInterfaces", colsNetworkInterface, drawCallbackNetworkInterface);			
+				}
+			});
 		});
+		
 	</script>
 </body>
 </html>

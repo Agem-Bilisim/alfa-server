@@ -8,15 +8,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import tr.com.agem.alfa.agent.sysinfo.Bios;
 import tr.com.agem.alfa.agent.sysinfo.Cpu;
 import tr.com.agem.alfa.agent.sysinfo.Disk;
 import tr.com.agem.alfa.agent.sysinfo.Gpu;
+import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.Memory;
 import tr.com.agem.alfa.agent.sysinfo.Network;
-import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.PeripheralDevice;
 import tr.com.agem.alfa.agent.sysinfo.Platform;
 import tr.com.agem.alfa.agent.sysinfo.Process;
@@ -27,8 +26,6 @@ import tr.com.agem.alfa.agent.sysinfo.Process;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "platform", "installed_packages", "disk", "cpu", "bios", "peripheral_devices", "gpu", "processes",
-		"users", "network", "memory" })
 public class SysInfoResultMessage extends AgentBaseMessage {
 
 	private static final long serialVersionUID = 1135297498132000603L;

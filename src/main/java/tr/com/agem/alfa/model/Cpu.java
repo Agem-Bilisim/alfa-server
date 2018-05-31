@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "c_agent_cpu")
 public class Cpu extends BaseModel {
@@ -63,7 +65,8 @@ public class Cpu extends BaseModel {
 	@Column(name = "MODEL")
 	private String model;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.cpu")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cpu")
 	private Set<AgentCpu> agentCpus = new HashSet<AgentCpu>(0);
 
 	public String getBits() {

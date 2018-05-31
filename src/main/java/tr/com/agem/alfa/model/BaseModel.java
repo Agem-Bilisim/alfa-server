@@ -52,9 +52,13 @@ public abstract class BaseModel implements Serializable {
 		}
 		if (createdBy == null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			CurrentUser user = (CurrentUser) authentication.getPrincipal();
-			checkNotNull(user, "Current user not found.");
-			createdBy = (String) user.getUsername();
+			if (authentication.getPrincipal() instanceof CurrentUser) {
+				CurrentUser user = (CurrentUser) authentication.getPrincipal();
+				checkNotNull(user, "Current user not found.");
+				createdBy = (String) user.getUsername();
+			} else {
+				createdBy = "SYSTEM";
+			}
 		}
 	}
 
@@ -65,9 +69,13 @@ public abstract class BaseModel implements Serializable {
 		}
 		if (lastModifiedBy == null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			CurrentUser user = (CurrentUser) authentication.getPrincipal();
-			checkNotNull(user, "Current user not found.");
-			lastModifiedBy = (String) user.getUsername();
+			if (authentication.getPrincipal() instanceof CurrentUser) {
+				CurrentUser user = (CurrentUser) authentication.getPrincipal();
+				checkNotNull(user, "Current user not found.");
+				lastModifiedBy = (String) user.getUsername();
+			} else {
+				lastModifiedBy = "SYSTEM";
+			}
 		}
 	}
 

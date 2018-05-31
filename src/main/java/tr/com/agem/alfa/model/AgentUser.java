@@ -20,7 +20,7 @@ public class AgentUser extends BaseModel {
 	@Column(name = "NAME", nullable = false, length = 255, unique = true)
 	private String name;
 
-	@Column(name = "GROUPS", nullable = false, length = 255)
+	@Column(name = "GROUPS", length = 255)
 	private String commaSeparatedGroups;
 
 	@JsonIgnore

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,25 @@ import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.AgentCpu;
+import tr.com.agem.alfa.model.AgentPeripheralDevice;
+import tr.com.agem.alfa.model.AgentRunningProcess;
+import tr.com.agem.alfa.model.AgentUser;
+import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.model.Platform;
+import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.util.CommonUtils;
 
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
 @Controller
 public class AgentController {
 
@@ -61,7 +72,7 @@ public class AgentController {
 		}
 		try {
 			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
-			agent = toAgentEntity(message, "SYSTEM", agent);
+			agent = toAgentEntity(message, agent);
 			agentService.saveOrUpdate(agent);
 			log.info("Agent and its system info created/updated successfully.");
 		} catch (Exception e) {
@@ -73,8 +84,7 @@ public class AgentController {
 		return ResponseEntity.ok(result);
 	}
 
-	private Agent toAgentEntity(SysInfoResultMessage message, String principal, Agent origAgent)
-			throws JsonProcessingException {
+	private Agent toAgentEntity(SysInfoResultMessage message, Agent origAgent) throws JsonProcessingException {
 		Agent agent = origAgent != null ? origAgent : new Agent();
 		//
 		// Agent
@@ -143,7 +153,9 @@ public class AgentController {
 			Gpu gpu = new Gpu();
 			gpu.setSubsystem(d.getSubsystem());
 			gpu.setKernel(d.getKernel());
-			gpu.setMemory(d.getKernel());
+			gpu.setMemory(d.getMemory());
+			gpu.setDriverDate(d.getDriverDate());
+			gpu.setDriverVersion(d.getDriverVersion());
 			agent.addGpu(gpu);
 		}
 		//
@@ -164,12 +176,100 @@ public class AgentController {
 		pl.setSystem(message.getPlatform().getSystem());
 		pl.setMachine(message.getPlatform().getMachine());
 		agent.setPlatform(pl);
-		// TODO users, processes, cpus, peripheral
-		return agent;
+		//
+		// Users
+		//
+		if (message.getUsers() != null) {
+			for (String u : message.getUsers()) {
+				AgentUser user = new AgentUser();
+				user.setName(u);
+				agent.addUser(user);
+			}
+		}
+		//
+		// Processes
+		//
+		if (message.getProcesses() != null) {
+			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
 
+				RunningProcess process = new RunningProcess();
+				process.setName(p.getName());
+
+				AgentRunningProcess cross = new AgentRunningProcess();
+				cross.setCpuPercent(p.getCpuPercent() != null ? p.getCpuPercent().toString() : null);
+				cross.setCpuTimes(p.getCpuTimes() != null ? StringUtils.join(",", p.getCpuTimes()) : null);
+				cross.setMemoryInfo(p.getMemoryInfo() != null ? StringUtils.join(",", p.getMemoryInfo()) : null);
+				cross.setPid(p.getPid() != null ? p.getPid().toString() : null);
+				cross.setUsername(p.getUsername() != null ? p.getUsername() : "SYSTEM");
+				cross.setAgent(agent);
+				cross.setRunningProcess(process);
+
+				agent.getAgentRunningProcesses().add(cross);
+			}
+		}
+		//
+		// CPU
+		//
+		if (message.getCpu() != null) {
+			Cpu cpu = new Cpu();
+			cpu.setArch(message.getCpu().getArch());
+			cpu.setBits(message.getCpu().getBits() != null ? message.getCpu().getBits().toString() : null);
+			cpu.setBrand(message.getCpu().getBrand());
+			cpu.setCount(message.getCpu().getCount());
+			cpu.setExtendedFamily(
+					message.getCpu().getExtendedFamily() != null ? message.getCpu().getExtendedFamily().toString()
+							: null);
+			cpu.setFamily(message.getCpu().getFamily() != null ? message.getCpu().getFamily().toString() : null);
+			cpu.setHzAdvertised(message.getCpu().getHzAdvertised());
+			cpu.setL2CacheAssociativity(message.getCpu().getL2CacheAssociativity());
+			cpu.setL2CacheLineSize(
+					message.getCpu().getL2CacheLineSize() != null ? message.getCpu().getL2CacheLineSize().toString()
+							: null);
+			cpu.setL2CacheSize(message.getCpu().getL2CacheSize());
+			cpu.setLogicalCoreCount(message.getCpu().getLogicalCoreCount());
+			cpu.setModel(message.getCpu().getModel() != null ? message.getCpu().getModel().toString() : null);
+			cpu.setProcessor(message.getCpu().getProcessor());
+			cpu.setPyhsicalCoreCount(message.getCpu().getPyhsicalCoreCount());
+			cpu.setRawArchString(message.getCpu().getRawArchString());
+			cpu.setVendorId(message.getCpu().getVendorId());
+
+			AgentCpu cross = new AgentCpu();
+			cross.setCommaSeparatedCpuTimes(
+					message.getCpu().getCpuTimes() != null ? StringUtils.join(",", message.getCpu().getCpuTimes())
+							: null);
+			cross.setCommaSeparatedFlags(
+					message.getCpu().getFlags() != null ? StringUtils.join(",", message.getCpu().getFlags()) : null);
+			cross.setCommaSeparatedStats(
+					message.getCpu().getStats() != null ? StringUtils.join(",", message.getCpu().getStats()) : null);
+			cross.setHzActual(message.getCpu().getHzActual());
+			cross.setAgent(agent);
+			cross.setCpu(cpu);
+
+			agent.getAgentCpus().add(cross);
+		}
+		//
+		// Peripherals
+		//
+		if (message.getPeripheralDevices() != null) {
+			for (tr.com.agem.alfa.agent.sysinfo.PeripheralDevice p : message.getPeripheralDevices()) {
+				PeripheralDevice peripheral = new PeripheralDevice();
+				peripheral.setShowInSurvey(false);
+				peripheral.setTag(p.getTag());
+
+				AgentPeripheralDevice cross = new AgentPeripheralDevice();
+				cross.setDeviceId(p.getDevice());
+				cross.setDevicePath(p.getDevice());
+				cross.setAgent(agent);
+				cross.setPeripheralDevice(peripheral);
+
+				agent.getAgentPeripheralDevices().add(cross);
+			}
+		}
+		return agent;
 	}
 
 	private String toCapabilityString(Map<String, String> capabilities) {
+		if (capabilities == null || capabilities.isEmpty()) return null;
 		StringBuilder cap = new StringBuilder();
 		for (Entry<String, String> e : capabilities.entrySet()) {
 			cap.append(e.getKey()).append(":").append(e.getValue()).append(",");
