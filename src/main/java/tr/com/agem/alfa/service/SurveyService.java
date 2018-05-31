@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Survey;
+import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.repository.SurveyRepository;
+import tr.com.agem.alfa.repository.SurveyResultRepository;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -18,10 +20,12 @@ import tr.com.agem.alfa.repository.SurveyRepository;
 public class SurveyService {
 
 	private final SurveyRepository surveyRepository;
+	private final SurveyResultRepository surveyResultRepository;
 
 	@Autowired
-	public SurveyService(SurveyRepository surveyRepository) {
+	public SurveyService(SurveyRepository surveyRepository, SurveyResultRepository surveyResultRepository) {
 		this.surveyRepository = surveyRepository;
+		this.surveyResultRepository = surveyResultRepository;
 	}
 
 	public Survey getSurvey(Long id) {
@@ -50,6 +54,11 @@ public class SurveyService {
 		}
 		// Create
 		this.surveyRepository.save(survey);
+	}
+
+	public void saveResult(SurveyResult result) {
+		Assert.notNull(result, "Survey result must not be null.");
+		surveyResultRepository.save(result);
 	}
 
 }

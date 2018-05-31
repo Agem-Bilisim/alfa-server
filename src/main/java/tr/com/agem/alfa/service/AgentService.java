@@ -38,7 +38,7 @@ public class AgentService {
 		Assert.notNull(messagingId, "Messaging ID must not be null.");
 		return this.agentRepository.getAgentByMessagingId(messagingId);
 	}
-	
+
 	public Page<Agent> getAgents(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
@@ -46,6 +46,11 @@ public class AgentService {
 			return null;
 		}
 		return this.agentRepository.findAll(pageable);
+	}
+
+	public Agent getAgent(Long id) {
+		Assert.notNull(id, "Agent ID must not be null.");
+		return this.agentRepository.findOne(id);
 	}
 
 }

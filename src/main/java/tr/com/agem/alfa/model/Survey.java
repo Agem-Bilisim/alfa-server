@@ -1,14 +1,18 @@
 package tr.com.agem.alfa.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import tr.com.agem.alfa.model.enums.SurveyType;
 
 /**
- * @author emre
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Entity
 @Table(name = "c_survey")
@@ -28,6 +32,9 @@ public class Survey extends BaseModel {
 
 	@Column(name = "SURVEY_TYPE")
 	private Integer surveyType;
+
+	@OneToMany(mappedBy = "survey")
+	private Set<SurveyResult> surveyResults = new HashSet<SurveyResult>(0);
 
 	public String getLabel() {
 		return label;
@@ -71,6 +78,14 @@ public class Survey extends BaseModel {
 		} else {
 			this.surveyType = surveyType.getId();
 		}
+	}
+
+	public Set<SurveyResult> getSurveyResults() {
+		return surveyResults;
+	}
+
+	public void setSurveyResults(Set<SurveyResult> surveyResults) {
+		this.surveyResults = surveyResults;
 	}
 
 }

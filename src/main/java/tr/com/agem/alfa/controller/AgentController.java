@@ -31,6 +31,7 @@ import tr.com.agem.alfa.agent.sysinfo.Device;
 import tr.com.agem.alfa.agent.sysinfo.GpuDevice;
 import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
+import tr.com.agem.alfa.messaging.message.SurveyResultMessage;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.AgentCpu;
@@ -45,8 +46,11 @@ import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.model.Platform;
 import tr.com.agem.alfa.model.RunningProcess;
+import tr.com.agem.alfa.model.Survey;
+import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
+import tr.com.agem.alfa.service.SurveyService;
 import tr.com.agem.alfa.util.CommonUtils;
 
 /**
@@ -57,8 +61,14 @@ public class AgentController {
 
 	private static final Logger log = LoggerFactory.getLogger(AgentController.class);
 
+	private final AgentService agentService;
+	private final SurveyService surveyService;
+
 	@Autowired
-	private AgentService agentService;
+	public AgentController(AgentService agentService, SurveyService surveyService) {
+		this.agentService = agentService;
+		this.surveyService = surveyService;
+	}
 
 	@PostMapping("/agent/sysinfo-result")
 	public @ResponseBody ResponseEntity<?> handleSysInfoResult(@Valid @RequestBody SysInfoResultMessage message,
@@ -79,6 +89,51 @@ public class AgentController {
 			String error = "Exception occurred when trying to handle system info.";
 			log.error(error, e);
 			result.setMessage(error);
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/agent/survey-result")
+	public @ResponseBody ResponseEntity<?> handleSurveyResult(@Valid @RequestBody SurveyResultMessage message,
+			BindingResult bindingResult) {
+		RestResponseBody result = new RestResponseBody();
+		if (bindingResult.hasErrors()) {
+			String error = ControllerUtils.toErrorMessage(bindingResult);
+			log.error(error);
+			result.setMessage(error);
+			return ResponseEntity.badRequest().body(result);
+		}
+		try {
+			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
+			Survey survey = surveyService.getSurvey(message.getSurveyId());
+			surveyService.saveResult(toSurveyResultEntity(message, checkNotNull(agent, "Agent not found."),
+					checkNotNull(survey, "Sruvey not found.")));
+			log.info("Survey result created successfully.");
+		} catch (Exception e) {
+			String error = "Exception occurred when trying to handle system info.";
+			log.error(error, e);
+			result.setMessage(error);
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/agent/list")
+	public String getListPage() {
+		return "agent/list";
+	}
+
+	@GetMapping("/agent/list-paginated")
+	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
+			Pageable pageable) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<Agent> agents = agentService.getAgents(pageable, search);
+			result.add("agents", checkNotNull(agents, "Agents not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find agents, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
 			return ResponseEntity.badRequest().body(result);
 		}
 		return ResponseEntity.ok(result);
@@ -277,24 +332,15 @@ public class AgentController {
 		return cap.toString();
 	}
 
-	@GetMapping("/agent/list")
-	public String getListPage() {
-		return "agent/list";
-	}
-
-	@GetMapping("/agent/list-paginated")
-	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
-			Pageable pageable) {
-		RestResponseBody result = new RestResponseBody();
-		try {
-			Page<Agent> agents = agentService.getAgents(pageable, search);
-			result.add("agents", checkNotNull(agents, "Agents not found."));
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to find agents, assuming invalid parameters", e);
-			result.setMessage(e.getMessage());
-			return ResponseEntity.badRequest().body(result);
-		}
-		return ResponseEntity.ok(result);
+	private SurveyResult toSurveyResultEntity(SurveyResultMessage message, Agent agent, Survey survey)
+			throws JsonProcessingException {
+		SurveyResult entity = new SurveyResult();
+		entity.setAgent(agent);
+		agent.getSurveyResults().add(entity);
+		entity.setSurvey(survey);
+		survey.getSurveyResults().add(entity);
+		entity.setResult(new ObjectMapper().writeValueAsBytes(message.getResult()));
+		return entity;
 	}
 
 }
