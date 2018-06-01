@@ -15,7 +15,7 @@
 <body>
 	<th:block layout:fragment="breadcrumb-list">
 		<li><a th:href="${'alfa/' + form.redirect}"><i class="fa fa-cubes"></i> <span th:text="${rlabel}"></span></a></li>
-		<li class="active">GPU Ekle</li>
+		<li class="active">Network Ekle</li>
 	</th:block>
 
 	<div layout:fragment="content">
@@ -23,31 +23,37 @@
 			<div class="col-xs-12">
 				<div class="box box-info">
 					<div class="box-header">
-						<h3 class="box-title">GPU Ekle</h3>
+						<h3 class="box-title">Network Ekle</h3>
 					</div>
-					<form role="form" id="gpuForm" th:action="@{/hardware/gpu/create}" method="post" th:object="${form}">
+					<form role="form" id="networkInterfaceForm" th:action="@{/hardware/networkInterface/create}" method="post" th:object="${form}">
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>
 						<input type="text" id="redirect" style="display:none;" name="redirect" th:field="*{redirect}" />
 						<div class="box-body">
-							<div class="form-group" th:classappend="${#fields.hasErrors('kernel')} ? 'has-error' : ''">
-								<label for="kernel">Kernel</label>
-								<input type="text" class="form-control" id="kernel"
-									name="kernel" placeholder="Kernel" th:field="*{kernel}" />
-								<span class="help-block" th:if="${#fields.hasErrors('kernel')}" th:errors="*{kernel}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('vendor')} ? 'has-error' : ''">
+								<label for="vendor">Sağlayıcı</label>
+								<input type="text" class="form-control" id="vendor"
+									name="vendor" placeholder="Sağlayıcı" th:field="*{vendor}" />
+								<span class="help-block" th:if="${#fields.hasErrors('vendor')}" th:errors="*{vendor}">Hata</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('memory')} ? 'has-error' : ''">
-								<label for="memory">Bellek</label>
-								<input type="text" class="form-control" id="memory"
-									name="memory" placeholder="Bellek" th:field="*{memory}" />
-								<span class="help-block" th:if="${#fields.hasErrors('memory')}" th:errors="*{memory}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('version')} ? 'has-error' : ''">
+								<label for="version">Versiyon</label>
+								<input type="text" class="form-control" id="version"
+									name="version" placeholder="Versiyon" th:field="*{version}" />
+								<span class="help-block" th:if="${#fields.hasErrors('version')}" th:errors="*{version}">Hata</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('subsystem')} ? 'has-error' : ''">
-								<label for="subsystem">Altsistem</label>
-								<input type="text" class="form-control" id="subsystem"
-									name="subsystem" placeholder="Altsistem" th:field="*{subsystem}" />
-								<span class="help-block" th:if="${#fields.hasErrors('subsystem')}" th:errors="*{subsystem}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('product')} ? 'has-error' : ''">
+								<label for="product">Ürün</label>
+								<input type="text" class="form-control" id="product"
+									name="product" placeholder="Ürün" th:field="*{product}" />
+								<span class="help-block" th:if="${#fields.hasErrors('product')}" th:errors="*{product}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('capabilities')} ? 'has-error' : ''">
+								<label for="capabilities">Yetenekler</label>
+								<input type="text" class="form-control" id="capabilities"
+									name="capabilities" placeholder="Yetenekler" th:field="*{capabilities}" />
+								<span class="help-block" th:if="${#fields.hasErrors('capabilities')}" th:errors="*{capabilities}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('agents')} ? 'has-error' : ''">
 								<label>Ajan</label>

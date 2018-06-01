@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -101,6 +103,22 @@ public class HardwareService {
 			return null;
 		}
 		return this.inetRepository.findAll(pageable);
+	}
+	
+	public List<Disk> getDisks() {
+		return this.diskRepository.findAll();
+	}
+
+	public List<Memory> getMemories() {
+		return this.memoryRepository.findAll();
+	}
+
+	public List<Bios> getBioss() {
+		return this.biosRepository.findAll();
+	}
+
+	public List<NetworkInterface> getNetworkInterfaces() {
+		return this.inetRepository.findAll();
 	}
 
 }

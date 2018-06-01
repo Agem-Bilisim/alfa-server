@@ -2,9 +2,7 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -19,22 +17,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import tr.com.agem.alfa.form.BiosForm;
 import tr.com.agem.alfa.form.CpuForm;
+import tr.com.agem.alfa.form.DiskForm;
 import tr.com.agem.alfa.form.GpuForm;
-import tr.com.agem.alfa.form.PackageForm;
-import tr.com.agem.alfa.form.ProblemForm;
-import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.form.MemoryForm;
+import tr.com.agem.alfa.form.NetworkInterfaceForm;
 import tr.com.agem.alfa.model.Bios;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
-import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.HardwareService;
-import tr.com.agem.alfa.util.SelectboxBuilder;
-import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -173,5 +169,53 @@ public class HardwareController {
 		}
 		model.put("form", new GpuForm().setRedirect(redirect));
 		return new ModelAndView("hardware/gpu/create", model);
+	}
+
+	@GetMapping("/hardware/disk/create")
+	public ModelAndView getDiskCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("agents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new DiskForm().setRedirect(redirect));
+		return new ModelAndView("hardware/disk/create", model);
+	}
+
+	@GetMapping("/hardware/memory/create")
+	public ModelAndView getMemoryCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("agents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new MemoryForm().setRedirect(redirect));
+		return new ModelAndView("hardware/memory/create", model);
+	}
+
+	@GetMapping("/hardware/bios/create")
+	public ModelAndView getBiosCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("agents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new BiosForm().setRedirect(redirect));
+		return new ModelAndView("hardware/bios/create", model);
+	}
+	
+	@GetMapping("/hardware/networkInterface/create")
+	public ModelAndView getNetworkInterfaceCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("agents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new NetworkInterfaceForm().setRedirect(redirect));
+		return new ModelAndView("hardware/networkInterface/create", model);
 	}
 }
