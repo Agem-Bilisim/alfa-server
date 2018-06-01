@@ -120,5 +120,109 @@ public class HardwareService {
 	public List<NetworkInterface> getNetworkInterfaces() {
 		return this.inetRepository.findAll();
 	}
+	
+	public void saveCpu(Cpu cpu) {
+		Assert.notNull(cpu, "Cpu must not be null.");
+		Cpu c = null;
+		if (cpu.getId() != null && (c = cpuRepository.findOne(cpu.getId())) != null) {
+			// Update
+			c.setL2CacheSize(cpu.getL2CacheSize());
+			c.setBits(cpu.getBits());
+			c.setExtendedFamily(cpu.getExtendedFamily());
+			c.setL2CacheAssociativity(cpu.getL2CacheAssociativity());
+			c.setL2CacheLineSize(cpu.getL2CacheLineSize());
+			c.setHzAdvertised(cpu.getHzAdvertised());
+			c.setProcessor(cpu.getProcessor());
+			c.setPyhsicalCoreCount(cpu.getPyhsicalCoreCount());
+			c.setLogicalCoreCount(cpu.getLogicalCoreCount());
+			c.setBrand(cpu.getBrand());
+			c.setRawArchString(cpu.getRawArchString());
+			this.cpuRepository.save(c);
+			return;
+		}
+		// Create
+		this.cpuRepository.save(cpu);
+	}
+
+	public void saveGpu(Gpu gpu) {
+		Assert.notNull(gpu, "Gpu must not be null.");
+		Gpu g = null;
+		if (gpu.getId() != null && (g = gpuRepository.findOne(gpu.getId())) != null) {
+			// Update
+			g.setSubsystem(gpu.getSubsystem());
+			g.setKernel(gpu.getKernel());
+			g.setMemory(gpu.getMemory());
+			g.setDriverDate(gpu.getDriverDate());
+			g.setDriverVersion(gpu.getDriverVersion());
+			this.gpuRepository.save(g);
+			return;
+		}
+		// Create
+		this.gpuRepository.save(gpu);
+	}
+
+	public void saveDisk(Disk disk) {
+		Assert.notNull(disk, "Disk must not be null.");
+		Disk d = null;
+		if (disk.getId() != null && (d = diskRepository.findOne(disk.getId())) != null) {
+			// Update
+			d.setVendor(disk.getVendor());
+			d.setDescription(disk.getDescription());
+			d.setVersion(disk.getVersion());
+			d.setProduct(disk.getProduct());
+			d.setSerial(disk.getSerial());
+			this.diskRepository.save(d);
+			return;
+		}
+		// Create
+		this.diskRepository.save(disk);
+	}
+
+	public void saveMemory(Memory memory) {
+		Assert.notNull(memory, "Memory must not be null.");
+		Memory m = null;
+		if (memory.getId() != null && (m = memoryRepository.findOne(memory.getId())) != null) {
+			// Update
+			m.setSpeed(memory.getSpeed());
+			m.setSize(memory.getSize());
+			m.setType(memory.getType());
+			m.setManufacturer(memory.getManufacturer());
+			this.memoryRepository.save(m);
+			return;
+		}
+		// Create
+		this.memoryRepository.save(memory);
+	}
+
+	public void saveBios(Bios bios) {
+		Assert.notNull(bios, "Bios must not be null.");
+		Bios b = null;
+		if (bios.getId() != null && (b = biosRepository.findOne(bios.getId())) != null) {
+			// Update
+			b.setVendor(bios.getVendor());
+			b.setVersion(bios.getVersion());
+			b.setReleaseDate(bios.getReleaseDate());
+			this.biosRepository.save(b);
+			return;
+		}
+		// Create
+		this.biosRepository.save(bios);
+	}
+
+	public void saveNetworkInterface(NetworkInterface networkInterface) {
+		Assert.notNull(networkInterface, "NetworkInterface must not be null.");
+		NetworkInterface ni = null;
+		if (networkInterface.getId() != null && (ni = inetRepository.findOne(networkInterface.getId())) != null) {
+			// Update
+			ni.setVendor(networkInterface.getVendor());
+			ni.setVersion(networkInterface.getVersion());
+			ni.setProduct(networkInterface.getProduct());
+			ni.setCapabilities(networkInterface.getCapabilities());
+			this.inetRepository.save(ni);
+			return;
+		}
+		// Create
+		this.inetRepository.save(networkInterface);
+	}
 
 }

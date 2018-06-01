@@ -3,7 +3,13 @@ package tr.com.agem.alfa.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import tr.com.agem.alfa.form.BiosForm;
+import tr.com.agem.alfa.form.CpuForm;
+import tr.com.agem.alfa.form.DiskForm;
+import tr.com.agem.alfa.form.GpuForm;
 import tr.com.agem.alfa.form.LdapIntegrationForm;
+import tr.com.agem.alfa.form.MemoryForm;
+import tr.com.agem.alfa.form.NetworkInterfaceForm;
 import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProblemReferenceForm;
@@ -11,8 +17,14 @@ import tr.com.agem.alfa.form.ProcessForm;
 import tr.com.agem.alfa.form.SurveyForm;
 import tr.com.agem.alfa.form.SysRoleForm;
 import tr.com.agem.alfa.form.SysUserForm;
+import tr.com.agem.alfa.model.Bios;
+import tr.com.agem.alfa.model.Cpu;
+import tr.com.agem.alfa.model.Disk;
+import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.LdapIntegration;
+import tr.com.agem.alfa.model.Memory;
+import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.RunningProcess;
@@ -62,4 +74,16 @@ public interface SysMapper {
 	LdapIntegrationForm toIntegrationForm(LdapIntegration entity);
 
 	LdapIntegration toIntegrationEntity(LdapIntegrationForm form);
+
+	Cpu toCpuEntity(CpuForm form);
+	
+	Gpu toGpuEntity(GpuForm form);
+
+	Disk toDiskEntity(DiskForm form);
+
+	Memory toMemoryEntity(MemoryForm form);
+
+	Bios toBiosEntity(BiosForm form);
+
+	NetworkInterface toNetworkInterfaceEntity(NetworkInterfaceForm form);
 }
