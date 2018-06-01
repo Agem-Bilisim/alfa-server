@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -46,6 +48,10 @@ public class AgentService {
 			return null;
 		}
 		return this.agentRepository.findAll(pageable);
+	}
+	
+	public List<Agent> getAgents() {
+		return this.agentRepository.findAll();
 	}
 
 	public Agent getAgent(Long id) {

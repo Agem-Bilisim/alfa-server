@@ -2,6 +2,11 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +17,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
+import tr.com.agem.alfa.form.CpuForm;
+import tr.com.agem.alfa.form.GpuForm;
+import tr.com.agem.alfa.form.PackageForm;
+import tr.com.agem.alfa.form.ProblemForm;
+import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.Bios;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
+import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.HardwareService;
+import tr.com.agem.alfa.util.SelectboxBuilder;
+import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -30,13 +45,15 @@ public class HardwareController {
 	private static final Logger log = LoggerFactory.getLogger(HardwareController.class);
 
 	private final HardwareService hardwareService;
+	private final AgentService agentService;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
-	public HardwareController(HardwareService hardwareService) {
+	public HardwareController(HardwareService hardwareService, AgentService agentService) {
 		this.hardwareService = hardwareService;
+		this.agentService = agentService;
 	}
 
 	@GetMapping("/hardware/list")
@@ -133,5 +150,28 @@ public class HardwareController {
 		}
 		return ResponseEntity.ok(result);
 	}
+	
+	@GetMapping("/hardware/cpu/create")
+	public ModelAndView getCpuCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("possibleagents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new CpuForm().setRedirect(redirect));
+		return new ModelAndView("hardware/cpu/create", model);
+	}
 
+	@GetMapping("/hardware/gpu/create")
+	public ModelAndView getGpuCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("agents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new GpuForm().setRedirect(redirect));
+		return new ModelAndView("hardware/gpu/create", model);
+	}
 }
