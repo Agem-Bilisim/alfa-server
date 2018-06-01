@@ -21,7 +21,7 @@ public interface SysUserRepository extends JpaRepository<SysUser, Long> {
 
 	SysUser findByUserName(String userName);
 	
-	@Query("SELECT u FROM c_user u JOIN c_role r ON (r.id = u.role_id) WHERE r.name LIKE CONCAT('%',:rolename,'%')")
+	@Query("SELECT u FROM SysUser u INNER JOIN u.role r WHERE r.name LIKE CONCAT('%',:rolename,'%')")
 	List<SysUser> findByRoleName(@Param("rolename") String roleName);
 
 }
