@@ -49,7 +49,7 @@ public class AgentService {
 		}
 		return this.agentRepository.findAll(pageable);
 	}
-	
+
 	public List<Agent> getAgents() {
 		return this.agentRepository.findAll();
 	}
@@ -57,10 +57,6 @@ public class AgentService {
 	public Agent getAgent(Long id) {
 		Assert.notNull(id, "Agent ID must not be null.");
 		return this.agentRepository.findOne(id);
-	}
-
-	public List<Agent> getAgents() {
-		return this.agentRepository.findAll();
 	}
 
 }
