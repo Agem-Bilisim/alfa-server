@@ -9,4 +9,6 @@ import tr.com.agem.alfa.model.SurveyResult;
  */
 public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long> {
 
+	SurveyResult findFirstByAgentMessagingIdAndSurveyIdOrderByCreatedDateDesc(String messagingId, Long surveyId);
+
 }

@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		
-		<!-- Sen-survey modal -->
+		<!-- Send-survey modal -->
 		<div
 			layout:insert="layouts/default-modal :: modal(modalId='sendSurveyModal', modalHeader='Anket gönder', modalButton='Gönder')"
 			th:remove="tag">
@@ -47,6 +47,23 @@
 						<select class="form-control select2" multiple id="agents" name="agents" style="width: 100%;">
 							<option th:each="agent : ${agents}" th:text="${agent.hostName + ' - ' + agent.ipAddresses}" th:value="${agent.messagingId}"></option>
 						</select>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<!-- Send-survey modal -->
+		<div
+			layout:insert="layouts/info-modal :: modal(modalId='surveyResultModal', modalHeader='Anket sonucu', modalButton='Kapat')"
+			th:remove="tag">
+			<div layout:fragment="modal-content">
+				<form role="form" id="sendSurveyForm">
+					<div class="form-group">
+						<label>Anket sonucunun gösterileceği ajan:</label>
+						<select class="form-control" id="agents_result" name="agents_result" style="width: 100%;">
+							<option th:each="agent : ${agents}" th:text="${agent.hostName + ' - ' + agent.ipAddresses}" th:value="${agent.messagingId}"></option>
+						</select>
+						<div id="surveyElement"></div>
 					</div>
 				</form>
 			</div>
@@ -80,12 +97,48 @@
 			});
 			$('#sendSurveyModal').modal('show');
 		};
+		
+		// Hook handler for displaying survey result if there is any
+		var handleResult = function(surveyId) {
+			SurveyEditor.editorLocalization.currentLocale = "tr";
+			SurveyEditor.StylesManager.applyTheme("bootstrap");
+			$("#agents_result").one("change", function(){
+				var messagingId = $("#agents_result").val();
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : "/alfa/survey/" + surveyId + "/result/" + messagingId,
+					dataType : 'json',
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						if (!result || !result.data || !result.data["result"]) {
+							alertify.warning("Seçili ajana dair anket sonucu bulunamadı.");
+							return;
+						}
+						alertify.success('Anket sonucu okundu.');
+						window.survey = new Survey.Model(JSON.parse(result.data["survey"]));
+						survey.locale = 'tr';
+						survey.data = JSON.parse(JSON.parse(result.data["result"]));
+						survey.mode = 'display';
+						$("#surveyElement").Survey({model: survey});
+					}
+				});
+			});
+			$('#surveyResultModal').modal('show');
+		};
 	
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
 					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/survey/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i></button>" 
+					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i></button>" 
+					+ "<button class=\"btn btn-outline-info\" onclick=\"handleResult(" + row['id'] + ")\"><i class=\"fa fa-clipboard\"></i></button>" 
 					+ "</div>";
 			};
 			

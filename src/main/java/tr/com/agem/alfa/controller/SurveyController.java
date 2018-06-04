@@ -2,6 +2,7 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import javax.validation.Valid;
@@ -30,6 +31,7 @@ import tr.com.agem.alfa.messaging.message.ServerBaseMessage;
 import tr.com.agem.alfa.messaging.service.MessagingService;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Survey;
+import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.SurveyService;
 
@@ -88,11 +90,35 @@ public class SurveyController {
 	public ResponseEntity<?> handleSurveySend(@PathVariable(name = "surveyId") Long surveyId,
 			@PathVariable(name = "messagingId") String messagingId) {
 		RestResponseBody result = new RestResponseBody();
-		Survey survey = surveyService.getSurvey(surveyId);
-		checkNotNull(survey, String.format("Survey:%d not found.", surveyId));
 		try {
+			Survey survey = surveyService.getSurvey(surveyId);
+			checkNotNull(survey, String.format("Survey:%d not found.", surveyId));
 			ServerBaseMessage message = MessageFactory.newSurveyMessage(messagingId, survey);
 			messagingService.send(message);
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to send survey, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/survey/{surveyId}/result/{messagingId}")
+	public ResponseEntity<?> getSurveyResult(@PathVariable(name = "surveyId") Long surveyId,
+			@PathVariable(name = "messagingId") String messagingId) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Survey survey = surveyService.getSurvey(surveyId);
+			checkNotNull(survey, String.format("Survey:%d not found.", surveyId));
+			result.add("survey", survey.getSurveyJson());
+			if (survey != null && survey.getSurveyResults() != null) {
+				for (SurveyResult _result : survey.getSurveyResults()) {
+					if (_result != null) {
+						result.add("result", new String(_result.getResult(), StandardCharsets.ISO_8859_1));
+						break;
+					}
+				}
+			}
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to send survey, assuming invalid parameters", e);
 			result.setMessage(e.getMessage());

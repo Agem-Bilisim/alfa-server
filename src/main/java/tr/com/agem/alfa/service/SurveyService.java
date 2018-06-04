@@ -60,5 +60,9 @@ public class SurveyService {
 		Assert.notNull(result, "Survey result must not be null.");
 		surveyResultRepository.save(result);
 	}
+	
+	public SurveyResult getLatestSurveyResult(String messagingId, Long surveyId) {
+		return this.surveyResultRepository.findFirstByAgentMessagingIdAndSurveyIdOrderByCreatedDateDesc(messagingId, surveyId);
+	}
 
 }
