@@ -58,8 +58,8 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			// Return to list when cancel button is clicked
-			$('#cancelBtn').click(function() {
-				window.location.href = /*[[@{'/software/list'}]]*/'';
+			$('#cancelBtn').one("click", function() {
+				window.location.href = '/alfa/software/list';
 			});
 		});
 	</script>

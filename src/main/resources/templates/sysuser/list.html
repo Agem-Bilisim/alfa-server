@@ -48,7 +48,7 @@
 			var drawCallback = function(settings) {
 				if ($("#newUserBtn").length == 0) {
 					$("#userTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newUserBtn\">Yeni</button>");
-					$("#newUserBtn").on("click", function() {
+					$("#newUserBtn").one("click", function() {
 						window.location.href = '/alfa/sysuser/create';
 					});
 				}

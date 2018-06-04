@@ -96,17 +96,13 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			// Return to user list when cancel button is clicked
-			$('#cancelBtn').click(function() {
-				window.location.href = /*[[@{'/sysuser/list'}]]*/'';
+			$('#cancelBtn').one("click", function() {
+				window.location.href = '/alfa/sysuser/list';
 			});
-			
 			// Config checkbox
 			$('input[type="checkbox"].minimal').iCheck({
 		      checkboxClass: 'icheckbox_minimal-blue'
 		    });
-			
-			// Config selectbox
-			$('.select2').select2();
 		});
 	</script>
 </body>

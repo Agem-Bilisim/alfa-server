@@ -46,7 +46,7 @@
 			var drawCallback = function(settings) {
 				if ($("#newProcessBtn").length == 0) {
 					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\" style=\"margin-left:10px;\">Yeni</button>");
-					$("#newProcessBtn").on("click", function() {
+					$("#newProcessBtn").one("click", function() {
 						window.location.href = '/alfa/bpm-process/create';
 					});
 				}

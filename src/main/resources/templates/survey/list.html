@@ -92,7 +92,7 @@
 			var drawCallback = function(settings) {
 				if ($("#newSurveyBtn").length == 0) {
 					$("#surveyTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newSurveyBtn\">Yeni</button>");
-					$("#newSurveyBtn").on("click", function() {
+					$("#newSurveyBtn").one("click", function() {
 						window.location.href = '/alfa/survey/create';
 					});
 				}

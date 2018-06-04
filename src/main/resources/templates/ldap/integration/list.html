@@ -52,13 +52,13 @@
 			var drawCallback = function(settings) {
 				if ($("#newIntegrationBtn").length == 0) {
 					$("#integrationTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newIntegrationBtn\" style=\"margin-left:10px;\">Yeni</button>");
-					$("#newIntegrationBtn").on("click", function() {
+					$("#newIntegrationBtn").one("click", function() {
 						window.location.href = '/alfa/ldap/integration/create';
 					});
 				}
 				
 				// Add sync button handler
-				$(".ldap-sync-btn").click(function() {
+				$(".ldap-sync-btn").one("click", function() {
 					var id = $(this).attr("integrationId");
 					Alfa.addEventQueue(id);
 					$.ajax({
