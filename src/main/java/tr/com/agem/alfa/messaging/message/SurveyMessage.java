@@ -3,6 +3,7 @@ package tr.com.agem.alfa.messaging.message;
 import java.util.LinkedHashMap;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -16,6 +17,7 @@ public class SurveyMessage extends ServerBaseMessage {
 
 	private LinkedHashMap<String, Object> survey;
 
+	@JsonProperty("survey_id")
 	private Long surveyId;
 
 	public String getTo() {

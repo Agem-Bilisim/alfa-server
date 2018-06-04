@@ -130,7 +130,8 @@ public class SurveyController {
 	}
 
 	@GetMapping("/survey/list")
-	public String getListPage() {
+	public String getListPage(Model model) {
+		model.addAttribute("agents", agentService.getAgents());
 		return "survey/list";
 	}
 

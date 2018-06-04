@@ -59,4 +59,8 @@ public class AgentService {
 		return this.agentRepository.findOne(id);
 	}
 
+	public List<Agent> getAgents() {
+		return this.agentRepository.findAll();
+	}
+
 }

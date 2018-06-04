@@ -1,12 +1,11 @@
 package tr.com.agem.alfa.messaging.message;
 
-import java.util.LinkedHashMap;
-
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -20,9 +19,10 @@ public class SurveyResultMessage extends AgentBaseMessage {
 	private String from;
 
 	@NotNull
-	private LinkedHashMap<String, Object> result;
+	private String result;
 
 	@NotNull
+	@JsonProperty("survey_id")
 	private Long surveyId;
 
 	public String getFrom() {
@@ -33,11 +33,11 @@ public class SurveyResultMessage extends AgentBaseMessage {
 		this.from = from;
 	}
 
-	public LinkedHashMap<String, Object> getResult() {
+	public String getResult() {
 		return result;
 	}
 
-	public void setResult(LinkedHashMap<String, Object> result) {
+	public void setResult(String result) {
 		this.result = result;
 	}
 

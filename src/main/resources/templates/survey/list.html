@@ -35,11 +35,58 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Sen-survey modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='sendSurveyModal', modalHeader='Anket gönder', modalButton='Gönder')"
+			th:remove="tag">
+			<div layout:fragment="modal-content">
+				<form role="form" id="sendSurveyForm">
+					<div class="form-group">
+						<label>Anketin gönderileceği ajanlar:</label>
+						<select class="form-control select2" multiple id="agents" name="agents" style="width: 100%;">
+							<option th:each="agent : ${agents}" th:text="${agent.hostName + ' - ' + agent.ipAddresses}" th:value="${agent.messagingId}"></option>
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		// Hook handler for sending survey
+		var handleSend = function(surveyId) {
+			$("#sendSurveyModalBtn").one("click", function(){
+				$('#sendSurveyModal').modal('hide');
+				for (var i=0; i < $("#agents").val().length; i++) {
+					var messagingId = $("#agents").val()[i];
+					alertify.message("Anket " + $("option[value='" + messagingId + "']", "#agents").text() + " adlı ajana gönderiliyor.");
+					$.ajax({
+						type : "POST",
+						contentType : "application/json",
+						url : "/alfa/survey/" + surveyId + "/send/" + messagingId,
+						dataType : 'json',
+						cache : false,
+						timeout : 600000,
+						beforeSend: function(xhr) {
+							var token = $('#_csrf').attr('content');
+							var header = $('#_csrf_header').attr('content');
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(result) {
+							alertify.success('Anket gönderildi.');
+						}
+					});
+				}
+			});
+			$('#sendSurveyModal').modal('show');
+		};
+	
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/survey/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>";
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/survey/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i></button>" 
+					+ "</div>";
 			};
 			
 			var drawCallback = function(settings) {
