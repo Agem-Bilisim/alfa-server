@@ -4,9 +4,9 @@
 
 	<bean id="processEngineConfiguration"
 		class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
-		<property name="jdbcUrl" value="jdbc:mysql://db.agem.com.tr:3306/alfabpmn?useSSL=false" />
-		<property name="jdbcUsername" value="root" />
-		<property name="jdbcPassword" value="1" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/activiti?useSSL=false" />
+		<property name="jdbcUsername" value="activiti" />
+		<property name="jdbcPassword" value="activiti" />
 		<property name="jdbcDriver" value="org.mariadb.jdbc.Driver" />
 		<property name="databaseSchemaUpdate" value="true" />
 
