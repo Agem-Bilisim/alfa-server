@@ -15,3 +15,13 @@
 2. Connect to MySQL/MariaDB client and run `CREATE DATABASE alfa DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;` to create *alfa* database
 3. Open `application.properties` and update property to `spring.jpa.hibernate.ddl-auto=create` to create tables and insert initial records.
 4. Run project as *Spring Boot App*. (You may change the property back to `spring.jpa.hibernate.ddl-auto=none` to start faster.)
+
+## TROUBLESHOOTING
+
+* Database table not found error?
+
+Make sure JPA created the table correctly! If not, you can update property `spring.jpa.hibernate.ddl-auto=update` in `application.properties` to make sure database is sync'ed on project startup!
+
+* SysMapper bean not found/cannot be created?
+
+Run `mvn clean install -DskipTests` then refresh your project in Eclipse.
