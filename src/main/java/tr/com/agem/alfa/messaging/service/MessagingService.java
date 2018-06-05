@@ -36,6 +36,9 @@ public class MessagingService {
 
 	@Value("${sys.agent.port}")
 	private String AGENT_PORT;
+	
+	@Value("${sys.agent.test-url}")
+	private String TEST_URL;
 
 	@Autowired
 	public MessagingService(BaseMessagingClient messagingClient, AgentRepository agentRepository) {
@@ -50,6 +53,18 @@ public class MessagingService {
 			messagingClient.sendMessage("http://" + ipAddress + ":" + AGENT_PORT, getCorrespondingURL(message), message);
 			break;
 		}
+	}
+	
+	public boolean isOnline(Agent agent) {
+		Assert.notNull(agent, "Agent must not be null.");
+		for (String ipAddress : getIpAddresses(agent.getIpAddresses())) {
+			try {
+				messagingClient.sendMessage("http://" + ipAddress + ":" + AGENT_PORT, TEST_URL);
+				return true;
+			} catch (Exception e) {
+			}
+		}
+		return false;
 	}
 
 	/**

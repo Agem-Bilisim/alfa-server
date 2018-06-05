@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import tr.com.agem.alfa.model.enums.AgentType;
 
 /**
@@ -54,6 +56,7 @@ public class Agent extends BaseModel {
 	@Column(name = "LAST_INSTALLATION_DATE", nullable = false)
 	private Date lastInstallationDate;
 
+	@JsonIgnore
 	@Lob
 	@Column(name = "SYS_INFO")
 	private byte[] sysinfo;
@@ -76,13 +79,13 @@ public class Agent extends BaseModel {
 					@JoinColumn(name = "TAG_ID", nullable = false, updatable = false) })
 	private Set<Tag> tags = new HashSet<Tag>(0);
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(fetch=FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_package_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "INSTALLED_PACKAGE_ID", nullable = false, updatable = false) })
 	private Set<InstalledPackage> installedPackages = new HashSet<InstalledPackage>(0);
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(fetch=FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_user_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "USER_ID", nullable = false, updatable = false) })

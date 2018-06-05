@@ -22,14 +22,21 @@ public class HttpClient extends BaseMessagingClient {
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(host + url);
 
-		httpPost.setEntity(
-				new StringEntity(new ObjectMapper().writeValueAsString(message), ContentType.APPLICATION_JSON));
+		if (message != null) {
+			httpPost.setEntity(
+					new StringEntity(new ObjectMapper().writeValueAsString(message), ContentType.APPLICATION_JSON));
+		}
 		httpPost.setHeader("Accept", "application/json");
 		httpPost.setHeader("Content-type", "application/json");
 
 		CloseableHttpResponse response = client.execute(httpPost);
 		Assert.isTrue(response.getStatusLine().getStatusCode() == 200, "Gönderilen ajanda beklenmeyen hata oluştu.");
 		client.close();
+	}
+
+	@Override
+	public void sendMessage(String host, String url) throws Exception {
+		sendMessage(host, url, null);
 	}
 
 }

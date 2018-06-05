@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,7 @@ import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
 import tr.com.agem.alfa.messaging.message.SurveyResultMessage;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
+import tr.com.agem.alfa.messaging.service.MessagingService;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.AgentCpu;
 import tr.com.agem.alfa.model.AgentPeripheralDevice;
@@ -63,11 +65,29 @@ public class AgentController {
 
 	private final AgentService agentService;
 	private final SurveyService surveyService;
+	private final MessagingService messagingService;
 
 	@Autowired
-	public AgentController(AgentService agentService, SurveyService surveyService) {
+	public AgentController(AgentService agentService, SurveyService surveyService, MessagingService messagingService) {
 		this.agentService = agentService;
 		this.surveyService = surveyService;
+		this.messagingService = messagingService;
+	}
+
+	@GetMapping("/agent/{agentId}/detail")
+	public @ResponseBody ResponseEntity<?> getAgentDetailsPage(@PathVariable Long agentId) {
+		log.info("Getting details for agent with agent id:{}", agentId);
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Agent agent = agentService.getAgent(agentId);
+			result.add("agent", checkNotNull(agent, "Agent not found."));
+			result.add("online-status", messagingService.isOnline(agent));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find agent", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
 	}
 
 	@PostMapping("/agent/sysinfo-result")

@@ -9,4 +9,6 @@ public abstract class BaseMessagingClient {
 
 	public abstract void sendMessage(String host, String url, ServerBaseMessage message) throws Exception;
 
+	public abstract void sendMessage(String string, String url) throws Exception;
+
 }
