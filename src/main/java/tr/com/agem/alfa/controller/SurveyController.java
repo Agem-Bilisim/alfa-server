@@ -147,8 +147,8 @@ public class SurveyController {
 			checkNotNull(user, "Current user not found.");
 			surveyService.saveSurvey(toSurveyEntity(form, user.getUsername()));
 		} catch (Exception e) {
-			log.warn("Exception occurred when trying to save the survey, duplicate email or surveyname", e);
-			bindingResult.reject("surveyname.or.email.exists", "Kullanıcı adı ya da e-posta zaten mevcut.");
+			log.warn("Exception occurred when trying to save the survey, assuming invalid parameters.", e);
+			bindingResult.reject("unexpected.error", "Beklenmeyen hata oluştu.");
 			return "survey/edit";
 		}
 		// everything fine redirect to list

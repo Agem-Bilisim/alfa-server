@@ -6,6 +6,7 @@ import org.mapstruct.ReportingPolicy;
 import tr.com.agem.alfa.form.BiosForm;
 import tr.com.agem.alfa.form.CpuForm;
 import tr.com.agem.alfa.form.DiskForm;
+import tr.com.agem.alfa.form.EducationForm;
 import tr.com.agem.alfa.form.GpuForm;
 import tr.com.agem.alfa.form.LdapIntegrationForm;
 import tr.com.agem.alfa.form.MemoryForm;
@@ -20,6 +21,7 @@ import tr.com.agem.alfa.form.SysUserForm;
 import tr.com.agem.alfa.model.Bios;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
+import tr.com.agem.alfa.model.Education;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.LdapIntegration;
@@ -86,4 +88,8 @@ public interface SysMapper {
 	Bios toBiosEntity(BiosForm form);
 
 	NetworkInterface toNetworkInterfaceEntity(NetworkInterfaceForm form);
+
+	Education toEducationEntity(EducationForm form);
+
+	EducationForm toEducationForm(Education education);
 }

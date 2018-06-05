@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Eğitim Listesi</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Eğitim Listesi</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Eğitim Listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="educationTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Tanım</th>
+									<th>Açıklama</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Send-education URL modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='sendUrlModal', modalHeader='Eğitim bağlantısı paylaş', modalButton='Paylaş')"
+			th:remove="tag">
+			<div layout:fragment="modal-content">
+				<form role="form" id="sendUrlForm">
+					<div class="form-group">
+						<label>Eğitimin paylaşılacağı ajanlar:</label>
+						<select class="form-control select2" multiple id="agents" name="agents" style="width: 100%;">
+							<option th:each="agent : ${agents}" th:text="${agent.hostName + ' - ' + agent.ipAddresses}" th:value="${agent.messagingId}"></option>
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		// Hook handler for sending URL
+		var handleSend = function(educationId) {
+			$("#sendUrlModalBtn").one("click", function(){
+				$('#sendUrlModal').modal('hide');
+				for (var i=0; i < $("#agents").val().length; i++) {
+					var messagingId = $("#agents").val()[i];
+					alertify.message("Eğitim bağlantısı " + $("option[value='" + messagingId + "']", "#agents").text() + " adlı ajanla paylaşılıyor.");
+					$.ajax({
+						type : "POST",
+						contentType : "application/json",
+						url : "/alfa/education/" + educationId + "/send/" + messagingId,
+						dataType : 'json',
+						cache : false,
+						timeout : 600000,
+						beforeSend: function(xhr) {
+							var token = $('#_csrf').attr('content');
+							var header = $('#_csrf_header').attr('content');
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(result) {
+							alertify.success('Eğitim bağlantısı paylaşıldı.');
+						}
+					});
+				}
+			});
+			$('#sendUrlModal').modal('show');
+		};
+		
+		$(function() {
+			var fnActionBtns = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/education/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i></button>" 
+					+ "</div>";
+			};
+			
+			var drawCallback = function(settings) {
+				if ($("#newEducationBtn").length == 0) {
+					$("#educationTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newEducationBtn\">Yeni</button>");
+					$("#newEducationBtn").one("click", function() {
+						window.location.href = '/alfa/education/create';
+					});
+				}
+			};
+			
+			const cols = [
+				{"data": "label", "searchable": true, "orderable": true }, 
+				{"data": "description", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtns, "searchable": false, "orderable": false }
+			];
+			
+			$('#educationTable').paginatedTable("/alfa/education/list-paginated", "educations", cols, drawCallback);
+		});
+	</script>
+</body>
+</html>

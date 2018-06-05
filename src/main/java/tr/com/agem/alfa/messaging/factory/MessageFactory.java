@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tr.com.agem.alfa.messaging.message.ServerBaseMessage;
 import tr.com.agem.alfa.messaging.message.SurveyMessage;
+import tr.com.agem.alfa.messaging.message.URLRedirectionMessage;
+import tr.com.agem.alfa.model.Education;
 import tr.com.agem.alfa.model.Survey;
 
 /**
@@ -25,6 +27,13 @@ public class MessageFactory {
 		msg.setSurvey(new ObjectMapper().readValue(survey.getSurveyJson(),
 				new TypeReference<LinkedHashMap<String, Object>>() {
 				}));
+		return msg;
+	}
+
+	public static ServerBaseMessage newURLRedirectionMessage(String recipient, Education education) {
+		URLRedirectionMessage msg = new URLRedirectionMessage();
+		msg.setTo(recipient);
+		msg.setUrl(education.getUrl());
 		return msg;
 	}
 

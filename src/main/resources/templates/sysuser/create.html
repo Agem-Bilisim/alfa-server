@@ -33,37 +33,37 @@
 							<div class="form-group" th:classappend="${#fields.hasErrors('userName')} ? 'has-error' : ''">
 								<label for="userName">Kullanıcı adı</label>
 								<input type="text" class="form-control" id="userName"
-									name="userName" placeholder="Username" th:field="*{userName}" />
+									name="userName" placeholder="Kullanıcı adı" th:field="*{userName}" />
 								<span class="help-block" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error' : ''">
 								<label for="email">E-posta</label>
 								<input type="text" class="form-control" id="email" name="email"
-									placeholder="E-mail" th:field="*{email}" />
+									placeholder="E-posta" th:field="*{email}" />
 								<span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error' : ''">
 								<label for="firstName">İsim</label>
 								<input type="text" class="form-control" id="firstName"
-									name="firstName" placeholder="First name" th:field="*{firstName}" />
+									name="firstName" placeholder="İsim" th:field="*{firstName}" />
 								<span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'has-error' : ''">
 								<label for="lastName">Soyisim</label>
 								<input type="text" class="form-control" id="lastName"
-									name="lastName" placeholder="Last name" th:field="*{lastName}" />
+									name="lastName" placeholder="Soyisim" th:field="*{lastName}" />
 								<span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error' : ''">
 								<label for="password">Parola</label>
 								<input type="password" class="form-control" id="password"
-									name="password" placeholder="New password" th:field="*{password}" />
+									name="password" placeholder="Parola" th:field="*{password}" />
 								<span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('passwordRepeated')} ? 'has-error' : ''">
 								<label for="passwordRepeated">Parolayı doğrulayın</label>
 								<input type="password" class="form-control"
-									id="passwordRepeated" name="passwordRepeated" placeholder="Confirm new password"
+									id="passwordRepeated" name="passwordRepeated" placeholder="Parolayı doğrulayın"
 									th:field="*{passwordRepeated}" />
 								<span class="help-block" th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Hata</span>
 							</div>
