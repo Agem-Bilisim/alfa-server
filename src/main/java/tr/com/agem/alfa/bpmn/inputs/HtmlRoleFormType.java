@@ -3,11 +3,11 @@ package tr.com.agem.alfa.bpmn.inputs;
 import java.util.List;
 
 import org.activiti.engine.form.FormProperty;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import tr.com.agem.alfa.bpmn.types.AbstractComboboxFormType;
 import tr.com.agem.alfa.model.SysRole;
-import tr.com.agem.alfa.repository.SysRoleRepository;
+import tr.com.agem.alfa.service.SpringTools;
+import tr.com.agem.alfa.service.SysUserService;
 
 /**
  * @author <a href="mailto:ali.ozeren@agem.com.tr">Ali Ozkan Ozeren</a>
@@ -19,9 +19,7 @@ public class HtmlRoleFormType extends AbstractComboboxFormType
 	
 	public static final String NAME = "role";
 
-
-	@Autowired
-	private SysRoleRepository sysRoleRepository;
+	private SysUserService sysUserService = (SysUserService) SpringTools.getInstance().getContext().getBean("sysUserService");
 	
 	
 	public String getName() 
@@ -38,18 +36,18 @@ public class HtmlRoleFormType extends AbstractComboboxFormType
 		str.append(super.getLabel());
 		str.append("</label>");
 		str.append("<select class=\"form-control select2\" id=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" name=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" ");
 		str.append(HTMLInputUtils.getInstance().prepareAttributes(this, super.getMap(), "options"));
 		str.append(" >");
 		
 		List<SysRole> roles;
 		if (super.getMap().get("filter") != null ) {
-			roles = sysRoleRepository.findByNameContainingAllIgnoringCase(super.getMap().get("filter"));
+			roles = sysUserService.getRolesNameContaining(super.getMap().get("filter"));
 		} else {
-			roles = sysRoleRepository.findAll();
+			roles = sysUserService.getRoles();
 		}
 		
 		if (roles != null) {

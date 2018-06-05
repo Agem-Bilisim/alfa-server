@@ -45,7 +45,6 @@
 						<div class="box-footer">
 							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
 							<div class="btn-toolbar pull-right">
-								<button type="button" id="startBtn" class="btn btn-default">Başlat</button>
 								<button type="submit" class="btn btn-primary pull-right" id="saveProcessBtn">Değişiklikleri Kaydet</button>
 							</div>
 						</div>
@@ -61,11 +60,8 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			// Return to list when cancel button is clicked
-			$('#cancelBtn').one("click", function() {
-				window.location.href = '/alfa/bpm-process/list';
-			});
-			$('#startBtn').click(function() {
-				window.location.href = /*[[@{'/task/startForm/' + ${form.id}}]]*/'';
+			$('#cancelBtn').click(function() {
+				window.location.href = /*[[@{'/bpm-process/list'}]]*/'';
 			});
 		});
 	</script>

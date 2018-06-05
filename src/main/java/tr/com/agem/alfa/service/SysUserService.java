@@ -18,7 +18,9 @@ import tr.com.agem.alfa.repository.SysUserRepository;
 @Transactional
 public class SysUserService {
 
+	@Autowired
 	private final SysUserRepository sysUserRepository;
+	@Autowired
 	private final SysRoleRepository sysRoleRepository;
 
 	@Autowired
@@ -52,6 +54,10 @@ public class SysUserService {
 
 	public List<SysRole> getRoles() {
 		return this.sysRoleRepository.findAll();
+	}
+
+	public List<SysRole> getRolesNameContaining(String filter) {
+		return this.sysRoleRepository.findByNameContainingAllIgnoringCase(filter);
 	}
 
 	public void saveUser(SysUser user) {

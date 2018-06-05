@@ -18,15 +18,15 @@ public class HtmlDateFormType extends AbstractDateFormType
 		StringBuffer str = new StringBuffer("<div class=\"form-group\"> ");
 
 		str.append("<label for=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\">");
 		str.append(super.getLabel());
 		str.append("</label>");
 		str.append("<div class=\"input-group date\">");	
 		str.append("<input type=\"text\" class=\"form-control date-input pull-right\" name=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" id=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" ");
 		str.append(" data-date-format=\"");
 		if (super.getDatePattern() == null) {

@@ -38,9 +38,9 @@ public class HtmlUserFormType extends AbstractComboboxFormType
 		str.append(super.getLabel());
 		str.append("</label>");
 		str.append("<select class=\"form-control select2\" id=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" name=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" ");
 		str.append(HTMLInputUtils.getInstance().prepareAttributes(this, super.getMap(), "options","role"));
 		str.append(" >");

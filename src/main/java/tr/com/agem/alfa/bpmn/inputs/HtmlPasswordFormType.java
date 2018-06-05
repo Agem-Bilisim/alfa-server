@@ -20,14 +20,14 @@ public class HtmlPasswordFormType extends AbstractPasswordFormType
 		StringBuffer str = new StringBuffer("<div class=\"form-group\"> ");
 
 		str.append("<label for=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\">");
 		str.append(super.getLabel());
 		str.append("</label>");
 		str.append("<input type=\"password\" class=\"form-control\" name=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" id=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" ");
 
 		if (property.getValue() != null) {

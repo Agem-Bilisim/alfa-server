@@ -22,9 +22,9 @@ public class HtmlCheckboxFormType extends AbstractCheckboxFormType
 		str.append("<div class=\"checkbox\">");
 		str.append("<label style=\"padding-left:0px;\">");
 		str.append("<input type=\"checkbox\" class=\"minimal\" name=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" id=\"");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" ");
 		if ( super.getCheckedValue() != null) {
 			str.append(" value=\"");
@@ -37,7 +37,7 @@ public class HtmlCheckboxFormType extends AbstractCheckboxFormType
 		}
 		str.append(">");
 		str.append("<input type=\"hidden\" name=\"_");
-		str.append(super.getId());
+		str.append("pact_").append(super.getId());
 		str.append("\" value=\"on\" />");
 		str.append(super.getLabel());
 		str.append("</label>");		
