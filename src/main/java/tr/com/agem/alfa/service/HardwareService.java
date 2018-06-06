@@ -15,6 +15,7 @@ import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.repository.BiosRepository;
 import tr.com.agem.alfa.repository.CpuRepository;
 import tr.com.agem.alfa.repository.DiskRepository;
@@ -121,7 +122,7 @@ public class HardwareService {
 		return this.inetRepository.findAll();
 	}
 	
-	public void saveCpu(Cpu cpu) {
+	public Cpu saveCpu(Cpu cpu) {
 		Assert.notNull(cpu, "Cpu must not be null.");
 		Cpu c = null;
 		if (cpu.getId() != null && (c = cpuRepository.findOne(cpu.getId())) != null) {
@@ -137,14 +138,13 @@ public class HardwareService {
 			c.setLogicalCoreCount(cpu.getLogicalCoreCount());
 			c.setBrand(cpu.getBrand());
 			c.setRawArchString(cpu.getRawArchString());
-			this.cpuRepository.save(c);
-			return;
+			return this.cpuRepository.save(c);
 		}
 		// Create
-		this.cpuRepository.save(cpu);
+		return this.cpuRepository.save(cpu);
 	}
 
-	public void saveGpu(Gpu gpu) {
+	public Gpu saveGpu(Gpu gpu) {
 		Assert.notNull(gpu, "Gpu must not be null.");
 		Gpu g = null;
 		if (gpu.getId() != null && (g = gpuRepository.findOne(gpu.getId())) != null) {
@@ -154,14 +154,13 @@ public class HardwareService {
 			g.setMemory(gpu.getMemory());
 			g.setDriverDate(gpu.getDriverDate());
 			g.setDriverVersion(gpu.getDriverVersion());
-			this.gpuRepository.save(g);
-			return;
+			return this.gpuRepository.save(g);
 		}
 		// Create
-		this.gpuRepository.save(gpu);
+		return this.gpuRepository.save(gpu);
 	}
 
-	public void saveDisk(Disk disk) {
+	public Disk saveDisk(Disk disk) {
 		Assert.notNull(disk, "Disk must not be null.");
 		Disk d = null;
 		if (disk.getId() != null && (d = diskRepository.findOne(disk.getId())) != null) {
@@ -171,14 +170,13 @@ public class HardwareService {
 			d.setVersion(disk.getVersion());
 			d.setProduct(disk.getProduct());
 			d.setSerial(disk.getSerial());
-			this.diskRepository.save(d);
-			return;
+			return this.diskRepository.save(d);
 		}
 		// Create
-		this.diskRepository.save(disk);
+		return this.diskRepository.save(disk);
 	}
 
-	public void saveMemory(Memory memory) {
+	public Memory saveMemory(Memory memory) {
 		Assert.notNull(memory, "Memory must not be null.");
 		Memory m = null;
 		if (memory.getId() != null && (m = memoryRepository.findOne(memory.getId())) != null) {
@@ -187,14 +185,13 @@ public class HardwareService {
 			m.setSize(memory.getSize());
 			m.setType(memory.getType());
 			m.setManufacturer(memory.getManufacturer());
-			this.memoryRepository.save(m);
-			return;
+			return this.memoryRepository.save(m);
 		}
 		// Create
-		this.memoryRepository.save(memory);
+		return this.memoryRepository.save(memory);
 	}
 
-	public void saveBios(Bios bios) {
+	public Bios saveBios(Bios bios) {
 		Assert.notNull(bios, "Bios must not be null.");
 		Bios b = null;
 		if (bios.getId() != null && (b = biosRepository.findOne(bios.getId())) != null) {
@@ -202,14 +199,13 @@ public class HardwareService {
 			b.setVendor(bios.getVendor());
 			b.setVersion(bios.getVersion());
 			b.setReleaseDate(bios.getReleaseDate());
-			this.biosRepository.save(b);
-			return;
+			return this.biosRepository.save(b);
 		}
 		// Create
-		this.biosRepository.save(bios);
+		return this.biosRepository.save(bios);
 	}
 
-	public void saveNetworkInterface(NetworkInterface networkInterface) {
+	public NetworkInterface saveNetworkInterface(NetworkInterface networkInterface) {
 		Assert.notNull(networkInterface, "NetworkInterface must not be null.");
 		NetworkInterface ni = null;
 		if (networkInterface.getId() != null && (ni = inetRepository.findOne(networkInterface.getId())) != null) {
@@ -218,11 +214,32 @@ public class HardwareService {
 			ni.setVersion(networkInterface.getVersion());
 			ni.setProduct(networkInterface.getProduct());
 			ni.setCapabilities(networkInterface.getCapabilities());
-			this.inetRepository.save(ni);
-			return;
+			return this.inetRepository.save(ni);
 		}
 		// Create
-		this.inetRepository.save(networkInterface);
+		return this.inetRepository.save(networkInterface);
+	}
+
+	public PeripheralDevice savePeripheralDevice(PeripheralDevice peripheralDevice) {
+		Assert.notNull(peripheralDevice, "PeripheralDevice must not be null.");
+		PeripheralDevice pd = null;
+		if (peripheralDevice.getId() != null && (pd = peripheralRepository.findOne(peripheralDevice.getId())) != null) {
+			// Update
+			pd.setTag(peripheralDevice.getTag());
+			pd.setShowInSurvey(peripheralDevice.getShowInSurvey());
+			return this.peripheralRepository.save(pd);
+		}
+		// Create
+		return this.peripheralRepository.save(peripheralDevice);
+	}
+	
+	public Page<PeripheralDevice> getPeripherals(Pageable pageable, String search) {
+		Assert.notNull(pageable, "Pageable must not be null.");
+		if (search != null && !search.isEmpty()) {
+			// TODO
+			return null;
+		}
+		return this.peripheralRepository.findAll(pageable);
 	}
 
 }

@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,7 +34,9 @@ import tr.com.agem.alfa.form.DiskForm;
 import tr.com.agem.alfa.form.GpuForm;
 import tr.com.agem.alfa.form.MemoryForm;
 import tr.com.agem.alfa.form.NetworkInterfaceForm;
+import tr.com.agem.alfa.form.PeripheralDeviceForm;
 import tr.com.agem.alfa.mapper.SysMapper;
+import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.Bios;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.CurrentUser;
@@ -38,6 +44,7 @@ import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.HardwareService;
 
@@ -45,6 +52,7 @@ import tr.com.agem.alfa.service.HardwareService;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Controller
+@Transactional
 public class HardwareController {
 
 	private static final Logger log = LoggerFactory.getLogger(HardwareController.class);
@@ -53,6 +61,9 @@ public class HardwareController {
 	private final AgentService agentService;
 	private final SysMapper mapper;
 
+	@PersistenceContext
+	private EntityManager em;
+	
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
@@ -162,7 +173,7 @@ public class HardwareController {
 	public ModelAndView getCpuCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
-			model.put("possibleagents", agentService.getAgents());
+			model.put("agents", agentService.getAgents());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -240,7 +251,12 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			hardwareService.saveCpu(toCpuEntity(form, user.getUsername()));
+			Cpu savedCpu = hardwareService.saveCpu(toCpuEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_cpu_agent (agent_id, cpu_id) VALUES (:agentId, :cpuId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("cpuId", savedCpu.getId());
+			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save CPU, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -271,7 +287,12 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			hardwareService.saveGpu(toGpuEntity(form, user.getUsername()));
+			Gpu savedGpu = hardwareService.saveGpu(toGpuEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_gpu_agent (agent_id, gpu_id) VALUES (:agentId, :gpuId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("gpuId", savedGpu.getId());
+			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save GPU, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -302,7 +323,12 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			hardwareService.saveDisk(toDiskEntity(form, user.getUsername()));
+			Disk savedDisk = hardwareService.saveDisk(toDiskEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_disk_agent (agent_id, disk_id) VALUES (:agentId, :diskId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("diskId", savedDisk.getId());
+			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save disk, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -333,7 +359,12 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			hardwareService.saveMemory(toMemoryEntity(form, user.getUsername()));
+			Memory savedMemory = hardwareService.saveMemory(toMemoryEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_memory_agent (agent_id, memory_id) VALUES (:agentId, :memoryId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("memoryId", savedMemory.getId());
+			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save memory, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -364,7 +395,12 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			hardwareService.saveBios(toBiosEntity(form, user.getUsername()));
+			Bios savedBios = hardwareService.saveBios(toBiosEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_bios_agent (agent_id, bios_id) VALUES (:agentId, :biosId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("biosId", savedBios.getId());
+			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save BIOS, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -395,7 +431,12 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			hardwareService.saveNetworkInterface(toNetworkInterfaceEntity(form, user.getUsername()));
+			NetworkInterface savedNetworkInterface = hardwareService.saveNetworkInterface(toNetworkInterfaceEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_inet_agent (agent_id, network_interface_id) VALUES (:agentId, :networkInterfaceId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("networkInterfaceId", savedNetworkInterface.getId());
+			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save networkInterface, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -414,5 +455,73 @@ public class HardwareController {
 		entity.setLastModifiedDate(date);
 		
 		return entity;
+	}
+	
+	@GetMapping("/peripheral/list")
+	public String getPeripheralListPage() {
+		return "peripheral/list";
+	}
+	
+	@GetMapping("/peripheral/create")
+	public ModelAndView getPeripheralCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			model.put("agents", agentService.getAgents());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.put("form", new PeripheralDeviceForm().setRedirect(redirect));
+		return new ModelAndView("peripheral/create", model);
+	}
+	
+	@PostMapping("/peripheral/create")
+	public String handlePeripheralCreate(@Valid @ModelAttribute("form") PeripheralDeviceForm form, BindingResult bindingResult,
+			Authentication authentication) {
+		if (bindingResult.hasErrors()) {
+			// failed validation
+			return "/peripheral/create";
+		}
+		try {
+			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+			checkNotNull(user, "Current user not found.");
+			PeripheralDevice savedPeripheralDevice = hardwareService.savePeripheralDevice(toPeripheralDeviceEntity(form, user.getUsername()));
+			Agent agent = form.getAgents().get(0);
+			Query query = em.createNativeQuery("INSERT INTO c_agent_peripheral_agent (agent_id, peripheral_id) VALUES (:agentId, :peripheralId)");
+			query.setParameter("agentId", agent.getId());
+			query.setParameter("peripheralId", savedPeripheralDevice.getId());
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to save peripheral, assuming invalid parameters", e);
+			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
+			return "/peripheral/create";
+		}
+		// everything fine redirect to list
+		return ControllerUtils.getRedirectMapping(form, "/peripheral/list");
+	}
+	
+	private PeripheralDevice toPeripheralDeviceEntity(PeripheralDeviceForm form, String username) {
+		PeripheralDevice entity = mapper.toPeripheralDeviceEntity(form);
+		Date date = new Date();
+		entity.setCreatedBy(username);
+		entity.setCreatedDate(date);
+		entity.setLastModifiedBy(username);
+		entity.setLastModifiedDate(date);
+		
+		return entity;
+	}
+	
+	@GetMapping("/peripheral/list-paginated")
+	public ResponseEntity<?> handlePeripheralList(@RequestParam(value = "search", required = false) String search,
+			Pageable pageable) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<PeripheralDevice> peripherals = hardwareService.getPeripherals(pageable, search);
+			result.add("peripherals", checkNotNull(peripherals, "Peripherals not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find peripherals, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
 	}
 }

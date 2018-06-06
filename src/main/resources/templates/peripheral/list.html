@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Donanım Envanteri</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Çevresel Birimler</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Çevresel Birim listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="peripheralTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Etiket</th>
+									<th>Ankette Gösterilsin</th>
+									<th>İşlemler</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		var tables = {};
+		$(function() {
+			var fnActionBtnsPeripheral = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/peripheral/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/peripheral/" + row['id'] + "/delete', 'peripheralTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "</div>";
+			};
+			var drawCallbackPeripheral = function(settings) {
+				if ($("#newPeripheralBtn").length == 0) {
+					$("#peripheralTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPeripheralBtn\">Yeni</button>");
+					$("#newPeripheralBtn").one("click", function() {
+						window.location.href = '/alfa/peripheral/create?redirect=peripheral/list';
+					});
+				}
+			};
+			const colsPeripheral = [
+				{"data": "tag", "searchable": true, "orderable": true }, 
+				{"data": "showInSurvey", "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsPeripheral, "searchable": false, "orderable": false }
+			];
+			tables.peripheralTable = $('#peripheralTable').paginatedTable("/alfa/peripheral/list-paginated", "peripherals", colsPeripheral, drawCallbackPeripheral);
+		});
+		
+	</script>
+</body>
+</html>

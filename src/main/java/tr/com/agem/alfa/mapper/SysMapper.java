@@ -12,6 +12,7 @@ import tr.com.agem.alfa.form.LdapIntegrationForm;
 import tr.com.agem.alfa.form.MemoryForm;
 import tr.com.agem.alfa.form.NetworkInterfaceForm;
 import tr.com.agem.alfa.form.PackageForm;
+import tr.com.agem.alfa.form.PeripheralDeviceForm;
 import tr.com.agem.alfa.form.ProblemForm;
 import tr.com.agem.alfa.form.ProblemReferenceForm;
 import tr.com.agem.alfa.form.ProcessForm;
@@ -28,6 +29,7 @@ import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.LdapIntegration;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.RunningProcess;
@@ -96,4 +98,7 @@ public interface SysMapper {
 	EducationForm toEducationForm(Education education);
 
 	Tag toTagEntity(TagForm tagForm);
+
+	PeripheralDevice toPeripheralDeviceEntity(PeripheralDeviceForm form);
+
 }
