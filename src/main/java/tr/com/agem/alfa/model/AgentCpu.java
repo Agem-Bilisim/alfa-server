@@ -26,7 +26,7 @@ public class AgentCpu implements Serializable {
 	@Column(name = "AGENT_CPU_AGENT_ID", unique = true, nullable = false, updatable = false)
 	private Long id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "AGENT_ID")
 	private Agent agent;
 

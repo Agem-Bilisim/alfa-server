@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.AgentCpu;
+import tr.com.agem.alfa.model.AgentPeripheralDevice;
 import tr.com.agem.alfa.model.AgentRunningProcess;
 import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.repository.AgentRepository;
@@ -46,6 +48,28 @@ public class AgentService {
 				Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
 				while (it.hasNext()) {
 					AgentRunningProcess _p = it.next();
+					if (_p.getId() != null) {
+						this.em.remove(_p);
+						it.remove();
+					}
+				}
+			}
+			// Remove CPUs
+			if (agent.getAgentCpus() != null) {
+				Iterator<AgentCpu> it = agent.getAgentCpus().iterator();
+				while (it.hasNext()) {
+					AgentCpu _c = it.next();
+					if (_c.getId() != null) {
+						this.em.remove(_c);
+						it.remove();
+					}
+				}
+			}
+			// Remove peripherals
+			if (agent.getAgentPeripheralDevices() != null) {
+				Iterator<AgentPeripheralDevice> it = agent.getAgentPeripheralDevices().iterator();
+				while (it.hasNext()) {
+					AgentPeripheralDevice _p = it.next();
 					if (_p.getId() != null) {
 						this.em.remove(_p);
 						it.remove();

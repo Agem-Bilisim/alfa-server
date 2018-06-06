@@ -20,7 +20,7 @@ public class PeripheralDevice extends BaseModel {
 
 	private static final long serialVersionUID = -5929581631043566633L;
 
-	@Column(name = "TAG", nullable = false, length = 100)
+	@Column(name = "TAG", nullable = false, length = 100, unique = true)
 	private String tag;
 
 	@Column(name = "SHOW_IN_SURVEY")

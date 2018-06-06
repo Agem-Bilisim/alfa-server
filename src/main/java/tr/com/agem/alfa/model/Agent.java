@@ -105,7 +105,7 @@ public class Agent extends BaseModel {
 					@JoinColumn(name = "GPU_ID", nullable = false, updatable = false) })
 	private Set<Gpu> gpus = new HashSet<Gpu>(0);
 
-	@OneToMany(mappedBy = "agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+	@OneToMany(mappedBy = "agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
 	@OneToMany(mappedBy = "agent", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
