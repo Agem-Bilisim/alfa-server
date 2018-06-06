@@ -2,6 +2,8 @@ package tr.com.agem.alfa.form;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import tr.com.agem.alfa.model.Agent;
@@ -19,13 +21,13 @@ public class CpuForm extends BaseForm {
 	@NotEmpty
 	private String hzAdvertised;
 
-	@NotEmpty
+	@NotNull
 	private Integer logicalCoreCount;
 
 	@NotEmpty
 	private String processor;
 
-	@NotEmpty
+	@NotNull
 	private Integer pyhsicalCoreCount;
 	
 	private String arch;

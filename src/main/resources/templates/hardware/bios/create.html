@@ -25,7 +25,7 @@
 					<div class="box-header">
 						<h3 class="box-title">BIOS Ekle</h3>
 					</div>
-					<form role="form" id="biosForm" th:action="@{/hardware/gpu/create}" method="post" th:object="${form}">
+					<form role="form" id="biosForm" th:action="@{/hardware/bios/create}" method="post" th:object="${form}">
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>

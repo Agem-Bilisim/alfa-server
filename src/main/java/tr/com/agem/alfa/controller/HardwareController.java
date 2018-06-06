@@ -395,12 +395,13 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			Bios savedBios = hardwareService.saveBios(toBiosEntity(form, user.getUsername()));
-			Agent agent = form.getAgents().get(0);
-			Query query = em.createNativeQuery("INSERT INTO c_agent_bios_agent (agent_id, bios_id) VALUES (:agentId, :biosId)");
-			query.setParameter("agentId", agent.getId());
-			query.setParameter("biosId", savedBios.getId());
-			query.executeUpdate();
+			hardwareService.saveBios(toBiosEntity(form, user.getUsername()));
+//			Bios savedBios = hardwareService.saveBios(toBiosEntity(form, user.getUsername()));
+//			Agent agent = form.getAgents().get(0);
+//			Query query = em.createNativeQuery("INSERT INTO c_agent_bios_agent (agent_id, bios_id) VALUES (:agentId, :biosId)");
+//			query.setParameter("agentId", agent.getId());
+//			query.setParameter("biosId", savedBios.getId());
+//			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save BIOS, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -486,9 +487,11 @@ public class HardwareController {
 			checkNotNull(user, "Current user not found.");
 			PeripheralDevice savedPeripheralDevice = hardwareService.savePeripheralDevice(toPeripheralDeviceEntity(form, user.getUsername()));
 			Agent agent = form.getAgents().get(0);
-			Query query = em.createNativeQuery("INSERT INTO c_agent_peripheral_agent (agent_id, peripheral_id) VALUES (:agentId, :peripheralId)");
+			Query query = em.createNativeQuery("INSERT INTO c_agent_peripheral_agent (agent_id, peripheral_id, device_id, device_path) VALUES (:agentId, :peripheralId, :deviceId, :devicePath)");
 			query.setParameter("agentId", agent.getId());
 			query.setParameter("peripheralId", savedPeripheralDevice.getId());
+			query.setParameter("deviceId", form.getDeviceId());
+			query.setParameter("devicePath", form.getDevicePath());
 			query.executeUpdate();
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save peripheral, assuming invalid parameters", e);

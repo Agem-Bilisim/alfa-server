@@ -18,6 +18,12 @@ public class PeripheralDeviceForm extends BaseForm {
 
 	private Boolean showInSurvey;
 
+	@NotEmpty
+	private String deviceId;
+
+	@NotEmpty
+	private String devicePath;
+
 	private List<Agent> agents;
 
 	public String getTag() {
@@ -42,6 +48,22 @@ public class PeripheralDeviceForm extends BaseForm {
 
 	public void setAgents(List<Agent> agents) {
 		this.agents = agents;
+	}
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	public String getDevicePath() {
+		return devicePath;
+	}
+
+	public void setDevicePath(String devicePath) {
+		this.devicePath = devicePath;
 	}
 
 }
