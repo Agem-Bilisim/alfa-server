@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.model.enums;
 
+import java.util.Locale;
+
 /**
  * 
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -39,6 +41,14 @@ public enum AgentType {
 			}
 		}
 		throw new IllegalArgumentException("No matching type for id: " + id);
+	}
+	
+	public static String getLabel(Integer id) {
+		if (id == null) {
+			return null;
+		}
+		AgentType t = getType(id);
+		return "agent-type." + t.toString().toLowerCase(Locale.US).replace("_", "-");
 	}
 
 }

@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import tr.com.agem.alfa.model.enums.AgentType;
@@ -73,19 +75,19 @@ public class Agent extends BaseModel {
 					@JoinColumn(name = "NETWORK_INTERFACE_ID", nullable = false, updatable = false) })
 	private Set<NetworkInterface> networkInterfaces = new HashSet<NetworkInterface>(0);
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_tag_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "TAG_ID", nullable = false, updatable = false) })
 	private Set<Tag> tags = new HashSet<Tag>(0);
 
-	@ManyToMany(fetch=FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_package_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "INSTALLED_PACKAGE_ID", nullable = false, updatable = false) })
 	private Set<InstalledPackage> installedPackages = new HashSet<InstalledPackage>(0);
 
-	@ManyToMany(fetch=FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "c_agent_user_agent", joinColumns = {
 			@JoinColumn(name = "AGENT_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "USER_ID", nullable = false, updatable = false) })
@@ -283,6 +285,10 @@ public class Agent extends BaseModel {
 	public AgentType getType() {
 		return AgentType.getType(type);
 	}
+	
+	public String getTypeLabel() {
+		return AgentType.getLabel(type);
+	}
 
 	public void setType(AgentType type) {
 		if (type == null) {
@@ -306,6 +312,13 @@ public class Agent extends BaseModel {
 
 	public void setSurveyResults(Set<SurveyResult> surveyResults) {
 		this.surveyResults = surveyResults;
+	}
+
+	public String getTagsStr() {
+		return tags != null && !tags.isEmpty()
+				? (StringUtils.join(tags, ",").length() > 80 ? StringUtils.join(tags, ",").substring(0, 80) + "..."
+						: StringUtils.join(tags, ","))
+				: "";
 	}
 
 	public void addDisk(Disk disk) {
@@ -354,6 +367,14 @@ public class Agent extends BaseModel {
 		}
 		user.addAgent(this);
 		this.users.add(user);
+	}
+
+	public void addTag(Tag tag) {
+		if (this.tags == null) {
+			this.tags = new HashSet<Tag>();
+		}
+		tag.addAgent(this);
+		this.tags.add(tag);
 	}
 
 }

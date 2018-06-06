@@ -3,6 +3,7 @@ package tr.com.agem.alfa.controller;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,10 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +36,9 @@ import tr.com.agem.alfa.agent.sysinfo.Device;
 import tr.com.agem.alfa.agent.sysinfo.GpuDevice;
 import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
+import tr.com.agem.alfa.form.AgentForm;
+import tr.com.agem.alfa.form.TagForm;
+import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.messaging.message.SurveyResultMessage;
 import tr.com.agem.alfa.messaging.message.SysInfoResultMessage;
 import tr.com.agem.alfa.messaging.service.MessagingService;
@@ -50,6 +57,7 @@ import tr.com.agem.alfa.model.Platform;
 import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.model.Survey;
 import tr.com.agem.alfa.model.SurveyResult;
+import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.SurveyService;
@@ -66,12 +74,23 @@ public class AgentController {
 	private final AgentService agentService;
 	private final SurveyService surveyService;
 	private final MessagingService messagingService;
+	private final MessageSource messageSource;
+	private final SysMapper sysMapper;
+
+	@Value("${sys.page-size}")
+	private Integer sysPageSize;
+
+	@Value("${sys.locale}")
+	private String locale;
 
 	@Autowired
-	public AgentController(AgentService agentService, SurveyService surveyService, MessagingService messagingService) {
+	public AgentController(AgentService agentService, SurveyService surveyService, MessagingService messagingService,
+			MessageSource messageSource, SysMapper sysMapper) {
 		this.agentService = agentService;
 		this.surveyService = surveyService;
 		this.messagingService = messagingService;
+		this.messageSource = messageSource;
+		this.sysMapper = sysMapper;
 	}
 
 	@GetMapping("/agent/{agentId}/detail")
@@ -82,6 +101,8 @@ public class AgentController {
 			Agent agent = agentService.getAgent(agentId);
 			result.add("agent", checkNotNull(agent, "Agent not found."));
 			result.add("online-status", messagingService.isOnline(agent));
+			result.add("agent-type",
+					messageSource.getMessage(agent.getTypeLabel(), null, Locale.forLanguageTag(locale)));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find agent", e);
 			result.setMessage(e.getMessage());
@@ -105,6 +126,41 @@ public class AgentController {
 			agent = toAgentEntity(message, agent);
 			agentService.saveOrUpdate(agent);
 			log.info("Agent and its system info created/updated successfully.");
+		} catch (Exception e) {
+			String error = "Exception occurred when trying to handle system info.";
+			log.error(error, e);
+			result.setMessage(error);
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/agent/tag/save")
+	public @ResponseBody ResponseEntity<?> handleTagSave(@Valid @RequestBody AgentForm form,
+			BindingResult bindingResult) {
+		RestResponseBody result = new RestResponseBody();
+		if (bindingResult.hasErrors()) {
+			String error = ControllerUtils.toErrorMessage(bindingResult);
+			log.error(error);
+			result.setMessage(error);
+			return ResponseEntity.badRequest().body(result);
+		}
+		try {
+			if (form.getTags() != null) {
+				Agent agent = agentService.getAgent(form.getId());
+				log.info("Tags created/updated successfully.");
+				for (TagForm tagForm : form.getTags()) {
+					agent.addTag(sysMapper.toTagEntity(tagForm));
+				}
+				Iterator<Tag> it = agent.getTags().iterator();
+				while (it.hasNext()) {
+					Tag tag = it.next();
+					if (!form.getTagsStr().contains(tag.getName())) {
+						it.remove();
+					}
+				}
+				agentService.saveOrUpdate(agent);
+			}
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";
 			log.error(error, e);
@@ -140,7 +196,8 @@ public class AgentController {
 	}
 
 	@GetMapping("/agent/list")
-	public String getListPage() {
+	public String getListPage(Model model) {
+		model.addAttribute("tags", agentService.getTags());
 		return "agent/list";
 	}
 

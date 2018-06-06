@@ -19,7 +19,7 @@ public class Tag extends BaseModel {
 
 	private static final long serialVersionUID = 8087486821765631219L;
 
-	@Column(name = "NAME", length = 500, nullable = false)
+	@Column(name = "NAME", length = 500, nullable = false, unique = true)
 	private String name;
 
 	@JsonIgnore
@@ -40,6 +40,38 @@ public class Tag extends BaseModel {
 
 	public void setAgents(Set<Agent> agents) {
 		this.agents = agents;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	public void addAgent(Agent agent) {
+		if (this.agents == null) {
+			this.agents = new HashSet<Agent>();
+		}
+		this.agents.add(agent);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Tag other = (Tag) obj;
+		if (name == null) {
+			if (other.name != null) return false;
+		} else if (!name.equals(other.name)) return false;
+		return true;
 	}
 
 }

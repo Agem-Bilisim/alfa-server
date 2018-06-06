@@ -18,6 +18,7 @@ import tr.com.agem.alfa.form.ProcessForm;
 import tr.com.agem.alfa.form.SurveyForm;
 import tr.com.agem.alfa.form.SysRoleForm;
 import tr.com.agem.alfa.form.SysUserForm;
+import tr.com.agem.alfa.form.TagForm;
 import tr.com.agem.alfa.model.Bios;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
@@ -33,6 +34,7 @@ import tr.com.agem.alfa.model.RunningProcess;
 import tr.com.agem.alfa.model.Survey;
 import tr.com.agem.alfa.model.SysRole;
 import tr.com.agem.alfa.model.SysUser;
+import tr.com.agem.alfa.model.Tag;
 
 /**
  * Mapper class to easily map/convert entity and form (DTO) instances to one
@@ -78,7 +80,7 @@ public interface SysMapper {
 	LdapIntegration toIntegrationEntity(LdapIntegrationForm form);
 
 	Cpu toCpuEntity(CpuForm form);
-	
+
 	Gpu toGpuEntity(GpuForm form);
 
 	Disk toDiskEntity(DiskForm form);
@@ -92,4 +94,6 @@ public interface SysMapper {
 	Education toEducationEntity(EducationForm form);
 
 	EducationForm toEducationForm(Education education);
+
+	Tag toTagEntity(TagForm tagForm);
 }

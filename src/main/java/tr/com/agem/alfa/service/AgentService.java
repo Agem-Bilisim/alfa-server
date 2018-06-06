@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.repository.AgentRepository;
+import tr.com.agem.alfa.repository.TagRepository;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -25,8 +27,14 @@ public class AgentService {
 	@PersistenceContext
 	private EntityManager em;
 
+	private final AgentRepository agentRepository;
+	private final TagRepository tagRepository;
+
 	@Autowired
-	private AgentRepository agentRepository;
+	public AgentService(AgentRepository agentRepository, TagRepository tagRepository) {
+		this.agentRepository = agentRepository;
+		this.tagRepository = tagRepository;
+	}
 
 	public Agent saveOrUpdate(Agent agent) {
 		Assert.notNull(agent, "Agent must not be null.");
@@ -57,6 +65,10 @@ public class AgentService {
 	public Agent getAgent(Long id) {
 		Assert.notNull(id, "Agent ID must not be null.");
 		return this.agentRepository.findOne(id);
+	}
+
+	public List<Tag> getTags() {
+		return this.tagRepository.findAll();
 	}
 
 }

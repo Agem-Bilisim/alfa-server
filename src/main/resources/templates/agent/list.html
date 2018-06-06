@@ -26,6 +26,7 @@
 									<th>Hostname</th>
 									<th>IP Adresleri</th>
 									<th>MAC Adresleri</th>
+									<th>Etiketler</th>
 									<th>İşlem</th>
 								</tr>
 							</thead>
@@ -88,11 +89,55 @@
 			</div>
 		</div>
 		
+		<!-- Etiket düzenleme -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='editTagsModal', modalHeader='Etiket düzenleme', modalButton='Değişiklikleri Kaydet')"
+			th:remove="tag">
+			<div layout:fragment="modal-content">
+				<form>
+					<div class="form-group">
+						<label>Etiket bulutu:</label>
+						<select class="form-control" multiple id="tags" name="tags" style="width: 100%;">
+							<option th:each="tag : ${tags}" th:text="${tag.name}" th:value="${tag.id + '-' + tag.name}"></option>
+						</select>
+						<span class="help-block">Birden fazla etiket seçebilir veya yeni etiket ekleyebilirsiniz.</span>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<input type="text" class="form-control" id="new-tag" name="new-tag"
+								placeholder="Yeni etiket" />
+							<div class="input-group-append">
+								<button type="button" class="btn" onclick="return handleTagAdd();"><i class="fa fa-plus"></i></button>
+							</div>						
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy';
 		var agentPackagesTable = null;
 		var agentUsersTable = null;
+		var lastAgentId = null;
+		
+		var handleTagsModal = function(agentId, tags) {
+			lastAgentId = agentId;
+			$("option:selected", "#tags").removeAttr("selected");
+			$("#tags").val(tags);
+			$('#editTagsModal').modal('show');
+		};
+		
+		var handleTagAdd = function() {
+			var newTag = $("#new-tag").val();
+			$("#tags").append($('<option>', {
+				value: "-" + newTag,
+				text: newTag,
+				selected: "selected"
+			}));
+			$("#new-tag").val("");
+		};
 	
 		var handleDetailsModal = function(agentId) {
 			$.ajax({
@@ -103,7 +148,6 @@
 				cache : false,
 				timeout : 600000,
 				success : function(result) {
-					console.log(JSON.stringify(result));
 					if (result && result.data && result.data.agent) {
 						// General
 						$("#agentHostname").html(result.data.agent['hostName']);
@@ -111,7 +155,7 @@
 								: "<i class=\"fa fa-circle text-error\"></i> Çevrimdışı");
 						$("#agentMacAddresses").html(result.data.agent['macAddresses']);
 						$("#agentIpAddresses").html(result.data.agent['ipAddresses']);
-						$("#agentType").html(result.data.agent['type']);
+						$("#agentType").html(result.data.agent['agent-type']);
 						$("#agentLastInstallationDate").html(result.data.agent['lastInstallationDate']);
 						
 						// Packages
@@ -196,7 +240,6 @@
 							}
 						}
 						
-						
 						// Show modal
 						$('#agentDetailModal').modal('show');
 					}
@@ -207,15 +250,47 @@
 		$(function() {
 			// Agent
 			var fnActionBtnsAgent = function(row, type, val, meta) {
-				return "<button class=\"btn btn-outline-primary\" onclick=\"return handleDetailsModal(" + row["id"] + ");\"><i class=\"fa fa-info\"></i> Detaylar</button>";
+				var commaSepTags = "";
+				if (row["tags"]) {
+					for(var i = 0; i < row["tags"].length; i++) {
+						if (commaSepTags.length > 0) {
+							commaSepTags += ", ";
+						}
+						commaSepTags += "'" + row["tags"][i]["id"] + "-" + row["tags"][i]["name"] + "'";
+					}
+				}
+				var buttons = "<button class=\"btn btn-outline-primary\" onclick=\"return handleDetailsModal(" + row["id"] + ");\"><i class=\"fa fa-info\"></i> Detaylar</button>";
+				buttons += "<button onclick=\"return handleTagsModal(" + row["id"] + ", [" + commaSepTags + "]);\" class=\"btn btn-outline-secondary\"><i class=\"fa fa-edit\"></i> Etiket düzenle</button>";
+				return buttons;
 			};
 			const colsAgent = [
 				{"data": "hostName", "searchable": true, "orderable": true }, 
 				{"data": "ipAddresses", "searchable": true, "orderable": true }, 
 				{"data": "macAddresses", "searchable": true, "orderable": true }, 
+				{"data": "tagsStr", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsAgent, "searchable": false, "orderable": false }
 			];
 			$('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, null);
+			
+			$("#editTagsModalBtn").one("click", function(){
+				var tagArr = [];
+				for(var i = 0; i < $("#tags").val().length; i++) {
+					var tag = $("#tags").val()[i];
+					var tokens = tag.split("-");
+					tagArr.push({ "id": tokens[0], "name": tokens[1] });
+				}
+				var d =  {"id": lastAgentId, "tags": tagArr};
+				Alfa.ajax(
+					{url: "/alfa/agent/tag/save", data: d}, 
+					function(result){
+						alertify.success("Etiketler başarıyla kaydedildi.");
+						$('#editTagsModal').modal('hide');
+					}, 
+					function() {
+						alertify.error("Etiketler kaydedilirken hata oluştu.");
+					}
+				);
+			});
 		});
 	</script>
 </body>
