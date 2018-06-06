@@ -51,7 +51,7 @@
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('agents')} ? 'has-error' : ''">
 								<label>Ajan</label>
-								<select class="form-control select2" id="agents" name="agents" style="width: 100%;" multiple>
+								<select class="form-control select2" id="agents" name="agents" style="width: 100%;">
 									<option th:each="agent : ${agents}" th:text="${agent.hostName} + ' - ' + ${agent.ipAddresses}" th:value="${agent.id}"></option>
 								</select>
 								<span class="help-block" th:if="${#fields.hasErrors('agents')}" th:errors="*{agents}">Hata</span>
@@ -73,7 +73,7 @@
 		$(function() {
 			// Return to list when cancel button is clicked
 			$('#cancelBtn').one("click", function() {
-				window.location.href = /*[[${'alfa/' + form.redirect}]]*/'';
+				window.location.href = /*[[${'/alfa/' + form.redirect}]]*/'';
 			});
 			
 			// Config checkbox
