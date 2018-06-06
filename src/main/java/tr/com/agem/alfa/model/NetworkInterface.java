@@ -86,7 +86,6 @@ public class NetworkInterface extends BaseModel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((capabilities == null) ? 0 : capabilities.hashCode());
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
@@ -99,9 +98,6 @@ public class NetworkInterface extends BaseModel {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		NetworkInterface other = (NetworkInterface) obj;
-		if (capabilities == null) {
-			if (other.capabilities != null) return false;
-		} else if (!capabilities.equals(other.capabilities)) return false;
 		if (product == null) {
 			if (other.product != null) return false;
 		} else if (!product.equals(other.product)) return false;

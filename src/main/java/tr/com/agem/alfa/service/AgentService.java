@@ -1,5 +1,6 @@
 package tr.com.agem.alfa.service;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.AgentRunningProcess;
 import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.repository.AgentRepository;
 import tr.com.agem.alfa.repository.TagRepository;
@@ -39,6 +41,17 @@ public class AgentService {
 	public Agent saveOrUpdate(Agent agent) {
 		Assert.notNull(agent, "Agent must not be null.");
 		if (agent.getId() != null) {
+			// Remove processes
+			if (agent.getAgentRunningProcesses() != null) {
+				Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
+				while (it.hasNext()) {
+					AgentRunningProcess _p = it.next();
+					if (_p.getId() != null) {
+						this.em.remove(_p);
+						it.remove();
+					}
+				}
+			}
 			return this.em.merge(agent);
 		}
 		return this.agentRepository.save(agent);

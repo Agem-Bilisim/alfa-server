@@ -94,4 +94,36 @@ public class Gpu extends BaseModel {
 		this.agents.add(agent);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((driverDate == null) ? 0 : driverDate.hashCode());
+		result = prime * result + ((driverVersion == null) ? 0 : driverVersion.hashCode());
+		result = prime * result + ((kernel == null) ? 0 : kernel.hashCode());
+		result = prime * result + ((subsystem == null) ? 0 : subsystem.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Gpu other = (Gpu) obj;
+		if (driverDate == null) {
+			if (other.driverDate != null) return false;
+		} else if (!driverDate.equals(other.driverDate)) return false;
+		if (driverVersion == null) {
+			if (other.driverVersion != null) return false;
+		} else if (!driverVersion.equals(other.driverVersion)) return false;
+		if (kernel == null) {
+			if (other.kernel != null) return false;
+		} else if (!kernel.equals(other.kernel)) return false;
+		if (subsystem == null) {
+			if (other.subsystem != null) return false;
+		} else if (!subsystem.equals(other.subsystem)) return false;
+		return true;
+	}
+
 }
