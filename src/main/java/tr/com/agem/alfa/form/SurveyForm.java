@@ -14,7 +14,6 @@ public class SurveyForm extends BaseForm {
 	@NotEmpty
 	private String label;
 
-	@NotEmpty
 	private String description;
 
 	@NotEmpty

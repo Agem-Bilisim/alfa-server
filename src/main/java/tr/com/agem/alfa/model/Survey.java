@@ -33,7 +33,7 @@ public class Survey extends BaseModel {
 	@Column(name = "SURVEY_TYPE")
 	private Integer surveyType;
 
-	@OneToMany(mappedBy = "survey")
+	@OneToMany(mappedBy = "survey", orphanRemoval = true)
 	private Set<SurveyResult> surveyResults = new HashSet<SurveyResult>(0);
 
 	public String getLabel() {

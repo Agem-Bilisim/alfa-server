@@ -61,6 +61,7 @@
 					<div class="form-group">
 						<label>Anket sonucunun gösterileceği ajan:</label>
 						<select class="form-control" id="agents_result" name="agents_result" style="width: 100%;">
+							<option></option>
 							<option th:each="agent : ${agents}" th:text="${agent.hostName + ' - ' + agent.ipAddresses}" th:value="${agent.messagingId}"></option>
 						</select>
 						<div id="surveyElement"></div>
@@ -102,8 +103,12 @@
 		var handleResult = function(surveyId) {
 			SurveyEditor.editorLocalization.currentLocale = "tr";
 			SurveyEditor.StylesManager.applyTheme("bootstrap");
-			$("#agents_result").one("change", function(){
+			$("#agents_result").on("change", function(){
 				var messagingId = $("#agents_result").val();
+				if (!messagingId) {
+					alertify.warning("Geçerli bir ajan kaydı seçiniz.");
+					return;
+				}
 				$.ajax({
 					type : "POST",
 					contentType : "application/json",
@@ -119,6 +124,7 @@
 					success : function(result) {
 						if (!result || !result.data || !result.data["result"]) {
 							alertify.warning("Seçili ajana dair anket sonucu bulunamadı.");
+							$("#surveyElement").html("");
 							return;
 						}
 						alertify.success('Anket sonucu okundu.');

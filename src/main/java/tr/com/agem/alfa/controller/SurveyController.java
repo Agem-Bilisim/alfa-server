@@ -113,7 +113,7 @@ public class SurveyController {
 			result.add("survey", survey.getSurveyJson());
 			if (survey != null && survey.getSurveyResults() != null) {
 				for (SurveyResult _result : survey.getSurveyResults()) {
-					if (_result != null) {
+					if (_result != null && messagingId.equals(_result.getAgent().getMessagingId())) {
 						result.add("result", new String(_result.getResult(), StandardCharsets.ISO_8859_1));
 						break;
 					}
