@@ -1,6 +1,10 @@
 package tr.com.agem.alfa.form;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
+
+import tr.com.agem.alfa.model.Agent;
 
 /**
  * @author <a href="mailto:caner.feyzullahoglu@agem.com.tr">Caner Feyzullahoğlu</a>
@@ -43,6 +47,8 @@ public class CpuForm extends BaseForm {
 	private String model;
 
 	private String rawArchString;
+	
+	private List<Agent> agents;
 
 	public String getBrand() {
 		return brand;
@@ -173,4 +179,12 @@ public class CpuForm extends BaseForm {
 	}
 
 	private String vendorId;
+
+	public List<Agent> getAgents() {
+		return agents;
+	}
+
+	public void setAgents(List<Agent> agents) {
+		this.agents = agents;
+	}
 }

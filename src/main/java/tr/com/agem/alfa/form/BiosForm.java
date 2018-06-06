@@ -1,6 +1,10 @@
 package tr.com.agem.alfa.form;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
+
+import tr.com.agem.alfa.model.Agent;
 
 public class BiosForm extends BaseForm {
 
@@ -13,6 +17,8 @@ public class BiosForm extends BaseForm {
 	private String version;
 
 	private String releaseDate;
+	
+	private List<Agent> agents;
 
 	public String getVendor() {
 		return vendor;
@@ -36,6 +42,14 @@ public class BiosForm extends BaseForm {
 
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public List<Agent> getAgents() {
+		return agents;
+	}
+
+	public void setAgents(List<Agent> agents) {
+		this.agents = agents;
 	}
 
 }

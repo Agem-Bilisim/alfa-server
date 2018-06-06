@@ -1,6 +1,10 @@
 package tr.com.agem.alfa.form;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
+
+import tr.com.agem.alfa.model.Agent;
 
 public class NetworkInterfaceForm extends BaseForm {
 	
@@ -15,6 +19,8 @@ public class NetworkInterfaceForm extends BaseForm {
 	private String product;
 
 	private String capabilities;
+	
+	private List<Agent> agents;
 
 	public String getVendor() {
 		return vendor;
@@ -46,5 +52,13 @@ public class NetworkInterfaceForm extends BaseForm {
 
 	public void setCapabilities(String capabilities) {
 		this.capabilities = capabilities;
+	}
+
+	public List<Agent> getAgents() {
+		return agents;
+	}
+
+	public void setAgents(List<Agent> agents) {
+		this.agents = agents;
 	}
 }

@@ -1,6 +1,10 @@
 package tr.com.agem.alfa.form;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
+
+import tr.com.agem.alfa.model.Agent;
 
 public class DiskForm extends BaseForm {
 
@@ -17,6 +21,8 @@ public class DiskForm extends BaseForm {
 	private String product;
 
 	private String serial;
+	
+	private List<Agent> agents;
 
 	public String getVendor() {
 		return vendor;
@@ -56,6 +62,14 @@ public class DiskForm extends BaseForm {
 
 	public void setSerial(String serial) {
 		this.serial = serial;
+	}
+
+	public List<Agent> getAgents() {
+		return agents;
+	}
+
+	public void setAgents(List<Agent> agents) {
+		this.agents = agents;
 	}
 
 }

@@ -1,6 +1,10 @@
 package tr.com.agem.alfa.form;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
+
+import tr.com.agem.alfa.model.Agent;
 
 public class GpuForm extends BaseForm {
 
@@ -14,6 +18,8 @@ public class GpuForm extends BaseForm {
 
 	@NotEmpty
 	private String memory;
+	
+	private List<Agent> agents;
 
 	public String getSubsystem() {
 		return subsystem;
@@ -37,6 +43,14 @@ public class GpuForm extends BaseForm {
 
 	public void setMemory(String memory) {
 		this.memory = memory;
+	}
+
+	public List<Agent> getAgents() {
+		return agents;
+	}
+
+	public void setAgents(List<Agent> agents) {
+		this.agents = agents;
 	}
 
 }
