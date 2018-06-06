@@ -44,7 +44,7 @@
 				<form role="form" id="sendSurveyForm">
 					<div class="form-group">
 						<label>Anketin gönderileceği ajanlar:</label>
-						<select class="form-control select2" multiple id="agents" name="agents" style="width: 100%;">
+						<select class="form-control" multiple id="agents" name="agents" style="width: 100%;">
 							<option th:each="agent : ${agents}" th:text="${agent.hostName + ' - ' + agent.ipAddresses}" th:value="${agent.messagingId}"></option>
 						</select>
 					</div>

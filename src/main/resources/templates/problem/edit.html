@@ -9,8 +9,6 @@
 	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
 	<!-- DataTables -->
 	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
-	<!-- Select2 -->
-	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
@@ -45,7 +43,7 @@
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('references')} ? 'has-error' : ''">
 								<label>Varsa soruna ilişkin yazılım/donanım</label>
-								<select class="form-control select2" id="references" name="references" style="width: 100%;" th:field="*{strReferences}" multiple>
+								<select class="form-control" id="references" name="references" style="width: 100%;" th:field="*{strReferences}" multiple>
 									<option th:each="ref : ${possiblerefs}" th:text="${ref.text}" th:value="${ref.value}"></option>
 								</select>
 								<span class="help-block" th:if="${#fields.hasErrors('references')}" th:errors="*{references}">Hata</span>

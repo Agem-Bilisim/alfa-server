@@ -8,8 +8,6 @@
 	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
 	<!-- DataTables -->
 	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
-	<!-- Select2 -->
-	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
@@ -40,7 +38,7 @@
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('ldapType')} ? 'has-error' : ''">
 								<label>Tür</label>
-								<select class="form-control select2" id="ldapType" name="ldapType" style="width: 100%;" th:field="*{ldapType}" >
+								<select class="form-control" id="ldapType" name="ldapType" style="width: 100%;" th:field="*{ldapType}" >
 									<option th:each="ldapType : ${T(tr.com.agem.alfa.model.enums.LdapType).values()}" th:text="${ldapType}" th:value="${ldapType.id}"></option>
 								</select>
 								<span class="help-block" th:if="${#fields.hasErrors('ldapType')}" th:errors="*{ldapType}">Hata</span>
@@ -53,7 +51,7 @@
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('encryptionType')} ? 'has-error' : ''">
 								<label>Şifreleme türü</label>
-								<select class="form-control select2" id="encryptionType" name="encryptionType" style="width: 100%;" th:field="*{encryptionType}" >
+								<select class="form-control" id="encryptionType" name="encryptionType" style="width: 100%;" th:field="*{encryptionType}" >
 									<option th:each="encryptionType : ${T(tr.com.agem.alfa.model.enums.LdapEncryptionType).values()}" th:text="${encryptionType}" th:value="${encryptionType.id}"></option>
 								</select>
 								<span class="help-block" th:if="${#fields.hasErrors('encryptionType')}" th:errors="*{encryptionType}">Hata</span>

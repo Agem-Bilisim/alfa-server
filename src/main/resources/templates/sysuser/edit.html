@@ -8,8 +8,6 @@
 	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
 	<!-- DataTables -->
 	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
-	<!-- Select2 -->
-	<link th:href="@{/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" />
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
@@ -75,7 +73,7 @@
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'has-error' : ''">
 								<label>Rol</label>
-								<select class="form-control select2" id="role" name="role" style="width: 100%;" th:field="*{role.id}" >
+								<select class="form-control" id="role" name="role" style="width: 100%;" th:field="*{role.id}" >
 									<option th:each="role : ${roles}" th:text="${role.name}" th:value="${role.id}"></option>
 								</select>
 								<span class="help-block" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Hata</span>
