@@ -3,6 +3,7 @@ package tr.com.agem.alfa.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +22,7 @@ public class RunningProcess extends BaseModel {
 	private String name;
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "runningProcess")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "runningProcess", cascade=CascadeType.REMOVE)
 	private Set<AgentRunningProcess> agentRunningProcesses = new HashSet<AgentRunningProcess>(0);
 
 	public String getName() {
