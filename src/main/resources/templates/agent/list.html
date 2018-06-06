@@ -272,7 +272,7 @@
 			];
 			$('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, null);
 			
-			$("#editTagsModalBtn").one("click", function(){
+			$("#editTagsModalBtn").on("click", function(){
 				var tagArr = [];
 				for(var i = 0; i < $("#tags").val().length; i++) {
 					var tag = $("#tags").val()[i];

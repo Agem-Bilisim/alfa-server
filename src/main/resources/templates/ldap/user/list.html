@@ -92,7 +92,7 @@
 			
 			var drawCallback = function(settings) {
 				// Add details button handler
-				$(".user-detail-btn").one("click", function() {
+				$(".user-detail-btn").on("click", function() {
 					var id = $(this).attr("userid");
 					$.ajax({
 						type: "GET",

@@ -73,7 +73,7 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		// Hook handler for sending survey
 		var handleSend = function(surveyId) {
-			$("#sendSurveyModalBtn").one("click", function(){
+			$("#sendSurveyModalBtn").on("click", function(){
 				$('#sendSurveyModal').modal('hide');
 				for (var i=0; i < $("#agents").val().length; i++) {
 					var messagingId = $("#agents").val()[i];
@@ -151,7 +151,7 @@
 			var drawCallback = function(settings) {
 				if ($("#newSurveyBtn").length == 0) {
 					$("#surveyTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newSurveyBtn\">Yeni</button>");
-					$("#newSurveyBtn").one("click", function() {
+					$("#newSurveyBtn").on("click", function() {
 						window.location.href = '/alfa/survey/create';
 					});
 				}

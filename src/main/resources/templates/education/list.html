@@ -56,7 +56,7 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		// Hook handler for sending URL
 		var handleSend = function(educationId) {
-			$("#sendUrlModalBtn").one("click", function(){
+			$("#sendUrlModalBtn").on("click", function(){
 				$('#sendUrlModal').modal('hide');
 				for (var i=0; i < $("#agents").val().length; i++) {
 					var messagingId = $("#agents").val()[i];
@@ -93,7 +93,7 @@
 			var drawCallback = function(settings) {
 				if ($("#newEducationBtn").length == 0) {
 					$("#educationTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newEducationBtn\">Yeni</button>");
-					$("#newEducationBtn").one("click", function() {
+					$("#newEducationBtn").on("click", function() {
 						window.location.href = '/alfa/education/create';
 					});
 				}

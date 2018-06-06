@@ -48,7 +48,7 @@
 			var drawCallbackPeripheral = function(settings) {
 				if ($("#newPeripheralBtn").length == 0) {
 					$("#peripheralTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPeripheralBtn\">Yeni</button>");
-					$("#newPeripheralBtn").one("click", function() {
+					$("#newPeripheralBtn").on("click", function() {
 						window.location.href = '/alfa/peripheral/create?redirect=peripheral/list';
 					});
 				}

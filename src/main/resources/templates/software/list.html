@@ -102,7 +102,7 @@
 		var handleDelete = function(url, tableToRefresh) {
 			console.log(url);
 			console.log(tableToRefresh);
-			$("#deleteConfirmModalBtn").one("click", function(){
+			$("#deleteConfirmModalBtn").on("click", function(){
 				$('#deleteConfirmModal').modal('hide');
 				$.ajax({
 					type : "POST",
@@ -137,7 +137,7 @@
 			var drawCallbackSoftware = function(settings) {
 				if ($("#newPackageBtn").length == 0) {
 					$("#packageTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newPackageBtn\">Yeni</button>");
-					$("#newPackageBtn").one("click", function() {
+					$("#newPackageBtn").on("click", function() {
 						window.location.href = '/alfa/installed-package/create';
 					});
 				}
@@ -159,7 +159,7 @@
 			var drawCallbackProcess = function(settings) {
 				if ($("#newProcessBtn").length == 0) {
 					$("#processTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProcessBtn\">Yeni</button>");
-					$("#newProcessBtn").one("click", function() {
+					$("#newProcessBtn").on("click", function() {
 						window.location.href = '/alfa/process/create';
 					});
 				}
@@ -179,7 +179,7 @@
 			var drawCallbackProblem = function(settings) {
 				if ($("#newProblemBtn").length == 0) {
 					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
-					$("#newProblemBtn").one("click", function() {
+					$("#newProblemBtn").on("click", function() {
 						window.location.href = '/alfa/problem/create?redirect=software/list';
 					});
 				}

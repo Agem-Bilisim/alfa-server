@@ -177,7 +177,7 @@
 			var drawCallbackCpu = function(settings) {
 				if ($("#newCpuBtn").length == 0) {
 					$("#cpuTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newCpuBtn\">Yeni</button>");
-					$("#newCpuBtn").one("click", function() {
+					$("#newCpuBtn").on("click", function() {
 						window.location.href = '/alfa/hardware/cpu/create?redirect=hardware/list';
 					});
 				}
@@ -203,7 +203,7 @@
 			var drawCallbackGpu = function(settings) {
 				if ($("#newGpuBtn").length == 0) {
 					$("#gpuTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newGpuBtn\">Yeni</button>");
-					$("#newGpuBtn").one("click", function() {
+					$("#newGpuBtn").on("click", function() {
 						window.location.href = '/alfa/hardware/gpu/create?redirect=hardware/list';
 					});
 				}
@@ -225,7 +225,7 @@
 			var drawCallbackDisk = function(settings) {
 				if ($("#newDiskBtn").length == 0) {
 					$("#diskTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newDiskBtn\">Yeni</button>");
-					$("#newDiskBtn").one("click", function() {
+					$("#newDiskBtn").on("click", function() {
 						window.location.href = '/alfa/hardware/disk/create?redirect=hardware/list';
 					});
 				}
@@ -249,7 +249,7 @@
 			var drawCallbackMemory = function(settings) {
 				if ($("#newMemoryBtn").length == 0) {
 					$("#memoryTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newMemoryBtn\">Yeni</button>");
-					$("#newMemoryBtn").one("click", function() {
+					$("#newMemoryBtn").on("click", function() {
 						window.location.href = '/alfa/hardware/memory/create?redirect=hardware/list';
 					});
 				}
@@ -272,7 +272,7 @@
 			var drawCallbackBios = function(settings) {
 				if ($("#newBiosBtn").length == 0) {
 					$("#biosTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newBiosBtn\">Yeni</button>");
-					$("#newBiosBtn").one("click", function() {
+					$("#newBiosBtn").on("click", function() {
 						window.location.href = '/alfa/hardware/bios/create?redirect=hardware/list';
 					});
 				}
@@ -294,7 +294,7 @@
 			var drawCallbackNetworkInterface = function(settings) {
 				if ($("#newNetworkInterfaceBtn").length == 0) {
 					$("#networkInterfaceTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newNetworkInterfaceBtn\">Yeni</button>");
-					$("#newNetworkInterfaceBtn").one("click", function() {
+					$("#newNetworkInterfaceBtn").on("click", function() {
 						window.location.href = '/alfa/hardware/networkInterface/create?redirect=hardware/list';
 					});
 				}
