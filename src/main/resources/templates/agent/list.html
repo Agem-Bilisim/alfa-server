@@ -259,8 +259,10 @@
 						commaSepTags += "'" + row["tags"][i]["id"] + "-" + row["tags"][i]["name"] + "'";
 					}
 				}
-				var buttons = "<button class=\"btn btn-outline-primary\" onclick=\"return handleDetailsModal(" + row["id"] + ");\"><i class=\"fa fa-info\"></i> Detaylar</button>";
+				var buttons = "<div class=\"btn-group\" role=\"group\">";
+				buttons += "<button class=\"btn btn-outline-primary\" onclick=\"return handleDetailsModal(" + row["id"] + ");\"><i class=\"fa fa-info\"></i> Detaylar</button>";
 				buttons += "<button onclick=\"return handleTagsModal(" + row["id"] + ", [" + commaSepTags + "]);\" class=\"btn btn-outline-secondary\"><i class=\"fa fa-edit\"></i> Etiket düzenle</button>";
+				buttons += "</div>";
 				return buttons;
 			};
 			const colsAgent = [

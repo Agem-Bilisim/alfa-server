@@ -130,8 +130,8 @@
 			// Software
 			var fnActionBtnsSoftware = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/installed-package/" + row['id'] + "/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/installed-package/" + row['id'] + "/delete', 'packageTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
 					+ "</div>";
 			};
 			var drawCallbackSoftware = function(settings) {
@@ -152,8 +152,8 @@
 			// Process
 			var fnActionBtnsProcess = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/process/" + row['id'] + "/delete', 'processTable')\"><i class=\"fa fa-trash\"></i></button>" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/process/" + row['id'] + "/delete', 'processTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
 				+ "</div>";
 			};
 			var drawCallbackProcess = function(settings) {
@@ -172,8 +172,8 @@
 			// Problem
 			var fnActionBtnsProblem = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?redirect=software/list\"><i class=\"fa fa-edit\"></i></a>"
-				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i></button>" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?redirect=software/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
 				+ "</div>";
 			};
 			var drawCallbackProblem = function(settings) {
@@ -187,7 +187,12 @@
 			const colsProblem = [
 				{"data": "label", "searchable": true, "orderable": true }, 
 				{"data": "description", "searchable": true, "orderable": true }, 
-				{"data": "solved", "searchable": true, "orderable": true }, 
+				{"data": 
+					function ( row, type, val, meta ) { 
+						row["solved_str"] = (row["solved"] == true ? "Çözüldü" : "Devam ediyor"); 
+						return row["solved_str"]; 
+					}
+				, "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 			

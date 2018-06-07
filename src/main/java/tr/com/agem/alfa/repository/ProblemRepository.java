@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +17,7 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
 			Pageable pageable);
 
 	Page<Problem> findByReferencesReferenceType(Integer referenceType, Pageable pageable);
+
+	List<Problem> findFirst5ByOrderByCreatedDateDesc();
 
 }
