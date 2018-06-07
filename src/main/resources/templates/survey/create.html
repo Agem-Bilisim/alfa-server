@@ -40,6 +40,13 @@
 									placeholder="Açıklama" th:field="*{description}" />
 								<span class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Hata</span>
 							</div>
+							<div class="form-group">
+								<div class="checkbox">
+									<label style="padding-left:0px;"> <input type="checkbox" class="minimal"
+										id="auto-survey-creation"> Yazılım ve çevresel birimlerden otomatik anket hazırla.
+									</label>
+								</div>
+							</div>
 							<div class="form-group" id="surveyContainer">
 								<div id="editorElement"></div>
 							</div>
@@ -51,10 +58,93 @@
 		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		var editor = null;	
+	
+		$("#auto-survey-creation").on("ifChecked", function(event) {
+			Alfa.ajax({url: '/alfa/survey/list-surveyable'}, function(result){
+				console.log(JSON.stringify(result));
+				if (!result || !result.data) return;
+				var elements = [];
+				if (result.data.packages) {
+					for(var i = 0; i < result.data.packages.length; i++) {
+						var item = result.data.packages[i];
+						elements.push({
+							type: "radiogroup",
+							name: "packagequestion" + i,
+							title: item.name + " adlı yazılımın eğitimini aldınız mı?",
+							choices: [
+								{
+									value: "item1",
+									text: "Evet"
+								},
+								{
+									value: "item2",
+									text: "Hayır"
+								}
+							]
+					    });
+					}
+				}
+				if (result.data.peripherals) {
+					for(var i = 0; i < result.data.peripherals.length; i++) {
+						var item = result.data.peripherals[i];
+						elements.push({
+							type: "radiogroup",
+							name: "peripheralsquestion" + i,
+							title: item.tag + " adlı çevresel birimi kullanıyor musunuz?",
+							choices: [
+								{
+									value: "item1",
+									text: "Evet"
+								},
+								{
+									value: "item2",
+									text: "Hayır"
+								}
+							]
+					    });
+					}
+				}
+				if (elements.length > 0) {
+					elements.push({
+					    type: "text",
+					    name: "name",
+					    title: "Lütfen adınızı giriniz",
+					    isRequired: true,
+					    placeHolder: "Ad soyad"
+				    });
+					elements.push({
+					    type: "text",
+					    name: "email",
+					    title: "E-posta adresiniz:",
+					    isRequired: true,
+					    validators: [
+					    	{ type: "email" }
+					    ],
+					    inputType: "email",
+					    placeHolder: "ad.soyad@alfa.org"
+				    });
+					var data = {
+						pages: [
+							{
+								name: "page1",
+								elements: elements
+							}
+						]
+					};
+					if (editor) {
+						editor.text = JSON.stringify(data);
+						$("#label").val("yazılım ve çevresel birim kullanımı anketi");
+						$("#description").val("Yazılım eğitimi ve çevresel birim kullanımına dair anket");
+					}
+				}
+			});
+		});
+	
 		$(function() {
 			SurveyEditor.editorLocalization.currentLocale = "tr";
 			SurveyEditor.StylesManager.applyTheme("bootstrap");
-			var editor = new SurveyEditor.SurveyEditor("editorElement", {
+			editor = new SurveyEditor.SurveyEditor("editorElement", {
 				questionTypes: ["text", "checkbox", "radiogroup", "dropdown", "rating"],
 				showJSONEditorTabValue: false,
 				showPagesToolbox: false,
@@ -71,6 +161,10 @@
 				$("#surveyForm").submit();
 			};
 			$(".svd_commercial_container").remove();
+			// Config checkbox
+			$('input[type="checkbox"].minimal').iCheck({
+		      checkboxClass: 'icheckbox_minimal-blue'
+		    });
 		});
 	</script>
 </body>

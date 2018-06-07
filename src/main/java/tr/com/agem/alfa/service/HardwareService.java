@@ -3,6 +3,7 @@ package tr.com.agem.alfa.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -250,4 +251,10 @@ public class HardwareService {
 		return this.peripheralRepository.findAll();
 	}
 
+	public List<PeripheralDevice> getSurveyablePeripherals() {
+		PeripheralDevice p = new PeripheralDevice();
+		p.setShowInSurvey(true);
+		return this.peripheralRepository.findAll(Example.of(p));
+	}
+	
 }

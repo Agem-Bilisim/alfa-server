@@ -33,6 +33,8 @@ import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Survey;
 import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.service.AgentService;
+import tr.com.agem.alfa.service.HardwareService;
+import tr.com.agem.alfa.service.SoftwareService;
 import tr.com.agem.alfa.service.SurveyService;
 
 /**
@@ -46,6 +48,8 @@ public class SurveyController {
 	private final SurveyService surveyService;
 	private final AgentService agentService;
 	private final MessagingService messagingService;
+	private final SoftwareService softwareService;
+	private final HardwareService hardwareService;
 	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
@@ -53,10 +57,12 @@ public class SurveyController {
 
 	@Autowired
 	public SurveyController(SurveyService surveyService, AgentService agentService, MessagingService messagingService,
-			SysMapper mapper) {
+			SoftwareService softwareService, HardwareService hardwareService, SysMapper mapper) {
 		this.surveyService = surveyService;
 		this.agentService = agentService;
 		this.messagingService = messagingService;
+		this.softwareService = softwareService;
+		this.hardwareService = hardwareService;
 		this.mapper = mapper;
 	}
 
@@ -102,7 +108,21 @@ public class SurveyController {
 		}
 		return ResponseEntity.ok(result);
 	}
-	
+
+	@PostMapping("/survey/list-surveyable")
+	public ResponseEntity<?> getSurveyable() {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			result.add("packages", softwareService.getSurveyablePackages());
+			result.add("peripherals", hardwareService.getSurveyablePeripherals());
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to get surveyables", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
 	@PostMapping("/survey/{surveyId}/result/{messagingId}")
 	public ResponseEntity<?> getSurveyResult(@PathVariable(name = "surveyId") Long surveyId,
 			@PathVariable(name = "messagingId") String messagingId) {
@@ -175,7 +195,7 @@ public class SurveyController {
 		}
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@PostMapping("/survey/{id}/delete")
 	public ResponseEntity<?> handleDelete(@PathVariable Long id) {
 		RestResponseBody result = new RestResponseBody();

@@ -3,6 +3,7 @@ package tr.com.agem.alfa.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -112,6 +113,12 @@ public class SoftwareService {
 
 	public List<RunningProcess> getProcesses() {
 		return this.processRepository.findAll();
+	}
+
+	public List<InstalledPackage> getSurveyablePackages() {
+		InstalledPackage p = new InstalledPackage();
+		p.setShowInSurvey(true);
+		return this.packageRepository.findAll(Example.of(p));
 	}
 
 }
