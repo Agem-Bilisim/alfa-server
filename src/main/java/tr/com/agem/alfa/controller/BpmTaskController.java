@@ -69,7 +69,7 @@ public class BpmTaskController
 		form.setProcessId(bpmn.getId());
 		form.setProcessName(bpmn.getName());
 		
-		return new ModelAndView("task/start", "form", form);
+		return new ModelAndView("bpm-task/start", "form", form);
 	}
 
 	@RequestMapping("/bpm-task/start/{processId}")
