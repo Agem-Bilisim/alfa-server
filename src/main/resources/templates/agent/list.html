@@ -23,6 +23,11 @@
 						<table id="agentTable" class="table table-bordered table-striped">
 							<thead>
 								<tr>
+									<th>
+										<label class="checkbox checkbox-inline">
+											<input type="checkbox" name="select_all" value="1" id="select-all">
+										</label>
+									</th>
 									<th>Hostname</th>
 									<th>IP Adresleri</th>
 									<th>MAC Adresleri</th>
@@ -138,6 +143,13 @@
 			}));
 			$("#new-tag").val("");
 		};
+		
+	   $('#select-all').on('click', function(){
+	      // Get all rows with search applied
+	      var rows = agentTable.rows({ 'search': 'applied' }).nodes();
+	      // Check/uncheck checkboxes for all rows in the table
+	      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+	   });
 	
 		var handleDetailsModal = function(agentId) {
 			$.ajax({
@@ -265,14 +277,33 @@
 				buttons += "</div>";
 				return buttons;
 			};
+			var fnCheckboxBtnsAgent = function(data, type, row) {
+				var ch = "<label class=\"checkbox checkbox-inline\">";
+				ch += "<input type=\"checkbox\" value=\"1\" rowid=\"" + row["id"] + "\">";
+				ch += "</label>";
+				return ch; 
+			};
+			var drawCallback = function(settings) {
+				if ($("#assignTagBtn").length == 0) {
+					$("#agentTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"assignTagBtn\">Seçilenlere etiket ata</button>");
+					$("#assignTagBtn").on("click", function() {
+						// Clear last agent ID so that multiple agent IDs can be used!
+						lastAgentId = null;
+						$("option:selected", "#tags").removeAttr("selected");
+						$('#editTagsModal').modal('show');
+					});
+				}
+			};
 			const colsAgent = [
+				{"searchable": false, "orderable": false, "render": fnCheckboxBtnsAgent },
 				{"data": "hostName", "searchable": true, "orderable": true }, 
 				{"data": "ipAddresses", "searchable": true, "orderable": true }, 
 				{"data": "macAddresses", "searchable": true, "orderable": true }, 
 				{"data": "tagsStr", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsAgent, "searchable": false, "orderable": false }
 			];
-			$('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, null);
+			var order = [ [1, 'desc'] ];
+			agentTable = $('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, drawCallback, order);
 			
 			$("#editTagsModalBtn").on("click", function(){
 				var tagArr = [];
@@ -281,17 +312,33 @@
 					var tokens = tag.split("-");
 					tagArr.push({ "id": tokens[0], "name": tokens[1] });
 				}
-				var d =  {"id": lastAgentId, "tags": tagArr};
-				Alfa.ajax(
-					{url: "/alfa/agent/tag/save", data: d}, 
-					function(result){
-						alertify.success("Etiketler başarıyla kaydedildi.");
-						$('#editTagsModal').modal('hide');
-					}, 
-					function() {
-						alertify.error("Etiketler kaydedilirken hata oluştu.");
-					}
-				);
+				if (lastAgentId) {
+					var d =  {"id": lastAgentId, "tags": tagArr};
+					Alfa.ajax(
+						{url: "/alfa/agent/tag/save", data: d}, 
+						function(result){
+							alertify.success("Etiketler başarıyla kaydedildi.");
+							$('#editTagsModal').modal('hide');
+						}, 
+						function() {
+							alertify.error("Etiketler kaydedilirken hata oluştu.");
+						}
+					);
+				} else {
+					$('input[type="checkbox"][name!="select_all"]:checked').each(function(){
+						var d =  {"id": $(this).attr("rowid"), "tags": tagArr};
+						Alfa.ajax(
+							{url: "/alfa/agent/tag/save", data: d}, 
+							function(result){
+								alertify.success("Etiketler başarıyla kaydedildi.");
+								$('#editTagsModal').modal('hide');
+							}, 
+							function() {
+								alertify.error("Etiketler kaydedilirken hata oluştu.");
+							}
+						);
+					});
+				}
 			});
 		});
 	</script>

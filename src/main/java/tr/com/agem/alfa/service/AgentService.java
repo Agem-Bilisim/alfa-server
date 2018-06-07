@@ -40,39 +40,41 @@ public class AgentService {
 		this.tagRepository = tagRepository;
 	}
 
-	public Agent saveOrUpdate(Agent agent) {
+	public Agent saveOrUpdate(Agent agent, boolean updateCrossTables) {
 		Assert.notNull(agent, "Agent must not be null.");
 		if (agent.getId() != null) {
-			// Remove processes
-			if (agent.getAgentRunningProcesses() != null) {
-				Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
-				while (it.hasNext()) {
-					AgentRunningProcess _p = it.next();
-					if (_p.getId() != null) {
-						this.em.remove(_p);
-						it.remove();
+			if (updateCrossTables) {
+				// Remove processes
+				if (agent.getAgentRunningProcesses() != null) {
+					Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
+					while (it.hasNext()) {
+						AgentRunningProcess _p = it.next();
+						if (_p.getId() != null) {
+							this.em.remove(_p);
+							it.remove();
+						}
 					}
 				}
-			}
-			// Remove CPUs
-			if (agent.getAgentCpus() != null) {
-				Iterator<AgentCpu> it = agent.getAgentCpus().iterator();
-				while (it.hasNext()) {
-					AgentCpu _c = it.next();
-					if (_c.getId() != null) {
-						this.em.remove(_c);
-						it.remove();
+				// Remove CPUs
+				if (agent.getAgentCpus() != null) {
+					Iterator<AgentCpu> it = agent.getAgentCpus().iterator();
+					while (it.hasNext()) {
+						AgentCpu _c = it.next();
+						if (_c.getId() != null) {
+							this.em.remove(_c);
+							it.remove();
+						}
 					}
 				}
-			}
-			// Remove peripherals
-			if (agent.getAgentPeripheralDevices() != null) {
-				Iterator<AgentPeripheralDevice> it = agent.getAgentPeripheralDevices().iterator();
-				while (it.hasNext()) {
-					AgentPeripheralDevice _p = it.next();
-					if (_p.getId() != null) {
-						this.em.remove(_p);
-						it.remove();
+				// Remove peripherals
+				if (agent.getAgentPeripheralDevices() != null) {
+					Iterator<AgentPeripheralDevice> it = agent.getAgentPeripheralDevices().iterator();
+					while (it.hasNext()) {
+						AgentPeripheralDevice _p = it.next();
+						if (_p.getId() != null) {
+							this.em.remove(_p);
+							it.remove();
+						}
 					}
 				}
 			}

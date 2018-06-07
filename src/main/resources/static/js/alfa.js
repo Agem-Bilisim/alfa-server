@@ -71,7 +71,7 @@ $.fn.serializeObject = function(ignoreList) {
  * drawCallback: Callback function to trigger after table is drawn.
  * 
  */
-$.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
+$.fn.paginatedTable = function(url, resultingProp, cols, drawCallback, order) {
 	if (!$.prototype.DataTable) {
 		console.log('DataTable function does not exist. Ensure that its js file is included in the HTML page.');
 		return;
@@ -89,6 +89,7 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 		console.log('Cols parameter was null.');
 		return;
 	}
+	console.log(order);
 	return this.DataTable({
 		"processing": true,
 		"serverSide": true,
@@ -165,7 +166,8 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback) {
 		"columns": cols,
 		"deferRender": true,
 		"responsive": true,
-		"drawCallback": drawCallback
+		"drawCallback": drawCallback,
+		"order": order ? order : [ [0, 'desc'] ],
 	});
 };
 

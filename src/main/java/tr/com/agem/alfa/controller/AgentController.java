@@ -124,7 +124,7 @@ public class AgentController {
 		try {
 			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
 			agent = toAgentEntity(message, agent);
-			agentService.saveOrUpdate(agent);
+			agentService.saveOrUpdate(agent, true);
 			log.info("Agent and its system info created/updated successfully.");
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";
@@ -159,7 +159,7 @@ public class AgentController {
 						it.remove();
 					}
 				}
-				agentService.saveOrUpdate(agent);
+				agentService.saveOrUpdate(agent, false);
 			}
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";
