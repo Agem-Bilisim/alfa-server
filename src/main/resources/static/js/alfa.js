@@ -108,6 +108,9 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback, order) {
 					finalUrl += "&sort.orders[" + index + "].direction=" + dir;
 				}
 			}
+			if (data.search) {
+				finalUrl += "&search=" + data.search.value;
+			}
 			var drawCount = data.draw;
 			$.ajax({
 				type: "GET",

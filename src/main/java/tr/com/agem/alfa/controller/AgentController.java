@@ -202,7 +202,7 @@ public class AgentController {
 	}
 
 	@GetMapping("/agent/list-paginated")
-	public ResponseEntity<?> handlePackageList(@RequestParam(value = "search", required = false) String search,
+	public ResponseEntity<?> handleAgentList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {
 		RestResponseBody result = new RestResponseBody();
 		try {

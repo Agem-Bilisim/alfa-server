@@ -91,8 +91,7 @@ public class AgentService {
 	public Page<Agent> getAgents(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			// TODO
-			return null;
+			return this.agentRepository.findByHostNameContainingOrIpAddressesContainingOrPlatformSystemContainingAllIgnoringCase(search, search, search, pageable);
 		}
 		return this.agentRepository.findAll(pageable);
 	}
