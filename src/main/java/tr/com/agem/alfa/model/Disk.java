@@ -89,6 +89,7 @@ public class Disk extends BaseModel {
 		if (this.agents == null) {
 			this.agents = new HashSet<Agent>();
 		}
+		agent.getDisks().add(this);
 		this.agents.add(agent);
 	}
 

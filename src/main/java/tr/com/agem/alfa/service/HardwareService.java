@@ -155,7 +155,8 @@ public class HardwareService {
 			g.setMemory(gpu.getMemory());
 			g.setDriverDate(gpu.getDriverDate());
 			g.setDriverVersion(gpu.getDriverVersion());
-			return this.gpuRepository.save(g);
+			g.setAgents(gpu.getAgents());
+			return this.gpuRepository.saveAndFlush(g);
 		}
 		// Create
 		return this.gpuRepository.save(gpu);
@@ -242,6 +243,21 @@ public class HardwareService {
 		}
 		return this.peripheralRepository.findAll(pageable);
 	}
+	
+	public Cpu getCpu(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.cpuRepository.findOne(id);
+	}
+
+	public Gpu getGpu(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.gpuRepository.findOne(id);
+	}
+
+	public Disk getDisk(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.diskRepository.findOne(id);
+	}
 
 	public List<Gpu> getGpus() {
 		return this.gpuRepository.findAll();
@@ -255,6 +271,21 @@ public class HardwareService {
 		PeripheralDevice p = new PeripheralDevice();
 		p.setShowInSurvey(true);
 		return this.peripheralRepository.findAll(Example.of(p));
+	}
+	
+	public Memory getMemory(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.memoryRepository.findOne(id);
+	}
+
+	public Bios getBios(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.biosRepository.findOne(id);
+	}
+
+	public NetworkInterface getNetworkInterface(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.inetRepository.findOne(id);
 	}
 	
 }

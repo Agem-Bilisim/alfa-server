@@ -53,12 +53,12 @@
 									name="manufacturer" placeholder="Üretici" th:field="*{manufacturer}" />
 								<span class="help-block" th:if="${#fields.hasErrors('manufacturer')}" th:errors="*{manufacturer}">Hata</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('agents')} ? 'has-error' : ''">
+							<div class="form-group" th:classappend="${#fields.hasErrors('agentIds')} ? 'has-error' : ''">
 								<label>Ajan</label>
-								<select class="form-control" id="agents" name="agents" style="width: 100%;">
+								<select class="form-control" id="agentIds" name="agentIds" style="width: 100%;" th:field="*{agentIds}" multiple>
 									<option th:each="agent : ${agents}" th:text="${agent.hostName} + ' - ' + ${agent.ipAddresses}" th:value="${agent.id}"></option>
 								</select>
-								<span class="help-block" th:if="${#fields.hasErrors('agents')}" th:errors="*{agents}">Hata</span>
+								<span class="help-block" th:if="${#fields.hasErrors('agentIds')}" th:errors="*{agentIds}">Hata</span>
 							</div>
 						</div>
 						<div class="box-footer">

@@ -1,10 +1,6 @@
 package tr.com.agem.alfa.form;
 
-import java.util.List;
-
 import org.hibernate.validator.constraints.NotEmpty;
-
-import tr.com.agem.alfa.model.Agent;
 
 public class MemoryForm extends BaseForm {
 
@@ -22,7 +18,7 @@ public class MemoryForm extends BaseForm {
 	@NotEmpty
 	private String manufacturer;
 	
-	private List<Agent> agents;
+	private Long[] agentIds;
 
 	public String getSpeed() {
 		return speed;
@@ -56,12 +52,12 @@ public class MemoryForm extends BaseForm {
 		this.manufacturer = manufacturer;
 	}
 
-	public List<Agent> getAgents() {
-		return agents;
+	public Long[] getAgentIds() {
+		return agentIds;
 	}
 
-	public void setAgents(List<Agent> agents) {
-		this.agents = agents;
+	public void setAgentIds(Long[] agentIds) {
+		this.agentIds = agentIds;
 	}
 
 }

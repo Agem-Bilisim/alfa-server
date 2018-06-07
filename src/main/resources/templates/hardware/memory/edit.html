@@ -13,7 +13,7 @@
 <body>
 	<th:block layout:fragment="breadcrumb-list">
 		<li><a th:href="${'alfa/' + form.redirect}"><i class="fa fa-cubes"></i> <span th:text="${rlabel}"></span></a></li>
-		<li class="active">Disk Ekle</li>
+		<li class="active">Bellek Düzenle</li>
 	</th:block>
 
 	<div layout:fragment="content">
@@ -21,37 +21,37 @@
 			<div class="col-xs-12">
 				<div class="box box-info">
 					<div class="box-header">
-						<h3 class="box-title">Disk Ekle</h3>
+						<h3 class="box-title">Bellek Düzenle</h3>
 					</div>
-					<form role="form" id="diskForm" th:action="@{/hardware/disk/create}" method="post" th:object="${form}">
+					<form role="form" id="memoryForm" th:action="@{'/hardware/memory/' + ${form.id}}" method="post" th:object="${form}">
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>
 						<input type="text" id="redirect" style="display:none;" name="redirect" th:field="*{redirect}" />
 						<div class="box-body">
-							<div class="form-group" th:classappend="${#fields.hasErrors('vendor')} ? 'has-error' : ''">
-								<label for="vendor">Sağlayıcı</label>
-								<input type="text" class="form-control" id="vendor"
-									name="vendor" placeholder="Sağlayıcı" th:field="*{vendor}" />
-								<span class="help-block" th:if="${#fields.hasErrors('vendor')}" th:errors="*{vendor}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('speed')} ? 'has-error' : ''">
+								<label for="speed">Hız</label>
+								<input type="text" class="form-control" id="speed"
+									name="speed" placeholder="Hız" th:field="*{speed}" />
+								<span class="help-block" th:if="${#fields.hasErrors('speed')}" th:errors="*{speed}">Hata</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'has-error' : ''">
-								<label for="description">Açıklama</label>
-								<input type="text" class="form-control" id="description"
-									name="description" placeholder="Açıklama" th:field="*{description}" />
-								<span class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('size')} ? 'has-error' : ''">
+								<label for="size">Boyut</label>
+								<input type="text" class="form-control" id="size"
+									name="size" placeholder="Boyut" th:field="*{size}" />
+								<span class="help-block" th:if="${#fields.hasErrors('size')}" th:errors="*{size}">Hata</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('version')} ? 'has-error' : ''">
-								<label for="version">Versiyon</label>
-								<input type="text" class="form-control" id="version"
-									name="version" placeholder="Versiyon" th:field="*{version}" />
-								<span class="help-block" th:if="${#fields.hasErrors('version')}" th:errors="*{version}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('type')} ? 'has-error' : ''">
+								<label for="type">Tip</label>
+								<input type="text" class="form-control" id="type"
+									name="type" placeholder="Tip" th:field="*{type}" />
+								<span class="help-block" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Hata</span>
 							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('product')} ? 'has-error' : ''">
-								<label for="product">Ürün</label>
-								<input type="text" class="form-control" id="product"
-									name="product" placeholder="Ürün" th:field="*{product}" />
-								<span class="help-block" th:if="${#fields.hasErrors('product')}" th:errors="*{product}">Hata</span>
+							<div class="form-group" th:classappend="${#fields.hasErrors('manufacturer')} ? 'has-error' : ''">
+								<label for="manufacturer">Üretici</label>
+								<input manufacturer="text" class="form-control" id="manufacturer"
+									name="manufacturer" placeholder="Üretici" th:field="*{manufacturer}" />
+								<span class="help-block" th:if="${#fields.hasErrors('manufacturer')}" th:errors="*{manufacturer}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('agentIds')} ? 'has-error' : ''">
 								<label>Ajan</label>
@@ -64,7 +64,7 @@
 						<div class="box-footer">
 							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
 							<div class="btn-toolbar pull-right">
-								<button type="submit" class="btn btn-primary pull-right">Kaydet</button>
+								<button type="submit" class="btn btn-primary pull-right">Değişiklikleri Kaydet</button>
 							</div>
 						</div>
 					</form>
@@ -77,7 +77,7 @@
 		$(function() {
 			// Return to list when cancel button is clicked
 			$('#cancelBtn').on("click", function() {
-				window.location.href = /*[[${'/alfa/' + form.redirect}]]*/'';
+				window.location.href = "/alfa/hardware/list";
 			});
 			
 			// Config checkbox

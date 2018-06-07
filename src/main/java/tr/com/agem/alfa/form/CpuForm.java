@@ -1,12 +1,8 @@
 package tr.com.agem.alfa.form;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
-
-import tr.com.agem.alfa.model.Agent;
 
 /**
  * @author <a href="mailto:caner.feyzullahoglu@agem.com.tr">Caner Feyzullahoğlu</a>
@@ -50,7 +46,7 @@ public class CpuForm extends BaseForm {
 
 	private String rawArchString;
 	
-	private List<Agent> agents;
+	private Long[] agentIds;
 
 	public String getBrand() {
 		return brand;
@@ -182,11 +178,11 @@ public class CpuForm extends BaseForm {
 
 	private String vendorId;
 
-	public List<Agent> getAgents() {
-		return agents;
+	public Long[] getAgentIds() {
+		return agentIds;
 	}
 
-	public void setAgents(List<Agent> agents) {
-		this.agents = agents;
+	public void setAgentIds(Long[] agentIds) {
+		this.agentIds = agentIds;
 	}
 }

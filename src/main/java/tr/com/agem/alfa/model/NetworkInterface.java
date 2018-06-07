@@ -79,6 +79,7 @@ public class NetworkInterface extends BaseModel {
 		if (this.agents == null) {
 			this.agents = new HashSet<Agent>();
 		}
+		agent.getNetworkInterfaces().add(this);
 		this.agents.add(agent);
 	}
 

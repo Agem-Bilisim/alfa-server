@@ -28,6 +28,8 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 	private String devicePath;
 
 	private List<Agent> agents;
+	
+	private Long agentId;
 
 	public String getTag() {
 		return tag;
@@ -69,6 +71,14 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 		this.devicePath = devicePath;
 	}
 
+	public Long getAgentId() {
+		return agentId;
+	}
+
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
+	}
+	
 	@Override
 	public String getOptionText() {
 		return this.tag;
@@ -78,5 +88,4 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 	public String getOptionValue() {
 		return ProblemReferenceType.PERIPHERAL.getId() + "-" + this.getId();
 	}
-
 }

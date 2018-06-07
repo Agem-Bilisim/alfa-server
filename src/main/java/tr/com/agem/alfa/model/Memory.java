@@ -80,6 +80,7 @@ public class Memory extends BaseModel {
 		if (this.agents == null) {
 			this.agents = new HashSet<Agent>();
 		}
+		agent.getMemories().add(this);
 		this.agents.add(agent);
 	}
 

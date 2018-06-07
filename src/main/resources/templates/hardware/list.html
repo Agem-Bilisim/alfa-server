@@ -163,9 +163,40 @@
 				</div>
 			</div>
 		</div>
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='deleteConfirmModal', modalHeader='Kayıt silinecek?', modalButton='Devam')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?</p>
+		</div>
 	</div>
+	<!-- Delete confirmation modal -->
 	<script layout:fragment="custom-script" th:inline="javascript">
 		var tables = {};
+		var handleDelete = function(url, tableToRefresh) {
+			console.log(url);
+			console.log(tableToRefresh);
+			$("#deleteConfirmModalBtn").on("click", function(){
+				$('#deleteConfirmModal').modal('hide');
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : url,
+					dataType : 'json',
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						alertify.success('Kayıt silindi.');
+						if (tables[tableToRefresh]) tables[tableToRefresh].ajax.reload();
+					}
+				});
+			});
+			$('#deleteConfirmModal').modal('show');
+		};
 		$(function() {
 			// CPU
 			var fnActionBtnsCpu = function(row, type, val, meta) {

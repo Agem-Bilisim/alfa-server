@@ -94,6 +94,7 @@ public class Gpu extends BaseModel {
 		if (this.agents == null) {
 			this.agents = new HashSet<Agent>();
 		}
+		agent.getGpus().add(this);
 		this.agents.add(agent);
 	}
 
