@@ -52,6 +52,13 @@
 			</div>
 		</div>
 		
+		<!-- Delete confirmation modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='deleteConfirmModal', modalHeader='Kayıt silinecek?', modalButton='Devam')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?</p>
+		</div>
+		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		// Hook handler for sending URL
@@ -82,11 +89,37 @@
 			$('#sendUrlModal').modal('show');
 		};
 		
+		var _table = null;
+		var handleDelete = function(url) {
+			$("#deleteConfirmModalBtn").on("click", function(){
+				$('#deleteConfirmModal').modal('hide');
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : url,
+					dataType : 'json',
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						alertify.success('Kayıt silindi.');
+						if (_table) _table.ajax.reload();
+					}
+				});
+			});
+			$('#deleteConfirmModal').modal('show');
+		};
+		
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/education/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i></button>" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/education/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i> Paylaş</button>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/education/" + row['id'] + "/delete')\"><i class=\"fa fa-trash\"></i> Sil</button>"
 					+ "</div>";
 			};
 			
@@ -105,7 +138,7 @@
 				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
-			$('#educationTable').paginatedTable("/alfa/education/list-paginated", "educations", cols, drawCallback);
+			_table = $('#educationTable').paginatedTable("/alfa/education/list-paginated", "educations", cols, drawCallback);
 		});
 	</script>
 </body>

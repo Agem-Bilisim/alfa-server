@@ -149,6 +149,19 @@ public class EducationController {
 		}
 		return ResponseEntity.ok(result);
 	}
+	
+	@PostMapping("/education/{id}/delete")
+	public ResponseEntity<?> handleDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			educationService.deleteEducation(checkNotNull(id, "ID not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete education, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
 
 	private Education toEducationEntity(EducationForm form, String username) {
 		Education entity = mapper.toEducationEntity(form);

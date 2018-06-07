@@ -53,4 +53,9 @@ public class EducationService {
 		return this.educationRepository.findAll(pageable);
 	}
 
+	public void deleteEducation(Long id) {
+		Assert.notNull(id, "ID must not be null.");
+		this.educationRepository.delete(id);
+	}
+
 }
