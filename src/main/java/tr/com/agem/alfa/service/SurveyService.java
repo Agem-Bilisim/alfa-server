@@ -65,4 +65,9 @@ public class SurveyService {
 		return this.surveyResultRepository.findFirstByAgentMessagingIdAndSurveyIdOrderByCreatedDateDesc(messagingId, surveyId);
 	}
 
+	public void deleteSurvey(Long id) {
+		Assert.notNull(id, "ID must not be null.");
+		this.surveyRepository.delete(id);
+	}
+
 }

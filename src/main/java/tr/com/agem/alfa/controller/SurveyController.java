@@ -175,6 +175,19 @@ public class SurveyController {
 		}
 		return ResponseEntity.ok(result);
 	}
+	
+	@PostMapping("/survey/{id}/delete")
+	public ResponseEntity<?> handleDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			surveyService.deleteSurvey(checkNotNull(id, "ID not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete education, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
 
 	private Survey toSurveyEntity(SurveyForm form, String username) {
 		Survey entity = mapper.toSurveyEntity(form);

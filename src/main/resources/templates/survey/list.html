@@ -69,6 +69,14 @@
 				</form>
 			</div>
 		</div>
+		
+		<!-- Delete confirmation modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='deleteConfirmModal', modalHeader='Kayıt silinecek?', modalButton='Devam')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?</p>
+		</div>
+		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		// Hook handler for sending survey
@@ -138,13 +146,39 @@
 			});
 			$('#surveyResultModal').modal('show');
 		};
+		
+		var _table = null;
+		var handleDelete = function(url) {
+			$("#deleteConfirmModalBtn").on("click", function(){
+				$('#deleteConfirmModal').modal('hide');
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : url,
+					dataType : 'json',
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						alertify.success('Kayıt silindi.');
+						if (_table) _table.ajax.reload();
+					}
+				});
+			});
+			$('#deleteConfirmModal').modal('show');
+		};
 	
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/survey/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i></button>" 
-					+ "<button class=\"btn btn-outline-info\" onclick=\"handleResult(" + row['id'] + ")\"><i class=\"fa fa-clipboard\"></i></button>" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/survey/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i> Gönder</button>" 
+					+ "<button class=\"btn btn-outline-info\" onclick=\"handleResult(" + row['id'] + ")\"><i class=\"fa fa-clipboard\"></i> Sonuçlar</button>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/survey/" + row['id'] + "/delete')\"><i class=\"fa fa-trash\"></i> Sil</button>"
 					+ "</div>";
 			};
 			
@@ -163,7 +197,7 @@
 				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
-			$('#surveyTable').paginatedTable("/alfa/survey/list-paginated", "surveys", cols, drawCallback);
+			_table = $('#surveyTable').paginatedTable("/alfa/survey/list-paginated", "surveys", cols, drawCallback);
 		});
 	</script>
 </body>

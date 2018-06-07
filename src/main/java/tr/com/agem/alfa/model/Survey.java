@@ -3,6 +3,7 @@ package tr.com.agem.alfa.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -33,7 +34,7 @@ public class Survey extends BaseModel {
 	@Column(name = "SURVEY_TYPE")
 	private Integer surveyType;
 
-	@OneToMany(mappedBy = "survey", orphanRemoval = true)
+	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<SurveyResult> surveyResults = new HashSet<SurveyResult>(0);
 
 	public String getLabel() {
