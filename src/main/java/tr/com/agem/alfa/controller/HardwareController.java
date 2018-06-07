@@ -864,29 +864,29 @@ public class HardwareController {
 		return "redirect:/hardware/list";
 	}
 	
-	@PostMapping("/hardware/cpu/{id}/delete")
-	public ResponseEntity<?> handleCpuDelete(@PathVariable Long id) {
-		RestResponseBody result = new RestResponseBody();
-		try {
-			hardwareService.deleteCpu(checkNotNull(id, "ID not found."));
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to delete CPU, assuming invalid parameters", e);
-			result.setMessage(e.getMessage());
-			return ResponseEntity.badRequest().body(result);
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	@PostMapping("/hardware/gpu/{id}/delete")
-	public ResponseEntity<?> handleGpuDelete(@PathVariable Long id) {
-		RestResponseBody result = new RestResponseBody();
-		try {
-			hardwareService.deleteGpu(checkNotNull(id, "ID not found."));
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to delete GPU, assuming invalid parameters", e);
-			result.setMessage(e.getMessage());
-			return ResponseEntity.badRequest().body(result);
-		}
-		return ResponseEntity.ok(result);
-	}
+//	@PostMapping("/hardware/cpu/{id}/delete")
+//	public ResponseEntity<?> handleCpuDelete(@PathVariable Long id) {
+//		RestResponseBody result = new RestResponseBody();
+//		try {
+//			hardwareService.deleteCpu(checkNotNull(id, "ID not found."));
+//		} catch (Exception e) {
+//			log.error("Exception occurred when trying to delete CPU, assuming invalid parameters", e);
+//			result.setMessage(e.getMessage());
+//			return ResponseEntity.badRequest().body(result);
+//		}
+//		return ResponseEntity.ok(result);
+//	}
+//
+//	@PostMapping("/hardware/gpu/{id}/delete")
+//	public ResponseEntity<?> handleGpuDelete(@PathVariable Long id) {
+//		RestResponseBody result = new RestResponseBody();
+//		try {
+//			hardwareService.deleteGpu(checkNotNull(id, "ID not found."));
+//		} catch (Exception e) {
+//			log.error("Exception occurred when trying to delete GPU, assuming invalid parameters", e);
+//			result.setMessage(e.getMessage());
+//			return ResponseEntity.badRequest().body(result);
+//		}
+//		return ResponseEntity.ok(result);
+//	}
 }

@@ -105,8 +105,6 @@ public interface SysMapper {
 	
 	CpuForm toCpuForm(Cpu entity);
 
-	GpuForm toGpuForm(Gpu entity);
-
 	DiskForm toDiskForm(Disk entity);
 
 	MemoryForm toMemoryForm(Memory entity);
