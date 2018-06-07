@@ -13,10 +13,10 @@ import tr.com.agem.alfa.model.Problem;
  */
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
-	Page<Problem> findByLabelContainingOrDescriptionContainingAllIgnoringCase(String search, String search2,
+	Page<Problem> findDistinctByLabelContainingOrDescriptionContainingAllIgnoringCase(String search, String search2,
 			Pageable pageable);
 
-	Page<Problem> findByReferencesReferenceType(Integer referenceType, Pageable pageable);
+	Page<Problem> findDistinctByReferencesReferenceType(Integer referenceType, Pageable pageable);
 
 	List<Problem> findFirst5ByOrderByCreatedDateDesc();
 

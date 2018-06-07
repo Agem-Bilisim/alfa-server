@@ -1,6 +1,8 @@
 package tr.com.agem.alfa.form;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -57,6 +59,13 @@ public class ProblemForm extends BaseForm {
 	}
 
 	public String[] getStrReferences() {
+		if ((strReferences == null || strReferences.length == 0) && !this.references.isEmpty()) {
+			List<String> _references = new ArrayList<String>();
+			for (ProblemReferenceForm ref : references) {
+				_references.add(ref.getReferenceType().getId() + "-" + ref.getId());
+			}
+			this.strReferences = _references.toArray(new String[] {});
+		}
 		return strReferences;
 	}
 

@@ -20,7 +20,7 @@ public class ProblemReferenceForm extends BaseForm {
 		if (ref == null || ref.isEmpty()) return;
 		String[] parts = ref.split("-");
 		setReferenceId(Long.parseLong(parts[1]));
-		setReferenceType(ProblemReferenceType.getType(parts[0]));
+		setReferenceType(ProblemReferenceType.getType(Integer.parseInt(parts[0])));
 	}
 
 	public ProblemReferenceType getReferenceType() {

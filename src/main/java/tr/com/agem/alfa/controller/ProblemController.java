@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +31,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import tr.com.agem.alfa.form.GpuForm;
 import tr.com.agem.alfa.form.PackageForm;
+import tr.com.agem.alfa.form.PeripheralDeviceForm;
 import tr.com.agem.alfa.form.ProblemForm;
-import tr.com.agem.alfa.form.ProcessForm;
 import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
+import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.InstalledPackage;
+import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
-import tr.com.agem.alfa.model.RunningProcess;
+import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 import tr.com.agem.alfa.service.HardwareService;
 import tr.com.agem.alfa.service.ProblemService;
 import tr.com.agem.alfa.service.SoftwareService;
@@ -76,14 +80,23 @@ public class ProblemController {
 	}
 
 	@GetMapping("/problem/create")
-	public ModelAndView getCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
+	public ModelAndView getCreatePage(@RequestParam(value = "referenceType", required = false) Integer referenceType,
+			@RequestParam(name = "redirect", required = false) String redirect) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
 			// @formatter:off
 			SelectboxBuilder builder = SelectboxBuilder
-										.newSelectbox()
-										.add(toPackageFormList(softwareService.getPackages()))
-										.add(toProcessFormList(softwareService.getProcesses()));
+										.newSelectbox();
+			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
+				builder.add(toPackageFormList(softwareService.getPackages()));
+			} else if (referenceType == ProblemReferenceType.HARDWARE.getId()) {
+				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toGpuFormList(hardwareService.getGpus()));
+			} else { // ALL
+				builder.add(toPackageFormList(softwareService.getPackages()));
+				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toGpuFormList(hardwareService.getGpus()));
+			}
 			// @formatter:on
 			model.put("possiblerefs", builder.build());
 		} catch (Exception e) {
@@ -115,25 +128,32 @@ public class ProblemController {
 
 	@GetMapping("/problem/{id}")
 	public ModelAndView getProblem(@PathVariable Long id,
+			@RequestParam(value = "referenceType", required = false) Integer referenceType,
 			@RequestParam(name = "redirect", required = false) String redirect) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
 			// @formatter:off
 			SelectboxBuilder builder = SelectboxBuilder
-										.newSelectbox()
-										.add(toPackageFormList(softwareService.getPackages()))
-										.add(toProcessFormList(softwareService.getProcesses()));
+										.newSelectbox();
+			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
+				builder.add(toPackageFormList(softwareService.getPackages()));
+			} else if (referenceType == ProblemReferenceType.HARDWARE.getId()) {
+				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toGpuFormList(hardwareService.getGpus()));
+			} else { // ALL
+				builder.add(toPackageFormList(softwareService.getPackages()));
+				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toGpuFormList(hardwareService.getGpus()));
+			}
 			// @formatter:on
 			model.put("possiblerefs", builder.build());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 		Problem problem = problemService.getProblem(id);
-		checkNotNull(problem, String.format("Problem:%d not found.", id));
-		model.put("form", mapper.toProblemForm(problem).setRedirect(redirect));
-		model.put("rlabel",
-				messageSource.getMessage(ControllerUtils.getRedirectUrl(redirect, "/problem/list").replace("/", "."),
-						null, Locale.forLanguageTag(locale)));
+		model.put("form", mapper.toProblemForm(checkNotNull(problem, String.format("Problem:%d not found.", id)))
+				.setRedirect(redirect));
+		model.put("rlabel", getRedirectionLabel(redirect));
 		return new ModelAndView("problem/edit", model);
 	}
 
@@ -181,8 +201,8 @@ public class ProblemController {
 			@RequestParam(value = "referenceType", required = false) Integer referenceType, Pageable pageable) {
 		RestResponseBody result = new RestResponseBody();
 		try {
-			Page<Problem> packages = problemService.getProblems(pageable, search, referenceType);
-			result.add("problems", checkNotNull(packages, "Problems not found."));
+			Page<Problem> problems = problemService.getProblems(pageable, search, referenceType);
+			result.add("problems", checkNotNull(problems, "Problems not found."));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find problems, assuming invalid parameters", e);
 			result.setMessage(e.getMessage());
@@ -208,15 +228,6 @@ public class ProblemController {
 		return entity;
 	}
 
-	private List<? extends OptionFormConvertable> toProcessFormList(List<RunningProcess> entities) {
-		if (entities == null || entities.isEmpty()) return null;
-		List<ProcessForm> forms = new ArrayList<ProcessForm>();
-		for (RunningProcess entity : entities) {
-			forms.add(mapper.toProcessForm(entity));
-		}
-		return forms;
-	}
-
 	private List<? extends OptionFormConvertable> toPackageFormList(List<InstalledPackage> entities) {
 		if (entities == null || entities.isEmpty()) return null;
 		List<PackageForm> forms = new ArrayList<PackageForm>();
@@ -224,6 +235,34 @@ public class ProblemController {
 			forms.add(mapper.toPackageForm(entity));
 		}
 		return forms;
+	}
+
+	private List<? extends OptionFormConvertable> toPeripheralFormList(List<PeripheralDevice> entities) {
+		if (entities == null || entities.isEmpty()) return null;
+		List<PeripheralDeviceForm> forms = new ArrayList<PeripheralDeviceForm>();
+		for (PeripheralDevice entity : entities) {
+			forms.add(mapper.toPeripheralDeviceForm(entity));
+		}
+		return forms;
+	}
+
+	private List<? extends OptionFormConvertable> toGpuFormList(List<Gpu> entities) {
+		if (entities == null || entities.isEmpty()) return null;
+		List<GpuForm> forms = new ArrayList<GpuForm>();
+		for (Gpu entity : entities) {
+			forms.add(mapper.toGpuForm(entity));
+		}
+		return forms;
+	}
+
+	/**
+	 * @param redirect
+	 * @return
+	 * @throws NoSuchMessageException
+	 */
+	private String getRedirectionLabel(String redirect) throws NoSuchMessageException {
+		return messageSource.getMessage(ControllerUtils.getRedirectUrl(redirect, "/problem/list").replace("/", "."),
+				null, Locale.forLanguageTag(locale));
 	}
 
 }
