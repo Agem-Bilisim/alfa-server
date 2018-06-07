@@ -52,6 +52,20 @@ public class SysUserService {
 		return this.sysUserRepository.findAll(pageable);
 	}
 
+	public List<SysUser> getUsersByRoleName(String roleName) {
+		if (roleName != null ) {
+			return this.sysUserRepository.findByRoleName(roleName);
+		}
+		return this.sysUserRepository.findAll();
+	}
+
+	public List<SysUser> getUsersByRoleId(Long roleId) {
+		if (roleId != null ) {
+			return this.sysUserRepository.findByRoleId(roleId);
+		}
+		return this.sysUserRepository.findAll();
+	}
+
 	public List<SysRole> getRoles() {
 		return this.sysRoleRepository.findAll();
 	}

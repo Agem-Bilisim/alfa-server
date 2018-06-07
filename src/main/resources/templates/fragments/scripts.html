@@ -53,6 +53,35 @@
 		<script th:src="@{/plugins/surveyjs/surveyeditor.min.js}"></script>
 		<!-- Lider -->
 		<script th:src="@{/js/alfa.js}"></script>
+		
+		<script>
+		var checkTasks = function() {
+			if ($(".tasks-menu a span").length > 0) {
+				Alfa.ajax(
+						{"url":"/alfa/bpm-task/list"},
+						function(result) { //successHandler
+							console.log(result);
+					
+							if (result && result.data) {
+								$(".tasks-menu a span").html(result.data["tasks"].content.length);
+								$(".tasks-menu .header").html(result.data["tasks"].content.length + " tane göreviniz var");
+								
+								$(".tasks-menu .menu li").html("<a href=\"/alfa/bpm-task/get/"+result.data["tasks"].content[0].taskId+"\" title=\""+result.data["tasks"].content[0].taskDescription+"\"><h3>" + result.data["tasks"].content[0].taskDescription +"</h3></a>" );
+							}
+						},
+						function(jqXHR, textStatus, errorThrown) { // errorHandler
+							console.log("Alfa: script.html : Görev bilgileri alınamadı.");
+						}
+					);
+				setTimeout(function(){ checkTasks(); }, 60000);
+			}
+		}
+		
+		$(document).ready(function() {
+			checkTasks();
+		});
+		
+	</script> 
 	</div>
 </body>
 </html>

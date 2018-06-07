@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+	
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Süreç Ekle</title>
+	<!-- iCheck -->
+	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+	<!-- Date -->
+	<link th:href="@{/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li><a th:href="@{/bpm-process/list}"><i class="fa fa-cubes"></i> Süreçler </a></li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title" th:text="${form.processName}"></h3>
+					</div>
+					<form role="form" id="taskForm" th:action="@{'/bpm-task/start/' + ${form.processId}}" method="post" enctype="multipart/form-data">
+						<input type="hidden" id="pact_component" name="pact_component" th:value="@{${form.relatedComponent}}" />
+						<input type="hidden" id="pact_componentId" name="pact_componentId" th:value="@{${form.relatedComponentId}}" />
+						<div class="box-body">
+							<div th:each="str : ${form.formString}" th:utext="${str}" th:remove="tag"></div>
+						</div>
+						<div class="box-footer">
+							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
+							<div class="btn-toolbar pull-right">
+								<button type="submit" class="btn btn-primary pull-right" id="saveProcessBtn">Başlat</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			// Return to list when cancel button is clicked
+			$('#cancelBtn').click(function() {
+				window.location.href = /*[[@{'/bpm-process/' + ${processId}}]]*/'';
+			});
+		});
+		
+		 $(document).ready(function(){
+		        $(".date-input").datepicker({
+		            todayHighlight: true,
+		            autoclose: true
+		        })
+		        
+		        $(".numeric-input").inputmask();
+		        
+		    });			
+	   
+	    
+	</script>
+</body>
+</html>

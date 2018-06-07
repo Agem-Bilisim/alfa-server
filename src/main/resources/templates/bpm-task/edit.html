@@ -14,7 +14,7 @@
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
-		<li><a th:href="@{/task/list}"><i class="fa fa-cubes"></i> Görevlerim</a></li>
+		<li><a th:href="@{/bpm-task/list-all}"><i class="fa fa-cubes"></i> Görevlerim</a></li>
 	</th:block>
 
 	<div layout:fragment="content">
@@ -22,18 +22,16 @@
 			<div class="col-xs-12">
 				<div class="box box-info">
 					<div class="box-header">
-						<h3 class="box-title" th:text="${form.processName}"></h3>
+						<h3 class="box-title" th:text="${form.taskDescription}"></h3>
 					</div>
-					<form role="form" id="taskForm" th:action="@{'/task/start/' + ${form.processId}}" method="post" enctype="multipart/form-data">
-						<input type="hidden" id="pact_component" name="pact_component" th:value="@{${form.relatedComponent}}" />
-						<input type="hidden" id="pact_componentId" name="pact_componentId" th:value="@{${form.relatedComponentId}}" />
+					<form role="form" id="taskForm" th:action="@{'/bpm-task/complete/' + ${form.taskId}}" method="post" enctype="multipart/form-data">
 						<div class="box-body">
 							<div th:each="str : ${form.formString}" th:utext="${str}" th:remove="tag"></div>
 						</div>
 						<div class="box-footer">
 							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
 							<div class="btn-toolbar pull-right">
-								<button type="submit" class="btn btn-primary pull-right" id="saveProcessBtn">Başlat</button>
+								<button type="submit" class="btn btn-primary pull-right" id="completeBtn">Tamamla</button>
 							</div>
 						</div>
 					</form>

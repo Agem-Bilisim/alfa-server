@@ -3,11 +3,13 @@ package tr.com.agem.alfa.bpmn.inputs;
 import java.util.List;
 
 import org.activiti.engine.form.FormProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import tr.com.agem.alfa.bpmn.types.AbstractComboboxFormType;
 import tr.com.agem.alfa.model.SysUser;
-import tr.com.agem.alfa.repository.SysUserRepository;
+import tr.com.agem.alfa.service.SpringTools;
+import tr.com.agem.alfa.service.SysUserService;
 
 /**
  * @author <a href="mailto:ali.ozeren@agem.com.tr">Ali Ozkan Ozeren</a>
@@ -21,7 +23,7 @@ public class HtmlUserFormType extends AbstractComboboxFormType
 
 
 	@Autowired
-	private SysUserRepository sysUserRepository;
+	private SysUserService sysUserService = (SysUserService) SpringTools.getInstance().getContext().getBean("sysUserService");
 	
 	
 	public String getName() 
@@ -46,16 +48,21 @@ public class HtmlUserFormType extends AbstractComboboxFormType
 		str.append(" >");
 		
 		List<SysUser> users;
-		if (super.getMap().get("role") != null ) {
-			users = sysUserRepository.findByRoleName(super.getMap().get("role"));
+		String role = super.getMap().get("role");
+		if (role != null ) {
+			if (StringUtils.isNumeric(role)) {
+				users = sysUserService.getUsersByRoleId(Long.parseLong(role));
+			} else {
+				users = sysUserService.getUsersByRoleName(role);
+			}
 		} else {
-			users = sysUserRepository.findAll();
+			users = sysUserService.getUsersByRoleId(null);
 		}
 		
 		if (users != null) {
 			for ( SysUser user : users) {
 				str.append("<option value='")
-				.append(user.getId())
+				.append(user.getUserName())
 				.append("'");
 				if (property.getValue() != null && property.getValue().equals(user.getId())) {
 					str.append(" selected ");
@@ -63,6 +70,7 @@ public class HtmlUserFormType extends AbstractComboboxFormType
 				
 				str.append(" > ")
 				.append(user.getFirstName()).append(" ").append(user.getLastName())
+				.append("(").append(user.getUserName()).append(")")
 				.append("</option>");
 			}
 		}

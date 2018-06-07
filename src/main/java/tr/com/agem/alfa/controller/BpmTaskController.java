@@ -10,6 +10,7 @@ import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import tr.com.agem.alfa.bpmn.AlfaBpmnFormService;
 import tr.com.agem.alfa.bpmn.AlfaBpmnProcessEngine;
 import tr.com.agem.alfa.bpmn.inputs.AlfaBpmnForm2MapConverter;
 import tr.com.agem.alfa.form.bpm.BpmTaskForm;
+import tr.com.agem.alfa.form.bpm.BpmTaskStartForm;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.bpm.BpmProcess;
 import tr.com.agem.alfa.service.BpmProcessService;
@@ -45,7 +47,7 @@ public class BpmTaskController
 		this.bpmProcessService = bpmProcessService;
 	}
 
-	@RequestMapping("/task/startForm/{processId}")
+	@RequestMapping("/bpm-task/startForm/{processId}")
 	public ModelAndView getProcessStartForm(@PathVariable Long processId, @RequestParam(required=false, value="relatedComponent") String component, 
 			@RequestParam(required = false, value="relatedComponentId") Long componentId) 
 	{
@@ -60,7 +62,7 @@ public class BpmTaskController
 		@SuppressWarnings("unchecked")
 		List<String> formString = (List<String>) AlfaBpmnFormService.getInstance().getRenderedStartFormByProcessId(bpmn.getProcessDeploymentId());
 		
-		BpmTaskForm form= new BpmTaskForm();
+		BpmTaskStartForm form= new BpmTaskStartForm();
 		form.setRelatedComponent(component);
 		form.setRelatedComponentId(componentId);
 		form.setFormString(formString);
@@ -70,7 +72,7 @@ public class BpmTaskController
 		return new ModelAndView("task/start", "form", form);
 	}
 
-	@RequestMapping("/task/start/{processId}")
+	@RequestMapping("/bpm-task/start/{processId}")
 	public String startProcess(@PathVariable Long processId, @RequestParam Map<String, String> queryMap) 
 	{
 		checkNotNull(processId, "Invalid process id");
@@ -88,7 +90,7 @@ public class BpmTaskController
 		return "redirect:/bpm-process/" + processId;
 	}
 	
-	@RequestMapping("/task/list")
+	@RequestMapping("/bpm-task/list")
 	public ResponseEntity<?>  listTasks(Authentication authentication) 
 	{
 		RestResponseBody result = new RestResponseBody();
@@ -98,8 +100,32 @@ public class BpmTaskController
 			List<String> role = new ArrayList<String>();
 			role.add(user.getRole());
 			
+			List<BpmTaskForm> list = new ArrayList<BpmTaskForm>();
+			
 			List<Task> tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getUsername(), role);
-			result.add("tasks", checkNotNull(tasks, "Aktif görev yok..."));
+			if (tasks != null) {
+				for (Task t : tasks) {
+					BpmTaskForm f = new BpmTaskForm();
+					f.setTaskId(t.getId());
+					f.setTaskDescription(t.getDescription());
+					f.setCreatedDate(t.getCreateTime());
+					list.add(f);
+				}
+			}
+			
+			tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getId().toString(), null);
+			if (tasks != null) {
+				for (Task t : tasks) {
+					BpmTaskForm f = new BpmTaskForm();
+					f.setTaskId(t.getId());
+					f.setTaskDescription(t.getDescription());
+					f.setCreatedDate(t.getCreateTime());
+					list.add(f);
+				}
+			}			
+			
+			result.add("tasks",  new PageImpl<BpmTaskForm>(list));
+			
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to list user tasks", e);
 			result.setMessage(e.getMessage());
@@ -108,22 +134,40 @@ public class BpmTaskController
 		
 		return ResponseEntity.ok(result);
 	}
+	
+	@RequestMapping("/bpm-task/list-all")
+	public String getListPage() {
+		return "bpm-task/list";
+	}	
 
-	@RequestMapping("/task/get/{taskId}")
+	@RequestMapping("/bpm-task/get/{taskId}")
 	public ModelAndView getTask(@PathVariable Long taskId) 
 	{
 		checkNotNull(taskId, "Task not found...");
 		
+		Task task = AlfaBpmnProcessEngine.getInstance().getTask(taskId.toString());
+
 		@SuppressWarnings("unchecked")
-		List<String> form = (List<String>) AlfaBpmnFormService.getInstance().getRenderedTaskForm(taskId.toString());
+		List<String> formString = (List<String>) AlfaBpmnFormService.getInstance().getRenderedTaskForm(taskId.toString());
+		BpmTaskForm form= new BpmTaskForm();
+		form.setFormString(formString);
+		form.setTaskId(task.getId());
+		form.setTaskDescription(task.getDescription());
 		
-		return new ModelAndView("task/get", "form", form);
+		return new ModelAndView("bpm-task/edit", "form", form);
 	}
 
-	@RequestMapping("/task/complete/{taskId}")
-	public String completeTask(@PathVariable Long taskId) {
+	@RequestMapping("/bpm-task/complete/{taskId}")
+	public String completeTask(@PathVariable Long taskId, @RequestParam Map<String, String> queryMap) {
 		
-		return "redirect:/bpm-process/list";
+		checkNotNull(taskId, "Task not found...");
+		
+		AlfaBpmnFormService.getInstance().submitTaskFormData(taskId.toString(), new AlfaBpmnForm2MapConverter(), queryMap);
+		
+		log.debug("The bpm task is completed: {} ", taskId);
+		
+		
+		return "redirect:/bpm-task/list-all";
 	}
 
 }
