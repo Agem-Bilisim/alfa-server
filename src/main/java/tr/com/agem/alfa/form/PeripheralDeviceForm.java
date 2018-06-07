@@ -5,11 +5,14 @@ import java.util.List;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.enums.ProblemReferenceType;
+import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
 /**
- * @author <a href="mailto:caner.feyzullahoglu@agem.com.tr">Caner Feyzullahoğlu</a>
+ * @author <a href="mailto:caner.feyzullahoglu@agem.com.tr">Caner
+ *         Feyzullahoğlu</a>
  */
-public class PeripheralDeviceForm extends BaseForm {
+public class PeripheralDeviceForm extends BaseForm implements OptionFormConvertable {
 
 	private static final long serialVersionUID = 5368610239577313929L;
 
@@ -64,6 +67,16 @@ public class PeripheralDeviceForm extends BaseForm {
 
 	public void setDevicePath(String devicePath) {
 		this.devicePath = devicePath;
+	}
+
+	@Override
+	public String getOptionText() {
+		return this.tag;
+	}
+
+	@Override
+	public String getOptionValue() {
+		return ProblemReferenceType.PERIPHERAL.getId() + "-" + this.getId();
 	}
 
 }

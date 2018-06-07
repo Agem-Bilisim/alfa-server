@@ -84,6 +84,8 @@ public interface SysMapper {
 	Cpu toCpuEntity(CpuForm form);
 
 	Gpu toGpuEntity(GpuForm form);
+	
+	GpuForm toGpuForm(Gpu entity);
 
 	Disk toDiskEntity(DiskForm form);
 
@@ -100,5 +102,7 @@ public interface SysMapper {
 	Tag toTagEntity(TagForm tagForm);
 
 	PeripheralDevice toPeripheralDeviceEntity(PeripheralDeviceForm form);
+
+	PeripheralDeviceForm toPeripheralDeviceForm(PeripheralDevice entity);
 
 }

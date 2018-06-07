@@ -5,8 +5,13 @@ import java.util.List;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import tr.com.agem.alfa.model.Agent;
+import tr.com.agem.alfa.model.enums.ProblemReferenceType;
+import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
-public class GpuForm extends BaseForm {
+/**
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ */
+public class GpuForm extends BaseForm implements OptionFormConvertable {
 
 	private static final long serialVersionUID = 3323842484079222128L;
 
@@ -18,7 +23,11 @@ public class GpuForm extends BaseForm {
 
 	@NotEmpty
 	private String memory;
-	
+
+	private String driverDate;
+
+	private String driverVersion;
+
 	private List<Agent> agents;
 
 	public String getSubsystem() {
@@ -51,6 +60,32 @@ public class GpuForm extends BaseForm {
 
 	public void setAgents(List<Agent> agents) {
 		this.agents = agents;
+	}
+
+	public String getDriverDate() {
+		return driverDate;
+	}
+
+	public void setDriverDate(String driverDate) {
+		this.driverDate = driverDate;
+	}
+
+	public String getDriverVersion() {
+		return driverVersion;
+	}
+
+	public void setDriverVersion(String driverVersion) {
+		this.driverVersion = driverVersion;
+	}
+
+	@Override
+	public String getOptionText() {
+		return this.subsystem + " Sürücü:" + this.driverVersion;
+	}
+
+	@Override
+	public String getOptionValue() {
+		return ProblemReferenceType.GPU.getId() + "-" + this.getId();
 	}
 
 }

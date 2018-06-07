@@ -40,9 +40,9 @@ public class HardwareService {
 	private final PeripheralRepository peripheralRepository;
 
 	@Autowired
-	public HardwareService(BiosRepository biosRepository, CpuRepository cpuRepository,
-			DiskRepository diskRepository, GpuRepository gpuRepository, InetRepository inetRepository,
-			MemoryRepository memoryRepository, PeripheralRepository peripheralRepository) {
+	public HardwareService(BiosRepository biosRepository, CpuRepository cpuRepository, DiskRepository diskRepository,
+			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository,
+			PeripheralRepository peripheralRepository) {
 		this.biosRepository = biosRepository;
 		this.cpuRepository = cpuRepository;
 		this.diskRepository = diskRepository;
@@ -51,7 +51,7 @@ public class HardwareService {
 		this.memoryRepository = memoryRepository;
 		this.peripheralRepository = peripheralRepository;
 	}
-	
+
 	public Page<Cpu> getCpus(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
@@ -69,7 +69,7 @@ public class HardwareService {
 		}
 		return this.gpuRepository.findAll(pageable);
 	}
-	
+
 	public Page<Disk> getDisks(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
@@ -105,7 +105,7 @@ public class HardwareService {
 		}
 		return this.inetRepository.findAll(pageable);
 	}
-	
+
 	public List<Disk> getDisks() {
 		return this.diskRepository.findAll();
 	}
@@ -121,7 +121,7 @@ public class HardwareService {
 	public List<NetworkInterface> getNetworkInterfaces() {
 		return this.inetRepository.findAll();
 	}
-	
+
 	public Cpu saveCpu(Cpu cpu) {
 		Assert.notNull(cpu, "Cpu must not be null.");
 		Cpu c = null;
@@ -232,7 +232,7 @@ public class HardwareService {
 		// Create
 		return this.peripheralRepository.save(peripheralDevice);
 	}
-	
+
 	public Page<PeripheralDevice> getPeripherals(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
@@ -240,6 +240,14 @@ public class HardwareService {
 			return null;
 		}
 		return this.peripheralRepository.findAll(pageable);
+	}
+
+	public List<Gpu> getGpus() {
+		return this.gpuRepository.findAll();
+	}
+
+	public List<PeripheralDevice> getPeripherals() {
+		return this.peripheralRepository.findAll();
 	}
 
 }

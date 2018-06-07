@@ -41,7 +41,7 @@ public class PackageForm extends BaseForm implements OptionFormConvertable {
 
 	@Override
 	public String getOptionValue() {
-		return ProblemReferenceType.PACKAGE.toString() + "-" + this.getId();
+		return ProblemReferenceType.PACKAGE.getId() + "-" + this.getId();
 	}
 
 }

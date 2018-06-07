@@ -27,10 +27,10 @@ public class ProblemService {
 	public Page<Problem> getProblems(Pageable pageable, String search, Integer referenceType) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			return this.problemRepository.findByLabelContainingOrDescriptionContainingAllIgnoringCase(search, search,
+			return this.problemRepository.findDistinctByLabelContainingOrDescriptionContainingAllIgnoringCase(search, search,
 					pageable);
 		} else if (referenceType != null) {
-			return this.problemRepository.findByReferencesReferenceType(referenceType, pageable);
+			return this.problemRepository.findDistinctByReferencesReferenceType(referenceType, pageable);
 		}
 		return this.problemRepository.findAll(pageable);
 	}
