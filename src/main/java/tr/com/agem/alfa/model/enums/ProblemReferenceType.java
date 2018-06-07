@@ -5,9 +5,7 @@ package tr.com.agem.alfa.model.enums;
  */
 public enum ProblemReferenceType {
 
-	CPU(1), PERIPHERAL(2), PROCESS(3), BIOS(4), DISK(5), GPU(6), PACKAGE(7), INET(8), MEMORY(9),
-	
-	HARDWARE(10);
+	CPU(1), PERIPHERAL(2), PROCESS(3), BIOS(4), DISK(5), GPU(6), PACKAGE(7), INET(8), MEMORY(9);
 
 	private int id;
 

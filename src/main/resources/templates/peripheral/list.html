@@ -3,46 +3,90 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layouts/dashboard">
 <head>
-	<title>Donanım Envanteri</title>
+	<title>Çevresel Cihazlar</title>
 	<!-- DataTables -->
 	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
-		<li class="active">Çevresel Birimler</li>
+		<li class="active">Çevresel Cihazlar</li>
 	</th:block>
 
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<div class="box">
-					<div class="box-header">
-						<h3 class="box-title">Çevresel Birim listesi</h3>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#peripheral" aria-controls="peripheral" role="tab" data-toggle="tab">Çevresel Cihazlar</a></li>
+			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
+			  	</ul>
+			
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="peripheral">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Çevresel cihaz listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="peripheralTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Cihaz adı</th>
+											<th>Ankete dahil edilebilir</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>				
 					</div>
-					<div class="box-body">
-						<table id="peripheralTable" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th>Etiket</th>
-									<th>Ankette Gösterilsin</th>
-									<th>İşlemler</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
+					<div role="tabpanel" class="tab-pane" id="problem">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Çevresel cihaz kaynaklı sorunlar</h3>
+							</div>
+							<div class="box-body">
+								<table id="problemTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Kısa Tanım</th>
+											<th>Açıklama</th>
+											<th>Durum</th>
+											<th>İşlem</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		
+		<!-- Delete confirmation modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='deleteConfirmModal', modalHeader='Kayıt silinecek?', modalButton='Devam')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?</p>
+		</div>
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		var tables = {};
+		
+		// TODO delete confirmation & ajax
+		
 		$(function() {
+			
+			// Peripheral
 			var fnActionBtnsPeripheral = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/peripheral/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/peripheral/" + row['id'] + "/delete', 'peripheralTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/peripheral/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/peripheral/" + row['id'] + "/delete', 'peripheralTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
 					+ "</div>";
 			};
 			var drawCallbackPeripheral = function(settings) {
@@ -55,12 +99,49 @@
 			};
 			const colsPeripheral = [
 				{"data": "tag", "searchable": true, "orderable": true }, 
-				{"data": "showInSurvey", "searchable": true, "orderable": true }, 
+				{"data": function ( row, type, val, meta ) { 
+						row["show_in_survey_str"] = (row["showInSurvey"] == true ? "Evet" : "Hayır"); 
+						return row["show_in_survey_str"]; 
+					}
+				, "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsPeripheral, "searchable": false, "orderable": false }
 			];
 			tables.peripheralTable = $('#peripheralTable').paginatedTable("/alfa/peripheral/list-paginated", "peripherals", colsPeripheral, drawCallbackPeripheral);
+			
+			// Problem
+			var fnActionBtnsProblem = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?referenceType=2&redirect=peripheral/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
+				+ "</div>";
+			};
+			var drawCallbackProblem = function(settings) {
+				if ($("#newProblemBtn").length == 0) {
+					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
+					$("#newProblemBtn").on("click", function() {
+						window.location.href = '/alfa/problem/create?referenceType=2&redirect=peripheral/list';
+					});
+				}
+			};
+			const colsProblem = [
+				{"data": "label", "searchable": true, "orderable": true }, 
+				{"data": "description", "searchable": true, "orderable": true }, 
+				{"data": 
+					function ( row, type, val, meta ) { 
+						row["solved_str"] = (row["solved"] == true ? "Çözüldü" : "Devam ediyor"); 
+						return row["solved_str"]; 
+					}
+				, "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
+			];
+			
+			// Handle table init
+			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				if ($(e.target).attr('href') == "#problem") {
+					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
+				}
+			});
 		});
-		
 	</script>
 </body>
 </html>

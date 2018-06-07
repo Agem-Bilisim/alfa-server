@@ -89,8 +89,9 @@ public class ProblemController {
 										.newSelectbox();
 			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
 				builder.add(toPackageFormList(softwareService.getPackages()));
-			} else if (referenceType == ProblemReferenceType.HARDWARE.getId()) {
+			} else if (referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
 				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+			} else if (referenceType == ProblemReferenceType.GPU.getId()) {
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
@@ -137,8 +138,9 @@ public class ProblemController {
 										.newSelectbox();
 			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
 				builder.add(toPackageFormList(softwareService.getPackages()));
-			} else if (referenceType == ProblemReferenceType.HARDWARE.getId()) {
+			} else if (referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
 				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+			} else if (referenceType == ProblemReferenceType.GPU.getId()) {
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
