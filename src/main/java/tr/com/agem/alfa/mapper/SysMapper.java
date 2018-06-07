@@ -102,6 +102,18 @@ public interface SysMapper {
 	Tag toTagEntity(TagForm tagForm);
 
 	PeripheralDevice toPeripheralDeviceEntity(PeripheralDeviceForm form);
+	
+	CpuForm toCpuForm(Cpu entity);
+
+	GpuForm toGpuForm(Gpu entity);
+
+	DiskForm toDiskForm(Disk entity);
+
+	MemoryForm toMemoryForm(Memory entity);
+
+	BiosForm toBiosForm(Bios entity);
+
+	NetworkInterfaceForm toNetworkInterfaceForm(NetworkInterface entity);
 
 	PeripheralDeviceForm toPeripheralDeviceForm(PeripheralDevice entity);
 
