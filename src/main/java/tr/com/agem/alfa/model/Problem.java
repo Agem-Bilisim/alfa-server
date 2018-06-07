@@ -26,7 +26,7 @@ public class Problem extends BaseModel {
 	@Column(name = "SOLVED")
 	private Boolean solved;
 
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
 	private Set<ProblemReference> references = new HashSet<ProblemReference>(0);
 
 	public String getLabel() {

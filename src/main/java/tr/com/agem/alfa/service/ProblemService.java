@@ -1,5 +1,10 @@
 package tr.com.agem.alfa.service;
 
+import java.util.Iterator;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Problem;
+import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.repository.ProblemRepository;
 
 /**
@@ -16,6 +22,9 @@ import tr.com.agem.alfa.repository.ProblemRepository;
 @Component
 @Transactional
 public class ProblemService {
+
+	@PersistenceContext
+	private EntityManager em;
 
 	private final ProblemRepository problemRepository;
 
@@ -27,8 +36,8 @@ public class ProblemService {
 	public Page<Problem> getProblems(Pageable pageable, String search, Integer referenceType) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			return this.problemRepository.findDistinctByLabelContainingOrDescriptionContainingAllIgnoringCase(search, search,
-					pageable);
+			return this.problemRepository.findDistinctByLabelContainingOrDescriptionContainingAllIgnoringCase(search,
+					search, pageable);
 		} else if (referenceType != null) {
 			return this.problemRepository.findDistinctByReferencesReferenceType(referenceType, pageable);
 		}
@@ -38,13 +47,23 @@ public class ProblemService {
 	public void saveProblem(Problem problem) {
 		Assert.notNull(problem, "Problem must not be null.");
 		Problem p = null;
+		// Update
 		if (problem.getId() != null && (p = problemRepository.findOne(problem.getId())) != null) {
-			// Update
 			p.setLabel(problem.getLabel());
 			p.setDescription(problem.getDescription());
 			p.setSolved(problem.getSolved());
-			p.setReferences(problem.getReferences());
-			this.problemRepository.save(p);
+			// Remove previous references!
+			if (p.getReferences() != null) {
+				Iterator<ProblemReference> it = p.getReferences().iterator();
+				while (it.hasNext()) {
+					ProblemReference ref = it.next();
+					this.em.remove(ref);
+					it.remove();
+				}
+				this.em.flush();
+			}
+			p.getReferences().addAll(problem.getReferences());
+			this.em.merge(p);
 			return;
 		}
 		// Create
