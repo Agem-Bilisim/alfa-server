@@ -148,7 +148,6 @@ public class AgentController {
 		try {
 			if (form.getTags() != null) {
 				Agent agent = agentService.getAgent(form.getId());
-				log.info("Tags created/updated successfully.");
 				for (TagForm tagForm : form.getTags()) {
 					agent.addTag(sysMapper.toTagEntity(tagForm));
 				}
@@ -160,6 +159,7 @@ public class AgentController {
 					}
 				}
 				agentService.saveOrUpdate(agent, false);
+				log.info("Tags created/updated successfully.");
 			}
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";

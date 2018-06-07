@@ -287,6 +287,10 @@
 				if ($("#assignTagBtn").length == 0) {
 					$("#agentTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"assignTagBtn\">Seçilenlere etiket ata</button>");
 					$("#assignTagBtn").on("click", function() {
+						if ($('input[type="checkbox"][name!="select_all"]:checked').length < 1) {
+							alertify.warning("Lütfen geçerli bir kayıt seçiniz.");
+							return;
+						}
 						// Clear last agent ID so that multiple agent IDs can be used!
 						lastAgentId = null;
 						$("option:selected", "#tags").removeAttr("selected");
