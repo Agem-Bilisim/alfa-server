@@ -37,7 +37,6 @@ import tr.com.agem.alfa.form.DiskForm;
 import tr.com.agem.alfa.form.GpuForm;
 import tr.com.agem.alfa.form.MemoryForm;
 import tr.com.agem.alfa.form.NetworkInterfaceForm;
-import tr.com.agem.alfa.form.PeripheralDeviceForm;
 import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.AgentCpu;
@@ -48,7 +47,6 @@ import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
-import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.HardwareService;
 
@@ -466,76 +464,6 @@ public class HardwareController {
 		entity.setLastModifiedDate(date);
 		
 		return entity;
-	}
-	
-	@GetMapping("/peripheral/list")
-	public String getPeripheralListPage() {
-		return "peripheral/list";
-	}
-	
-	@GetMapping("/peripheral/create")
-	public ModelAndView getPeripheralCreatePage(@RequestParam(name = "redirect", required = false) String redirect) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		try {
-			model.put("agents", agentService.getAgents());
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-		model.put("form", new PeripheralDeviceForm().setRedirect(redirect));
-		return new ModelAndView("peripheral/create", model);
-	}
-	
-	@PostMapping("/peripheral/create")
-	public String handlePeripheralCreate(@Valid @ModelAttribute("form") PeripheralDeviceForm form, BindingResult bindingResult,
-			Authentication authentication) {
-		if (bindingResult.hasErrors()) {
-			// failed validation
-			return "/peripheral/create";
-		}
-		try {
-			CurrentUser user = (CurrentUser) authentication.getPrincipal();
-			checkNotNull(user, "Current user not found.");
-			PeripheralDevice savedPeripheralDevice = hardwareService.savePeripheralDevice(toPeripheralDeviceEntity(form, user.getUsername()));
-			Agent agent = form.getAgents().get(0);
-			Query query = em.createNativeQuery("INSERT INTO c_agent_peripheral_agent (agent_id, peripheral_id, device_id, device_path) VALUES (:agentId, :peripheralId, :deviceId, :devicePath)");
-			query.setParameter("agentId", agent.getId());
-			query.setParameter("peripheralId", savedPeripheralDevice.getId());
-			query.setParameter("deviceId", form.getDeviceId());
-			query.setParameter("devicePath", form.getDevicePath());
-			query.executeUpdate();
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to save peripheral, assuming invalid parameters", e);
-			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
-			return "/peripheral/create";
-		}
-		// everything fine redirect to list
-		return ControllerUtils.getRedirectMapping(form, "/peripheral/list");
-	}
-	
-	private PeripheralDevice toPeripheralDeviceEntity(PeripheralDeviceForm form, String username) {
-		PeripheralDevice entity = mapper.toPeripheralDeviceEntity(form);
-		Date date = new Date();
-		entity.setCreatedBy(username);
-		entity.setCreatedDate(date);
-		entity.setLastModifiedBy(username);
-		entity.setLastModifiedDate(date);
-		
-		return entity;
-	}
-	
-	@GetMapping("/peripheral/list-paginated")
-	public ResponseEntity<?> handlePeripheralList(@RequestParam(value = "search", required = false) String search,
-			Pageable pageable) {
-		RestResponseBody result = new RestResponseBody();
-		try {
-			Page<PeripheralDevice> peripherals = hardwareService.getPeripherals(pageable, search);
-			result.add("peripherals", checkNotNull(peripherals, "Peripherals not found."));
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to find peripherals, assuming invalid parameters", e);
-			result.setMessage(e.getMessage());
-			return ResponseEntity.badRequest().body(result);
-		}
-		return ResponseEntity.ok(result);
 	}
 	
 	@GetMapping("/hardware/cpu/{id}")

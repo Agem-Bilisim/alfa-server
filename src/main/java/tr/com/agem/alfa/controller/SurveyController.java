@@ -33,7 +33,7 @@ import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Survey;
 import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.service.AgentService;
-import tr.com.agem.alfa.service.HardwareService;
+import tr.com.agem.alfa.service.PeripheralService;
 import tr.com.agem.alfa.service.SoftwareService;
 import tr.com.agem.alfa.service.SurveyService;
 
@@ -49,7 +49,7 @@ public class SurveyController {
 	private final AgentService agentService;
 	private final MessagingService messagingService;
 	private final SoftwareService softwareService;
-	private final HardwareService hardwareService;
+	private final PeripheralService peripheralService;
 	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
@@ -57,12 +57,12 @@ public class SurveyController {
 
 	@Autowired
 	public SurveyController(SurveyService surveyService, AgentService agentService, MessagingService messagingService,
-			SoftwareService softwareService, HardwareService hardwareService, SysMapper mapper) {
+			SoftwareService softwareService, PeripheralService peripheralService, SysMapper mapper) {
 		this.surveyService = surveyService;
 		this.agentService = agentService;
 		this.messagingService = messagingService;
 		this.softwareService = softwareService;
-		this.hardwareService = hardwareService;
+		this.peripheralService = peripheralService;
 		this.mapper = mapper;
 	}
 
@@ -114,7 +114,7 @@ public class SurveyController {
 		RestResponseBody result = new RestResponseBody();
 		try {
 			result.add("packages", softwareService.getSurveyablePackages());
-			result.add("peripherals", hardwareService.getSurveyablePeripherals());
+			result.add("peripherals", peripheralService.getSurveyablePeripherals());
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to get surveyables", e);
 			result.setMessage(e.getMessage());

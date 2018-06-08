@@ -1,10 +1,7 @@
 package tr.com.agem.alfa.form;
 
-import java.util.List;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
-import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 import tr.com.agem.alfa.util.SelectboxBuilder.OptionFormConvertable;
 
@@ -27,9 +24,7 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 	@NotEmpty
 	private String devicePath;
 
-	private List<Agent> agents;
-	
-	private Long agentId;
+	private Long[] agentIds;
 
 	public String getTag() {
 		return tag;
@@ -45,14 +40,6 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 
 	public void setShowInSurvey(Boolean showInSurvey) {
 		this.showInSurvey = showInSurvey;
-	}
-
-	public List<Agent> getAgents() {
-		return agents;
-	}
-
-	public void setAgents(List<Agent> agents) {
-		this.agents = agents;
 	}
 
 	public String getDeviceId() {
@@ -71,14 +58,14 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 		this.devicePath = devicePath;
 	}
 
-	public Long getAgentId() {
-		return agentId;
+	public Long[] getAgentIds() {
+		return agentIds;
 	}
 
-	public void setAgentId(Long agentId) {
-		this.agentId = agentId;
+	public void setAgentIds(Long[] agentIds) {
+		this.agentIds = agentIds;
 	}
-	
+
 	@Override
 	public String getOptionText() {
 		return this.tag;

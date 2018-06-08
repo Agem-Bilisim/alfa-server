@@ -2,9 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layouts/dashboard">
-<!--/*@thymesVar id="roles" type="java.util.List<tr.com.agem.lider.model.Role>"*/-->
 <head>
-	<title>Sorun Ekle</title>
+	<title>Çevresel Cihaz Ekle</title>
 	<!-- iCheck -->
 	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
 	<!-- DataTables -->
@@ -12,8 +11,8 @@
 </head>
 <body>
 	<th:block layout:fragment="breadcrumb-list">
-		<li><a th:href="${'alfa/' + form.redirect}"><i class="fa fa-cubes"></i> <span th:text="${rlabel}"></span></a></li>
-		<li class="active">Çevresel Birim Ekle</li>
+		<li><a th:href="@{/peripheral/list}"><i class="fa fa-print"></i> Çevresel Cihazlar</a></li>
+		<li class="active">Çevresel Cihaz Ekle</li>
 	</th:block>
 
 	<div layout:fragment="content">
@@ -21,51 +20,44 @@
 			<div class="col-xs-12">
 				<div class="box box-info">
 					<div class="box-header">
-						<h3 class="box-title">Çevresel Birim Ekle</h3>
+						<h3 class="box-title">Çevresel Cihaz Ekle</h3>
 					</div>
 					<form role="form" id="peripheralForm" th:action="@{/peripheral/create}" method="post" th:object="${form}">
 						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
     						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 						</div>
-						<input type="text" id="redirect" style="display:none;" name="redirect" th:field="*{redirect}" />
 						<div class="box-body">
 							<div class="form-group" th:classappend="${#fields.hasErrors('tag')} ? 'has-error' : ''">
-								<label for="tag">Etiket</label>
+								<label for="tag">Cihaz adı</label>
 								<input type="text" class="form-control" id="tag"
 									name="tag" placeholder="Etiket" th:field="*{tag}" />
 								<span class="help-block" th:if="${#fields.hasErrors('tag')}" th:errors="*{tag}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('deviceId')} ? 'has-error' : ''">
-								<label for="deviceId">deviceId</label>
+								<label for="deviceId">Sistemde gözüken cihaz ID</label>
 								<input type="text" class="form-control" id="deviceId"
 									name="deviceId" placeholder="deviceId" th:field="*{deviceId}" />
 								<span class="help-block" th:if="${#fields.hasErrors('deviceId')}" th:errors="*{deviceId}">Hata</span>
 							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('devicePath')} ? 'has-error' : ''">
-								<label for="devicePath">devicePath</label>
+								<label for="devicePath">Cihaz dizini</label>
 								<input type="text" class="form-control" id="devicePath"
 									name="devicePath" placeholder="devicePath" th:field="*{devicePath}" />
 								<span class="help-block" th:if="${#fields.hasErrors('devicePath')}" th:errors="*{devicePath}">Hata</span>
 							</div>
-<!-- 							<div class="form-group" th:classappend="${#fields.hasErrors('showInSurvey')} ? 'has-error' : ''"> -->
-<!-- 								<label for="showInSurvey">Ankette Göster</label> -->
-<!-- 								<input type="text" class="form-control" id="showInSurvey" -->
-<!-- 									name="showInSurvey" placeholder="Ankette Göster" th:field="*{showInSurvey}" /> -->
-<!-- 								<span class="help-block" th:if="${#fields.hasErrors('showInSurvey')}" th:errors="*{showInSurvey}">Hata</span> -->
-<!-- 							</div> -->
+							<div class="form-group" th:classappend="${#fields.hasErrors('agentIds')} ? 'has-error' : ''">
+								<label>Varsa ilişkili sistemler</label>
+								<select class="form-control" id="agentIds" name="agentIds" style="width: 100%;" th:field="*{agentIds}" multiple>
+									<option th:each="agent : ${agents}" th:text="${agent.hostName} + ' - ' + ${agent.ipAddresses}" th:value="${agent.id}"></option>
+								</select>
+								<span class="help-block" th:if="${#fields.hasErrors('agentIds')}" th:errors="*{agentIds}">Hata</span>
+							</div>
 							<div class="form-group">
 								<div class="checkbox">
 									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="showInSurvey"
-										id="showInSurvey" th:field="*{showInSurvey}"> Ankette göster
+										id="showInSurvey" th:field="*{showInSurvey}"> Ankette gösterilebilir
 									</label>
 								</div>
-							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('agents')} ? 'has-error' : ''">
-								<label>Ajan</label>
-								<select class="form-control" id="agents" name="agents" style="width: 100%;">
-									<option th:each="agent : ${agents}" th:text="${agent.hostName} + ' - ' + ${agent.ipAddresses}" th:value="${agent.id}"></option>
-								</select>
-								<span class="help-block" th:if="${#fields.hasErrors('agents')}" th:errors="*{agents}">Hata</span>
 							</div>
 						</div>
 						<div class="box-footer">
@@ -78,15 +70,13 @@
 				</div>
 			</div>
 		</div>
-		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			// Return to list when cancel button is clicked
 			$('#cancelBtn').on("click", function() {
-				window.location.href = /*[[${'/alfa/' + form.redirect}]]*/'';
+				window.location.href = '/alfa/peripheral/list';
 			});
-			
 			// Config checkbox
 			$('input[type="checkbox"].minimal').iCheck({
 		      checkboxClass: 'icheckbox_minimal-blue'

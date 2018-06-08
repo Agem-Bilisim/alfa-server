@@ -3,7 +3,6 @@ package tr.com.agem.alfa.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -16,14 +15,12 @@ import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
-import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.repository.BiosRepository;
 import tr.com.agem.alfa.repository.CpuRepository;
 import tr.com.agem.alfa.repository.DiskRepository;
 import tr.com.agem.alfa.repository.GpuRepository;
 import tr.com.agem.alfa.repository.InetRepository;
 import tr.com.agem.alfa.repository.MemoryRepository;
-import tr.com.agem.alfa.repository.PeripheralRepository;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -38,19 +35,16 @@ public class HardwareService {
 	private final GpuRepository gpuRepository;
 	private final InetRepository inetRepository;
 	private final MemoryRepository memoryRepository;
-	private final PeripheralRepository peripheralRepository;
 
 	@Autowired
 	public HardwareService(BiosRepository biosRepository, CpuRepository cpuRepository, DiskRepository diskRepository,
-			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository,
-			PeripheralRepository peripheralRepository) {
+			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository) {
 		this.biosRepository = biosRepository;
 		this.cpuRepository = cpuRepository;
 		this.diskRepository = diskRepository;
 		this.gpuRepository = gpuRepository;
 		this.inetRepository = inetRepository;
 		this.memoryRepository = memoryRepository;
-		this.peripheralRepository = peripheralRepository;
 	}
 
 	public Page<Cpu> getCpus(Pageable pageable, String search) {
@@ -222,28 +216,6 @@ public class HardwareService {
 		return this.inetRepository.save(networkInterface);
 	}
 
-	public PeripheralDevice savePeripheralDevice(PeripheralDevice peripheralDevice) {
-		Assert.notNull(peripheralDevice, "PeripheralDevice must not be null.");
-		PeripheralDevice pd = null;
-		if (peripheralDevice.getId() != null && (pd = peripheralRepository.findOne(peripheralDevice.getId())) != null) {
-			// Update
-			pd.setTag(peripheralDevice.getTag());
-			pd.setShowInSurvey(peripheralDevice.getShowInSurvey());
-			return this.peripheralRepository.save(pd);
-		}
-		// Create
-		return this.peripheralRepository.save(peripheralDevice);
-	}
-
-	public Page<PeripheralDevice> getPeripherals(Pageable pageable, String search) {
-		Assert.notNull(pageable, "Pageable must not be null.");
-		if (search != null && !search.isEmpty()) {
-			// TODO
-			return null;
-		}
-		return this.peripheralRepository.findAll(pageable);
-	}
-	
 	public Cpu getCpu(Long id) {
 		Assert.notNull(id, "ID must not be null");
 		return this.cpuRepository.findOne(id);
@@ -263,16 +235,6 @@ public class HardwareService {
 		return this.gpuRepository.findAll();
 	}
 
-	public List<PeripheralDevice> getPeripherals() {
-		return this.peripheralRepository.findAll();
-	}
-
-	public List<PeripheralDevice> getSurveyablePeripherals() {
-		PeripheralDevice p = new PeripheralDevice();
-		p.setShowInSurvey(true);
-		return this.peripheralRepository.findAll(Example.of(p));
-	}
-	
 	public Memory getMemory(Long id) {
 		Assert.notNull(id, "ID must not be null");
 		return this.memoryRepository.findOne(id);

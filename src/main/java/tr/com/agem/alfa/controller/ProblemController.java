@@ -44,6 +44,7 @@ import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
 import tr.com.agem.alfa.service.HardwareService;
+import tr.com.agem.alfa.service.PeripheralService;
 import tr.com.agem.alfa.service.ProblemService;
 import tr.com.agem.alfa.service.SoftwareService;
 import tr.com.agem.alfa.util.SelectboxBuilder;
@@ -60,6 +61,7 @@ public class ProblemController {
 	private final ProblemService problemService;
 	private final SoftwareService softwareService;
 	private final HardwareService hardwareService;
+	private final PeripheralService peripheralService;
 	private final MessageSource messageSource;
 	private final SysMapper mapper;
 
@@ -71,10 +73,11 @@ public class ProblemController {
 
 	@Autowired
 	public ProblemController(ProblemService problemService, SoftwareService softwareService,
-			HardwareService hardwareService, MessageSource messageSource, SysMapper mapper) {
+			HardwareService hardwareService, PeripheralService peripheralService, MessageSource messageSource, SysMapper mapper) {
 		this.problemService = problemService;
 		this.softwareService = softwareService;
 		this.hardwareService = hardwareService;
+		this.peripheralService = peripheralService;
 		this.messageSource = messageSource;
 		this.mapper = mapper;
 	}
@@ -90,12 +93,12 @@ public class ProblemController {
 			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
 				builder.add(toPackageFormList(softwareService.getPackages()));
 			} else if (referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
-				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
 			} else if (referenceType == ProblemReferenceType.GPU.getId()) {
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
-				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			}
 			// @formatter:on
@@ -139,12 +142,12 @@ public class ProblemController {
 			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
 				builder.add(toPackageFormList(softwareService.getPackages()));
 			} else if (referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
-				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
 			} else if (referenceType == ProblemReferenceType.GPU.getId()) {
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
-				builder.add(toPeripheralFormList(hardwareService.getPeripherals()));
+				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			}
 			// @formatter:on
