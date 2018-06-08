@@ -202,6 +202,7 @@ Alfa.ajax = function(opts, successHandler, errorHandler) {
 		contentType : "application/json",
 		url : opts.url,
 		dataType : 'json',
+		async: opts.async ? opts.async : true,
 		data: JSON.stringify(opts.data),
 		cache : false,
 		timeout : 600000,

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ import tr.com.agem.alfa.repository.TagRepository;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Component
-@Transactional
+@Transactional(rollbackFor=Exception.class)
 public class AgentService {
 
 	@PersistenceContext
@@ -91,7 +92,9 @@ public class AgentService {
 	public Page<Agent> getAgents(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
-			return this.agentRepository.findByHostNameContainingOrIpAddressesContainingOrPlatformSystemContainingAllIgnoringCase(search, search, search, pageable);
+			return this.agentRepository
+					.findByHostNameContainingOrIpAddressesContainingOrPlatformSystemContainingAllIgnoringCase(search,
+							search, search, pageable);
 		}
 		return this.agentRepository.findAll(pageable);
 	}
@@ -107,6 +110,23 @@ public class AgentService {
 
 	public List<Tag> getTags() {
 		return this.tagRepository.findAll();
+	}
+
+	public void saveTags(Agent agent, List<Tag> tags) {
+		Query query = this.em.createNativeQuery("DELETE FROM c_agent_tag_agent WHERE agent_id = :agentId");
+		query.setParameter("agentId", agent.getId());
+		query.executeUpdate();
+		if (tags != null) {
+			for (Tag tag : tags) {
+				Tag _tag = this.tagRepository.findByName(tag.getName());
+				Long id = _tag == null ? id = this.tagRepository.save(tag).getId() : _tag.getId();
+				Query query2 = this.em.createNativeQuery(
+						"INSERT INTO c_agent_tag_agent (agent_id, tag_id) VALUES (:agentId, :tagId)");
+				query2.setParameter("agentId", agent.getId());
+				query2.setParameter("tagId", id);
+				query2.executeUpdate();
+			}
+		}
 	}
 
 }

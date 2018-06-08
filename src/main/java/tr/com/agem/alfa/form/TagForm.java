@@ -1,5 +1,6 @@
 package tr.com.agem.alfa.form;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -10,6 +11,7 @@ public class TagForm extends BaseForm {
 	private static final long serialVersionUID = 3887521280929916142L;
 
 	@NotEmpty
+	@Length(max = 100)
 	private String name;
 
 	public String getName() {

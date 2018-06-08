@@ -2,8 +2,9 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -146,21 +147,16 @@ public class AgentController {
 			return ResponseEntity.badRequest().body(result);
 		}
 		try {
+			Agent agent = agentService.getAgent(form.getId());
+			List<Tag> tags = null;
 			if (form.getTags() != null) {
-				Agent agent = agentService.getAgent(form.getId());
+				tags = new ArrayList<Tag>();
 				for (TagForm tagForm : form.getTags()) {
-					agent.addTag(sysMapper.toTagEntity(tagForm));
+					tags.add(sysMapper.toTagEntity(tagForm));
 				}
-				Iterator<Tag> it = agent.getTags().iterator();
-				while (it.hasNext()) {
-					Tag tag = it.next();
-					if (!form.getTagsStr().contains(tag.getName())) {
-						it.remove();
-					}
-				}
-				agentService.saveOrUpdate(agent, false);
-				log.info("Tags created/updated successfully.");
 			}
+			agentService.saveTags(agent, tags);
+			log.info("Tags created/updated successfully.");
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";
 			log.error(error, e);

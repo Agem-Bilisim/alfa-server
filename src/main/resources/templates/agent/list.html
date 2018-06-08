@@ -31,6 +31,7 @@
 									<th>Hostname</th>
 									<th>IP Adresleri</th>
 									<th>MAC Adresleri</th>
+									<th>İşletim Sistemi</th>
 									<th>Etiketler</th>
 									<th>İşlem</th>
 								</tr>
@@ -303,6 +304,7 @@
 				{"data": "hostName", "searchable": true, "orderable": true }, 
 				{"data": "ipAddresses", "searchable": true, "orderable": true }, 
 				{"data": "macAddresses", "searchable": true, "orderable": true }, 
+				{"data": "platform.system", "searchable": true, "orderable": true }, 
 				{"data": "tagsStr", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsAgent, "searchable": false, "orderable": false }
 			];
@@ -323,6 +325,7 @@
 						function(result){
 							alertify.success("Etiketler başarıyla kaydedildi.");
 							$('#editTagsModal').modal('hide');
+							agentTable.ajax.reload();
 						}, 
 						function() {
 							alertify.error("Etiketler kaydedilirken hata oluştu.");
@@ -332,7 +335,7 @@
 					$('input[type="checkbox"][name!="select_all"]:checked').each(function(){
 						var d =  {"id": $(this).attr("rowid"), "tags": tagArr};
 						Alfa.ajax(
-							{url: "/alfa/agent/tag/save", data: d}, 
+							{url: "/alfa/agent/tag/save", data: d, async: false}, 
 							function(result){
 								alertify.success("Etiketler başarıyla kaydedildi.");
 								$('#editTagsModal').modal('hide');
@@ -342,6 +345,7 @@
 							}
 						);
 					});
+					agentTable.ajax.reload();
 				}
 			});
 		});

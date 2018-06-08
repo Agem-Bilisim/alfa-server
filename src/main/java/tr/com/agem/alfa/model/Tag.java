@@ -19,7 +19,7 @@ public class Tag extends BaseModel {
 
 	private static final long serialVersionUID = 8087486821765631219L;
 
-	@Column(name = "NAME", length = 500, nullable = false, unique = true)
+	@Column(name = "NAME", length = 100, nullable = false, unique = true)
 	private String name;
 
 	@JsonIgnore

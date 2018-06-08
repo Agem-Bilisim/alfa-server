@@ -9,4 +9,6 @@ import tr.com.agem.alfa.model.Tag;
  */
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
+	Tag findByName(String name);
+
 }
