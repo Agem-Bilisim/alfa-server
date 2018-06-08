@@ -121,4 +121,8 @@ public class SoftwareService {
 		return this.packageRepository.findAll(Example.of(p));
 	}
 
+	public RunningProcess getProcess(String name) {
+		return this.processRepository.findByNameIgnoreCase(name);
+	}
+
 }

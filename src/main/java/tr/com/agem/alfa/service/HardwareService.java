@@ -15,12 +15,14 @@ import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
+import tr.com.agem.alfa.model.Platform;
 import tr.com.agem.alfa.repository.BiosRepository;
 import tr.com.agem.alfa.repository.CpuRepository;
 import tr.com.agem.alfa.repository.DiskRepository;
 import tr.com.agem.alfa.repository.GpuRepository;
 import tr.com.agem.alfa.repository.InetRepository;
 import tr.com.agem.alfa.repository.MemoryRepository;
+import tr.com.agem.alfa.repository.PlatformRepository;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -35,16 +37,18 @@ public class HardwareService {
 	private final GpuRepository gpuRepository;
 	private final InetRepository inetRepository;
 	private final MemoryRepository memoryRepository;
+	private final PlatformRepository platformRepository;
 
 	@Autowired
 	public HardwareService(BiosRepository biosRepository, CpuRepository cpuRepository, DiskRepository diskRepository,
-			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository) {
+			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository, PlatformRepository platformRepository) {
 		this.biosRepository = biosRepository;
 		this.cpuRepository = cpuRepository;
 		this.diskRepository = diskRepository;
 		this.gpuRepository = gpuRepository;
 		this.inetRepository = inetRepository;
 		this.memoryRepository = memoryRepository;
+		this.platformRepository = platformRepository;
 	}
 
 	public Page<Cpu> getCpus(Pageable pageable, String search) {
@@ -249,5 +253,17 @@ public class HardwareService {
 		Assert.notNull(id, "ID must not be null");
 		return this.inetRepository.findOne(id);
 	}
-	
+
+	public Disk getDisk(String product, String version) {
+		return this.diskRepository.findByProductAndVersion(product, version);
+	}
+
+	public Bios getBios(String version, String vendor) {
+		return this.biosRepository.findByVersionAndVendor(version, vendor);
+	}
+
+	public Platform getPlatform(String system, String release) {
+		return this.platformRepository.findBySystemAndRelease(system, release);
+	}
+
 }

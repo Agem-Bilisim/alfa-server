@@ -92,4 +92,8 @@ public class PeripheralService {
 		this.peripheralRepository.delete(id);
 	}
 
+	public PeripheralDevice getPeripheral(String tag) {
+		return this.peripheralRepository.findByTag(tag);
+	}
+
 }
