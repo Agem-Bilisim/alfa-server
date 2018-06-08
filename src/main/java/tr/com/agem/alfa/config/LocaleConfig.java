@@ -44,6 +44,7 @@ public class LocaleConfig extends WebMvcConfigurerAdapter {
 		messageSource.setCacheSeconds(cacheSeconds);
 		messageSource.setDefaultEncoding(encoding);
 		messageSource.setFallbackToSystemLocale(false);
+		messageSource.setUseCodeAsDefaultMessage(true);
 		return messageSource;
 	}
 

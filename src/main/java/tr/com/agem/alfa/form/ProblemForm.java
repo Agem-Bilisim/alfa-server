@@ -55,27 +55,29 @@ public class ProblemForm extends BaseForm {
 	}
 
 	public void setReferences(Set<ProblemReferenceForm> references) {
+		if (references != null) {
+			List<String> _references = new ArrayList<String>();
+			for (ProblemReferenceForm ref : references) {
+				_references.add(ref.getReferenceType().getId() + "-" + ref.getReferenceId());
+			}
+			this.strReferences = _references.toArray(new String[] {});
+		}
 		this.references = references;
 	}
 
 	public String[] getStrReferences() {
-		if ((strReferences == null || strReferences.length == 0) && !this.references.isEmpty()) {
-			List<String> _references = new ArrayList<String>();
-			for (ProblemReferenceForm ref : references) {
-				_references.add(ref.getReferenceType().getId() + "-" + ref.getId());
-			}
-			this.strReferences = _references.toArray(new String[] {});
-		}
 		return strReferences;
 	}
 
 	public void setStrReferences(String[] strReferences) {
-		this.strReferences = strReferences;
 		if (strReferences != null) {
+			List<ProblemReferenceForm> _references = new ArrayList<ProblemReferenceForm>();
 			for (String ref : strReferences) {
-				this.references.add(new ProblemReferenceForm(ref));
+				_references.add(new ProblemReferenceForm(ref));
 			}
+			this.references = new HashSet<>(_references);
 		}
+		this.strReferences = strReferences;
 	}
 
 }

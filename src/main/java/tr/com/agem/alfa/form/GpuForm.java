@@ -77,7 +77,7 @@ public class GpuForm extends BaseForm implements OptionFormConvertable {
 
 	@Override
 	public String getOptionText() {
-		return this.subsystem + " Sürücü:" + this.driverVersion;
+		return this.subsystem + (this.driverVersion != null ? " Sürücü:" + this.driverVersion : "");
 	}
 
 	@Override
