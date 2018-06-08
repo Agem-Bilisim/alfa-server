@@ -159,7 +159,7 @@
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				if ($(e.target).attr('href') == "#problem") {
-					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
+					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=2", "problems", colsProblem, drawCallbackProblem);
 				}
 			});
 		});
