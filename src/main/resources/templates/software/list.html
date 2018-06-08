@@ -100,8 +100,6 @@
 		// Hook handler for delete confirmation
 		var tables = {};
 		var handleDelete = function(url, tableToRefresh) {
-			console.log(url);
-			console.log(tableToRefresh);
 			$("#deleteConfirmModalBtn").on("click", function(){
 				$('#deleteConfirmModal').modal('hide');
 				$.ajax({

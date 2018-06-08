@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -84,6 +85,19 @@ public class PeripheralController {
 		}
 		// everything fine redirect to list
 		return ControllerUtils.getRedirectMapping(form, "/peripheral/list");
+	}
+	
+	@PostMapping("/peripheral/{id}/delete")
+	public ResponseEntity<?> handleDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			peripheralService.deletePeripheral(checkNotNull(id, "ID not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete package, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/peripheral/list")

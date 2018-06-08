@@ -87,4 +87,9 @@ public class PeripheralService {
 		}
 	}
 
+	public void deletePeripheral(Long id) {
+		Assert.notNull(id, "ID must not be null.");
+		this.peripheralRepository.delete(id);
+	}
+
 }

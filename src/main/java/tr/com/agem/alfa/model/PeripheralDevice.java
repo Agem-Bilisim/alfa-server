@@ -3,6 +3,7 @@ package tr.com.agem.alfa.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class PeripheralDevice extends BaseModel {
 	private Boolean showInSurvey;
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "peripheralDevice")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "peripheralDevice", cascade = CascadeType.REMOVE)
 	private Set<AgentPeripheralDevice> agentPeripheralDevices = new HashSet<AgentPeripheralDevice>(0);
 
 	public String getTag() {
