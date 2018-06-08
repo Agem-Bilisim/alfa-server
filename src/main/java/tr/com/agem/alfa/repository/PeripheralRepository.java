@@ -9,4 +9,6 @@ import tr.com.agem.alfa.model.PeripheralDevice;
  */
 public interface PeripheralRepository extends JpaRepository<PeripheralDevice, Long> {
 
+	PeripheralDevice findByTag(String tag);
+
 }

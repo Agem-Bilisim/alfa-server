@@ -9,4 +9,6 @@ import tr.com.agem.alfa.model.Bios;
  */
 public interface BiosRepository extends JpaRepository<Bios, Long> {
 
+	Bios findByVersionAndVendor(String version, String vendor);
+
 }

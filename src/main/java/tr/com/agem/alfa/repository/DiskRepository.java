@@ -9,4 +9,6 @@ import tr.com.agem.alfa.model.Disk;
  */
 public interface DiskRepository extends JpaRepository<Disk, Long> {
 
+	Disk findByProductAndVersion(String product, String version);
+
 }

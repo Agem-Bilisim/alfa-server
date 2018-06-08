@@ -9,4 +9,6 @@ import tr.com.agem.alfa.model.Platform;
  */
 public interface PlatformRepository extends JpaRepository<Platform, Long> {
 
+	Platform findBySystemAndRelease(String system, String release);
+
 }
