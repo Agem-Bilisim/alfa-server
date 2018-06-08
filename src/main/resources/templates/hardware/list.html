@@ -23,6 +23,7 @@
 			    	<li role="presentation"><a href="#memory" aria-controls="memory" role="tab" data-toggle="tab">RAM Bellek</a></li>
 			    	<li role="presentation"><a href="#bios" aria-controls="bios" role="tab" data-toggle="tab">BIOS</a></li>
 			    	<li role="presentation"><a href="#networkInterface" aria-controls="networkInterface" role="tab" data-toggle="tab">Ağ</a></li>
+			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -152,6 +153,27 @@
 											<th>Ürün</th>
 											<th>Yetenekler</th>
 											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="problem">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Donanım kaynaklı sorunlar</h3>
+							</div>
+							<div class="box-body">
+								<table id="problemTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Kısa Tanım</th>
+											<th>Açıklama</th>
+											<th>Durum</th>
+											<th>İşlem</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -337,6 +359,33 @@
 				{"data": "capabilities", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsNetworkInterface, "searchable": false, "orderable": false }
 			];
+			
+			// Problem
+			var fnActionBtnsProblem = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?referenceType=6&redirect=hardware/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
+				+ "</div>";
+			};
+			var drawCallbackProblem = function(settings) {
+				if ($("#newProblemBtn").length == 0) {
+					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
+					$("#newProblemBtn").on("click", function() {
+						window.location.href = '/alfa/problem/create?referenceType=6&redirect=hardware/list';
+					});
+				}
+			};
+			const colsProblem = [
+				{"data": "label", "searchable": true, "orderable": true }, 
+				{"data": "description", "searchable": true, "orderable": true }, 
+				{"data": 
+					function ( row, type, val, meta ) { 
+						row["solved_str"] = (row["solved"] == true ? "Çözüldü" : "Devam ediyor"); 
+						return row["solved_str"]; 
+					}
+				, "searchable": true, "orderable": true }, 
+				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
+			];
 
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -350,6 +399,8 @@
 					tables.biosTable = $('#biosTable').paginatedTable("/alfa/hardware/bios/list-paginated", "bioss", colsBios, drawCallbackBios);			
 				} else if ($(e.target).attr('href') == "#networkInterface") {
 					tables.networkInterfaceTable = $('#networkInterfaceTable').paginatedTable("/alfa/hardware/networkInterface/list-paginated", "networkInterfaces", colsNetworkInterface, drawCallbackNetworkInterface);			
+				} else if ($(e.target).attr('href') == "#problem") {
+					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=6", "problems", colsProblem, drawCallbackProblem);
 				}
 			});
 		});
