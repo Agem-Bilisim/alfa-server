@@ -90,50 +90,50 @@ public class BpmTaskController
 		return "redirect:/bpm-process/" + processId;
 	}
 	
-	@RequestMapping("/bpm-task/list")
-	public ResponseEntity<?>  listTasks(Authentication authentication) 
-	{
-		RestResponseBody result = new RestResponseBody();
-		
-		try {
-			CurrentUser user = (CurrentUser) authentication.getPrincipal();
-			List<String> role = new ArrayList<String>();
-			role.add(user.getRole());
-			
-			List<BpmTaskForm> list = new ArrayList<BpmTaskForm>();
-			
-			List<Task> tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getUsername(), role);
-			if (tasks != null) {
-				for (Task t : tasks) {
-					BpmTaskForm f = new BpmTaskForm();
-					f.setTaskId(t.getId());
-					f.setTaskDescription(t.getDescription());
-					f.setCreatedDate(t.getCreateTime());
-					list.add(f);
-				}
-			}
-			
-			tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getId().toString(), null);
-			if (tasks != null) {
-				for (Task t : tasks) {
-					BpmTaskForm f = new BpmTaskForm();
-					f.setTaskId(t.getId());
-					f.setTaskDescription(t.getDescription());
-					f.setCreatedDate(t.getCreateTime());
-					list.add(f);
-				}
-			}			
-			
-			result.add("tasks",  new PageImpl<BpmTaskForm>(list));
-			
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to list user tasks", e);
-			result.setMessage(e.getMessage());
-			return ResponseEntity.badRequest().body(result);
-		}
-		
-		return ResponseEntity.ok(result);
-	}
+//	@RequestMapping("/bpm-task/list")
+//	public ResponseEntity<?>  listTasks(Authentication authentication) 
+//	{
+//		RestResponseBody result = new RestResponseBody();
+//		
+//		try {
+//			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+//			List<String> role = new ArrayList<String>();
+//			role.add(user.getRole());
+//			
+//			List<BpmTaskForm> list = new ArrayList<BpmTaskForm>();
+//			
+//			List<Task> tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getUsername(), role);
+//			if (tasks != null) {
+//				for (Task t : tasks) {
+//					BpmTaskForm f = new BpmTaskForm();
+//					f.setTaskId(t.getId());
+//					f.setTaskDescription(t.getDescription());
+//					f.setCreatedDate(t.getCreateTime());
+//					list.add(f);
+//				}
+//			}
+//			
+//			tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getId().toString(), null);
+//			if (tasks != null) {
+//				for (Task t : tasks) {
+//					BpmTaskForm f = new BpmTaskForm();
+//					f.setTaskId(t.getId());
+//					f.setTaskDescription(t.getDescription());
+//					f.setCreatedDate(t.getCreateTime());
+//					list.add(f);
+//				}
+//			}			
+//			
+//			result.add("tasks",  new PageImpl<BpmTaskForm>(list));
+//			
+//		} catch (Exception e) {
+//			log.error("Exception occurred when trying to list user tasks", e);
+//			result.setMessage(e.getMessage());
+//			return ResponseEntity.badRequest().body(result);
+//		}
+//		
+//		return ResponseEntity.ok(result);
+//	}
 	
 	@RequestMapping("/bpm-task/list-all")
 	public String getListPage() {

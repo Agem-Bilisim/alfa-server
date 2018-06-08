@@ -319,7 +319,7 @@
 			var fnActionBtnsNetworkInterface = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
 					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/networkInterface/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/networkinterface/" + row['id'] + "/delete', 'networkInterfaceTable')\"><i class=\"fa fa-trash\"></i></button>" 
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/networkInterface/" + row['id'] + "/delete', 'networkInterfaceTable')\"><i class=\"fa fa-trash\"></i></button>" 
 					+ "</div>";
 			};
 			var drawCallbackNetworkInterface = function(settings) {
@@ -349,7 +349,7 @@
 				} else if ($(e.target).attr('href') == "#bios") {
 					tables.biosTable = $('#biosTable').paginatedTable("/alfa/hardware/bios/list-paginated", "bioss", colsBios, drawCallbackBios);			
 				} else if ($(e.target).attr('href') == "#networkInterface") {
-					tables.networkInterface = $('#networkInterfaceTable').paginatedTable("/alfa/hardware/networkInterface/list-paginated", "networkInterfaces", colsNetworkInterface, drawCallbackNetworkInterface);			
+					tables.networkInterfaceTable = $('#networkInterfaceTable').paginatedTable("/alfa/hardware/networkInterface/list-paginated", "networkInterfaces", colsNetworkInterface, drawCallbackNetworkInterface);			
 				}
 			});
 		});

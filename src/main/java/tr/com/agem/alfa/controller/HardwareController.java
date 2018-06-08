@@ -792,29 +792,108 @@ public class HardwareController {
 		return "redirect:/hardware/list";
 	}
 	
-//	@PostMapping("/hardware/cpu/{id}/delete")
-//	public ResponseEntity<?> handleCpuDelete(@PathVariable Long id) {
-//		RestResponseBody result = new RestResponseBody();
-//		try {
-//			hardwareService.deleteCpu(checkNotNull(id, "ID not found."));
-//		} catch (Exception e) {
-//			log.error("Exception occurred when trying to delete CPU, assuming invalid parameters", e);
-//			result.setMessage(e.getMessage());
-//			return ResponseEntity.badRequest().body(result);
-//		}
-//		return ResponseEntity.ok(result);
-//	}
-//
-//	@PostMapping("/hardware/gpu/{id}/delete")
-//	public ResponseEntity<?> handleGpuDelete(@PathVariable Long id) {
-//		RestResponseBody result = new RestResponseBody();
-//		try {
-//			hardwareService.deleteGpu(checkNotNull(id, "ID not found."));
-//		} catch (Exception e) {
-//			log.error("Exception occurred when trying to delete GPU, assuming invalid parameters", e);
-//			result.setMessage(e.getMessage());
-//			return ResponseEntity.badRequest().body(result);
-//		}
-//		return ResponseEntity.ok(result);
-//	}
+	@PostMapping("/hardware/cpu/{id}/delete")
+	public ResponseEntity<?> handleCpuDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Query query = em.createNativeQuery("DELETE FROM c_agent_cpu_agent WHERE cpu_id = :cpuId");
+			query.setParameter("cpuId", id);
+			query.executeUpdate();
+			query = em.createNativeQuery("DELETE FROM c_agent_cpu WHERE id = :cpuId");
+			query.setParameter("cpuId", id);
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete CPU, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/hardware/gpu/{id}/delete")
+	public ResponseEntity<?> handleGpuDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Query query = em.createNativeQuery("DELETE FROM c_agent_gpu_agent WHERE gpu_id = :gpuId");
+			query.setParameter("gpuId", id);
+			query.executeUpdate();
+			query = em.createNativeQuery("DELETE FROM c_agent_gpu WHERE id = :gpuId");
+			query.setParameter("gpuId", id);
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete GPU, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/hardware/disk/{id}/delete")
+	public ResponseEntity<?> handleDiskDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Query query = em.createNativeQuery("DELETE FROM c_agent_disk_agent WHERE disk_id = :diskId");
+			query.setParameter("diskId", id);
+			query.executeUpdate();
+			query = em.createNativeQuery("DELETE FROM c_agent_disk WHERE id = :diskId");
+			query.setParameter("diskId", id);
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete Disk, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/hardware/memory/{id}/delete")
+	public ResponseEntity<?> handleMemoryDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Query query = em.createNativeQuery("DELETE FROM c_agent_memory_agent WHERE memory_id = :memoryId");
+			query.setParameter("memoryId", id);
+			query.executeUpdate();
+			query = em.createNativeQuery("DELETE FROM c_agent_memory WHERE id = :memoryId");
+			query.setParameter("memoryId", id);
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete Memory, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/hardware/bios/{id}/delete")
+	public ResponseEntity<?> handleBiosDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Query query = em.createNativeQuery("DELETE FROM c_agent_bios WHERE id = :biosId");
+			query.setParameter("biosId", id);
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete Bios, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/hardware/networkInterface/{id}/delete")
+	public ResponseEntity<?> handleNetworkInterfaceDelete(@PathVariable Long id) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Query query = em.createNativeQuery("DELETE FROM c_agent_inet_agent WHERE network_interface_id = :networkInterfaceId");
+			query.setParameter("networkInterfaceId", id);
+			query.executeUpdate();
+			query = em.createNativeQuery("DELETE FROM c_agent_inet WHERE id = :networkInterfaceId");
+			query.setParameter("networkInterfaceId", id);
+			query.executeUpdate();
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to delete NetworkInterface, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
 }
