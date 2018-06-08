@@ -125,6 +125,30 @@
 									name="vendorId" placeholder="vendorId" th:field="*{vendorId}" />
 								<span class="help-block" th:if="${#fields.hasErrors('vendorId')}" th:errors="*{vendorId}">Hata</span>
 							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('cpuTimes')} ? 'has-error' : ''">
+								<label for="cpuTimes">cpuTimes</label>
+								<input type="text" class="form-control" id="cpuTimes"
+									name="cpuTimes" placeholder="cpuTimes" th:field="*{cpuTimes}" />
+								<span class="help-block" th:if="${#fields.hasErrors('cpuTimes')}" th:errors="*{cpuTimes}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('flags')} ? 'has-error' : ''">
+								<label for="flags">flags</label>
+								<input type="text" class="form-control" id="flags"
+									name="flags" placeholder="flags" th:field="*{flags}" />
+								<span class="help-block" th:if="${#fields.hasErrors('flags')}" th:errors="*{flags}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('stats')} ? 'has-error' : ''">
+								<label for="stats">stats</label>
+								<input type="text" class="form-control" id="stats"
+									name="stats" placeholder="stats" th:field="*{stats}" />
+								<span class="help-block" th:if="${#fields.hasErrors('stats')}" th:errors="*{stats}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('hzActual')} ? 'has-error' : ''">
+								<label for="hzActual">hzActual</label>
+								<input type="text" class="form-control" id="hzActual"
+									name="hzActual" placeholder="hzActual" th:field="*{hzActual}" />
+								<span class="help-block" th:if="${#fields.hasErrors('hzActual')}" th:errors="*{hzActual}">Hata</span>
+							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('agentIds')} ? 'has-error' : ''">
 								<label>Ajan</label>
 								<select class="form-control" id="agentIds" name="agentIds" style="width: 100%;" th:field="*{agentIds}" multiple>

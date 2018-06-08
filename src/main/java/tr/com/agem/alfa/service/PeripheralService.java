@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import tr.com.agem.alfa.model.AgentPeripheralDevice;
 import tr.com.agem.alfa.model.PeripheralDevice;
+import tr.com.agem.alfa.repository.AgentPeripheralDeviceRepository;
 import tr.com.agem.alfa.repository.PeripheralRepository;
 
 /**
@@ -28,10 +30,12 @@ public class PeripheralService {
 	private EntityManager em;
 
 	private final PeripheralRepository peripheralRepository;
+	private final AgentPeripheralDeviceRepository agentPeripheralDeviceRepository;
 
 	@Autowired
-	public PeripheralService(PeripheralRepository peripheralRepository) {
+	public PeripheralService(PeripheralRepository peripheralRepository, AgentPeripheralDeviceRepository agentPeripheralDeviceRepository) {
 		this.peripheralRepository = peripheralRepository;
+		this.agentPeripheralDeviceRepository = agentPeripheralDeviceRepository;
 	}
 
 	public PeripheralDevice savePeripheralDevice(PeripheralDevice peripheralDevice) {
@@ -91,6 +95,17 @@ public class PeripheralService {
 		Assert.notNull(id, "ID must not be null.");
 		this.peripheralRepository.delete(id);
 	}
+	
+	public PeripheralDevice getPeripheralDevice(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.peripheralRepository.findOne(id);
+	}
+
+	public AgentPeripheralDevice getAgentPeripheralDevice(Long id) {
+		Assert.notNull(id, "ID must not be null");
+		return this.agentPeripheralDeviceRepository.findOne(id);
+	}
+
 
 	public PeripheralDevice getPeripheral(String tag) {
 		return this.peripheralRepository.findByTag(tag);

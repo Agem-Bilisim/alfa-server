@@ -18,6 +18,10 @@ public class PackageForm extends BaseForm implements OptionFormConvertable {
 	@NotEmpty
 	private String version;
 
+	private Boolean showInSurvey;
+
+	private Boolean institutional;
+	
 	public String getName() {
 		return name;
 	}
@@ -42,6 +46,22 @@ public class PackageForm extends BaseForm implements OptionFormConvertable {
 	@Override
 	public String getOptionValue() {
 		return ProblemReferenceType.PACKAGE.getId() + "-" + this.getId();
+	}
+
+	public Boolean getShowInSurvey() {
+		return showInSurvey;
+	}
+
+	public void setShowInSurvey(Boolean showInSurvey) {
+		this.showInSurvey = showInSurvey;
+	}
+
+	public Boolean getInstitutional() {
+		return institutional;
+	}
+
+	public void setInstitutional(Boolean institutional) {
+		this.institutional = institutional;
 	}
 
 }

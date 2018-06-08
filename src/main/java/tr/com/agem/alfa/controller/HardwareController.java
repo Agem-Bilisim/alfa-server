@@ -254,12 +254,7 @@ public class HardwareController {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
 			Cpu savedCpu = hardwareService.saveCpu(toCpuEntity(form, user.getUsername()));
-			// TODO
-//			Agent agent = form.getAgents().get(0);
-//			Query query = em.createNativeQuery("INSERT INTO c_agent_cpu_agent (agent_id, cpu_id) VALUES (:agentId, :cpuId)");
-//			query.setParameter("agentId", agent.getId());
-//			query.setParameter("cpuId", savedCpu.getId());
-//			query.executeUpdate();
+			hardwareService.saveCpu(savedCpu, form.getCpuTimes(), form.getFlags(), form.getStats(), form.getHzActual(), form.getAgentIds());
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save CPU, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -403,12 +398,15 @@ public class HardwareController {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
 			Bios biosEntity = toBiosEntity(form, user.getUsername());
+			hardwareService.saveBios(biosEntity);
 			if (form.getAgentIds() != null) {
 				for (Long agentId : form.getAgentIds()) {
-					biosEntity.addAgent(agentService.getAgent(agentId));
+					Query query = em.createNativeQuery("UPDATE c_agent SET bios_id = :biosId WHERE id = :agentId");
+					query.setParameter("biosId", biosEntity.getId());
+					query.setParameter("agentId", agentId);
+					query.executeUpdate();
 				}
 			}
-			hardwareService.saveBios(biosEntity);
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to save BIOS, assuming invalid parameters", e);
 			bindingResult.reject("unexpected", "Beklenmeyen hata oluştu.");
@@ -498,17 +496,24 @@ public class HardwareController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			Query query = em.createNativeQuery("DELETE FROM c_agent_cpu_agent WHERE cpu_id = :cpuId");
-			query.setParameter("cpuId", id);
-			query.executeUpdate();
 			Cpu cpuEntity = hardwareService.getCpu(id);
-			if (form.getAgentIds() != null) {
-				for (Long agentId : form.getAgentIds()) {
-					// TODO
-//					cpuEntity.addAgent(agentService.getAgent(agentId));
-				}
-			}
-			hardwareService.saveCpu(cpuEntity);
+			cpuEntity.setBrand(form.getBrand());
+			cpuEntity.setHzAdvertised(form.getHzAdvertised());
+			cpuEntity.setLogicalCoreCount(form.getLogicalCoreCount());
+			cpuEntity.setProcessor(form.getProcessor());
+			cpuEntity.setPyhsicalCoreCount(form.getPyhsicalCoreCount());
+			cpuEntity.setArch(form.getArch());
+			cpuEntity.setBits(form.getBits());
+			cpuEntity.setCount(form.getCount());
+			cpuEntity.setExtendedFamily(form.getExtendedFamily());
+			cpuEntity.setFamily(form.getFamily());
+			cpuEntity.setL2CacheAssociativity(form.getL2CacheAssociativity());
+			cpuEntity.setL2CacheLineSize(form.getL2CacheLineSize());
+			cpuEntity.setL2CacheSize(form.getL2CacheSize());
+			cpuEntity.setModel(form.getModel());
+			cpuEntity.setRawArchString(form.getRawArchString());
+			cpuEntity.setVendorId(form.getVendorId());
+			hardwareService.saveCpu(cpuEntity, form.getCpuTimes(), form.getFlags(), form.getStats(), form.getHzActual(), form.getAgentIds());
 		} catch (Exception e) {
 			log.warn("Exception occurred when trying to save the CPU", e);
 			bindingResult.reject("save.error",

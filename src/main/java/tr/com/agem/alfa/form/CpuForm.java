@@ -46,6 +46,14 @@ public class CpuForm extends BaseForm {
 
 	private String rawArchString;
 	
+	private String cpuTimes;
+
+	private String flags;
+
+	private String stats;
+
+	private String hzActual;
+	
 	private Long[] agentIds;
 
 	public String getBrand() {
@@ -184,5 +192,37 @@ public class CpuForm extends BaseForm {
 
 	public void setAgentIds(Long[] agentIds) {
 		this.agentIds = agentIds;
+	}
+
+	public String getCpuTimes() {
+		return cpuTimes;
+	}
+
+	public void setCpuTimes(String cpuTimes) {
+		this.cpuTimes = cpuTimes;
+	}
+
+	public String getFlags() {
+		return flags;
+	}
+
+	public void setFlags(String flags) {
+		this.flags = flags;
+	}
+
+	public String getStats() {
+		return stats;
+	}
+
+	public void setStats(String stats) {
+		this.stats = stats;
+	}
+
+	public String getHzActual() {
+		return hzActual;
+	}
+
+	public void setHzActual(String hzActual) {
+		this.hzActual = hzActual;
 	}
 }

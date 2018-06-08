@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Çevresel Cihaz Ekle</title>
+	<!-- iCheck -->
+	<link th:href="@{/plugins/iCheck/all.css}" rel="stylesheet" />
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li><a th:href="@{/peripheral/list}"><i class="fa fa-print"></i> Çevresel Cihazlar</a></li>
+		<li class="active">Çevresel Cihaz Düzenle</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">Çevresel Cihaz Düzenle</h3>
+					</div>
+					<form role="form" id="peripheralForm" th:action="@{'/peripheral/' + ${form.id}}" method="post" th:object="${form}">
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+    						<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+						</div>
+						<div class="box-body">
+							<div class="form-group" th:classappend="${#fields.hasErrors('tag')} ? 'has-error' : ''">
+								<label for="tag">Cihaz adı</label>
+								<input type="text" class="form-control" id="tag"
+									name="tag" placeholder="Etiket" th:field="*{tag}" />
+								<span class="help-block" th:if="${#fields.hasErrors('tag')}" th:errors="*{tag}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('deviceId')} ? 'has-error' : ''">
+								<label for="deviceId">Sistemde gözüken cihaz ID</label>
+								<input type="text" class="form-control" id="deviceId"
+									name="deviceId" placeholder="deviceId" th:field="*{deviceId}" />
+								<span class="help-block" th:if="${#fields.hasErrors('deviceId')}" th:errors="*{deviceId}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('devicePath')} ? 'has-error' : ''">
+								<label for="devicePath">Cihaz dizini</label>
+								<input type="text" class="form-control" id="devicePath"
+									name="devicePath" placeholder="devicePath" th:field="*{devicePath}" />
+								<span class="help-block" th:if="${#fields.hasErrors('devicePath')}" th:errors="*{devicePath}">Hata</span>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('agentIds')} ? 'has-error' : ''">
+								<label>Varsa ilişkili sistemler</label>
+								<select class="form-control" id="agentIds" name="agentIds" style="width: 100%;" th:field="*{agentIds}" multiple>
+									<option th:each="agent : ${agents}" th:text="${agent.hostName} + ' - ' + ${agent.ipAddresses}" th:value="${agent.id}"></option>
+								</select>
+								<span class="help-block" th:if="${#fields.hasErrors('agentIds')}" th:errors="*{agentIds}">Hata</span>
+							</div>
+							<div class="form-group">
+								<div class="checkbox">
+									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="showInSurvey"
+										id="showInSurvey" th:field="*{showInSurvey}"> Ankette gösterilebilir
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
+							<div class="btn-toolbar pull-right">
+								<button type="submit" class="btn btn-primary pull-right">Değişiklikleri Kaydet</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			// Return to list when cancel button is clicked
+			$('#cancelBtn').on("click", function() {
+				window.location.href = '/alfa/peripheral/list';
+			});
+			// Config checkbox
+			$('input[type="checkbox"].minimal').iCheck({
+		      checkboxClass: 'icheckbox_minimal-blue'
+		    });
+		});
+	</script>
+</body>
+</html>

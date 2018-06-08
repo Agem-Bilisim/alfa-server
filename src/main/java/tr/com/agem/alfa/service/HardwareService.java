@@ -2,6 +2,10 @@ package tr.com.agem.alfa.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +42,9 @@ public class HardwareService {
 	private final InetRepository inetRepository;
 	private final MemoryRepository memoryRepository;
 	private final PlatformRepository platformRepository;
+	
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
 	public HardwareService(BiosRepository biosRepository, CpuRepository cpuRepository, DiskRepository diskRepository,
@@ -141,6 +148,28 @@ public class HardwareService {
 		}
 		// Create
 		return this.cpuRepository.save(cpu);
+	}
+	
+	public void saveCpu(Cpu cpu, String cpuTimes, String flags, String stats, String hzActual, Long[] agentIds) {
+		Cpu c = this.saveCpu(cpu);
+		// Delete previous cross-table records
+		Query query = em.createNativeQuery("DELETE FROM c_agent_cpu_agent WHERE cpu_id = :cpuId");
+		query.setParameter("cpuId", c.getId());
+		query.executeUpdate();
+		// Insert cross-table records
+		if (agentIds != null) {
+			for (Long agentId : agentIds) {
+				Query query2 = em.createNativeQuery(
+						"INSERT INTO c_agent_cpu_agent (agent_id, cpu_id, cpu_times, flags, stats, hz_actual) VALUES (:agentId, :cpuId, :cpuTimes, :flags, :stats, :hzActual)");
+				query2.setParameter("agentId", agentId);
+				query2.setParameter("cpuId", c.getId());
+				query2.setParameter("cpuTimes", cpuTimes);
+				query2.setParameter("flags", flags);
+				query2.setParameter("stats", stats);
+				query2.setParameter("hzActual", hzActual);
+				query2.executeUpdate();
+			}
+		}
 	}
 
 	public Gpu saveGpu(Gpu gpu) {

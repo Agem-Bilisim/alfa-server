@@ -64,6 +64,8 @@ public class SoftwareService {
 			// Update
 			p.setName(_package.getName());
 			p.setVersion(_package.getVersion());
+			p.setShowInSurvey(_package.getShowInSurvey());
+			p.setInstitutional(_package.getInstitutional());
 			this.packageRepository.save(p);
 			return;
 		}

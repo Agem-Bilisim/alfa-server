@@ -130,7 +130,6 @@
 											<th>Marka</th>
 											<th>Versiyon</th>
 											<th>Çıkış Tarihi</th>
-											<th>İşlemler</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -316,12 +315,6 @@
 			];
 
 			// BIOS
-			var fnActionBtnsBios = function(row, type, val, meta) {
-				return "<div class=\"btn-group\" role=\"group\">" 
-					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/hardware/bios/" + row["id"] + "\"><i class=\"fa fa-edit\"></i></a>"
-					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/hardware/bios/" + row['id'] + "/delete', 'biosTable')\"><i class=\"fa fa-trash\"></i></button>" 
-					+ "</div>";
-			};
 			var drawCallbackBios = function(settings) {
 				if ($("#newBiosBtn").length == 0) {
 					$("#biosTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newBiosBtn\">Yeni</button>");
@@ -333,8 +326,7 @@
 			const colsBios = [
 				{"data": "vendor", "searchable": true, "orderable": true }, 
 				{"data": "version", "searchable": true, "orderable": true }, 
-				{"data": "releaseDate", "searchable": true, "orderable": true }, 
-				{"data": fnActionBtnsBios, "searchable": false, "orderable": false }
+				{"data": "releaseDate", "searchable": true, "orderable": true }
 			];
 
 			// NetworkInterface
