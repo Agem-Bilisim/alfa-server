@@ -4,11 +4,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +65,9 @@ import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
+import tr.com.agem.alfa.service.HardwareService;
+import tr.com.agem.alfa.service.PeripheralService;
+import tr.com.agem.alfa.service.SoftwareService;
 import tr.com.agem.alfa.service.SurveyService;
 import tr.com.agem.alfa.util.CommonUtils;
 
@@ -68,6 +75,7 @@ import tr.com.agem.alfa.util.CommonUtils;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Controller
+@Transactional(rollbackFor = Exception.class)
 public class AgentController {
 
 	private static final Logger log = LoggerFactory.getLogger(AgentController.class);
@@ -76,7 +84,13 @@ public class AgentController {
 	private final SurveyService surveyService;
 	private final MessagingService messagingService;
 	private final MessageSource messageSource;
+	private final HardwareService hardwareService;
+	private final SoftwareService softwareService;
+	private final PeripheralService peripheralService;
 	private final SysMapper sysMapper;
+	
+	@PersistenceContext
+	private EntityManager em;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
@@ -86,11 +100,14 @@ public class AgentController {
 
 	@Autowired
 	public AgentController(AgentService agentService, SurveyService surveyService, MessagingService messagingService,
-			MessageSource messageSource, SysMapper sysMapper) {
+			MessageSource messageSource, HardwareService hardwareService, SoftwareService softwareService, PeripheralService peripheralService, SysMapper sysMapper) {
 		this.agentService = agentService;
 		this.surveyService = surveyService;
 		this.messagingService = messagingService;
 		this.messageSource = messageSource;
+		this.hardwareService = hardwareService;
+		this.softwareService = softwareService;
+		this.peripheralService = peripheralService;
 		this.sysMapper = sysMapper;
 	}
 
@@ -241,7 +258,8 @@ public class AgentController {
 			disk.setVersion(d.getVersion());
 			disk.setProduct(d.getProduct());
 			disk.setSerial(d.getSerial());
-			agent.addDisk(disk);
+			Disk tmp = this.hardwareService.getDisk(disk.getProduct(), disk.getVersion());
+			agent.addDisk(tmp != null ? tmp : disk);
 		}
 		//
 		// Network interfaces
@@ -261,7 +279,8 @@ public class AgentController {
 			tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
 			mPackage.setName(_package.getName());
 			mPackage.setVersion(_package.getVersion());
-			agent.addInstalledPackage(mPackage);
+			tr.com.agem.alfa.model.InstalledPackage tmp = this.softwareService.getPackage(mPackage.getName(), mPackage.getVersion());
+			agent.addInstalledPackage(tmp != null ? tmp : mPackage);
 		}
 		//
 		// Memories
@@ -294,7 +313,8 @@ public class AgentController {
 		bios.setVendor(message.getBios().getVendor());
 		bios.setVersion(message.getBios().getVersion());
 		bios.setReleaseDate(message.getBios().getReleaseDate());
-		agent.setBios(bios);
+		tr.com.agem.alfa.model.Bios _tmp = this.hardwareService.getBios(bios.getVersion(), bios.getVendor());
+		agent.setBios(_tmp != null ? _tmp : bios);
 		//
 		// Platform
 		//
@@ -303,7 +323,8 @@ public class AgentController {
 		pl.setVersion(message.getPlatform().getVersion());
 		pl.setSystem(message.getPlatform().getSystem());
 		pl.setMachine(message.getPlatform().getMachine());
-		agent.setPlatform(pl);
+		Platform __tmp = this.hardwareService.getPlatform(pl.getSystem(), pl.getRelease());
+		agent.setPlatform(__tmp != null ? __tmp : pl);
 		//
 		// Users
 		//
@@ -311,17 +332,36 @@ public class AgentController {
 			for (String u : message.getUsers()) {
 				AgentUser user = new AgentUser();
 				user.setName(u);
-				agent.addUser(user);
+				AgentUser tmp = this.agentService.getAgentUser(user.getName());
+				agent.addUser(tmp != null ? tmp : user);
 			}
 		}
 		//
 		// Processes
 		//
 		if (message.getProcesses() != null) {
+			agent.getAgentRunningProcesses().clear();
+			if (agent.getAgentRunningProcesses() != null) {
+				Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
+				while (it.hasNext()) {
+					AgentRunningProcess _p = it.next();
+					if (_p.getId() != null) {
+						this.em.createNativeQuery(
+								"DELETE FROM c_agent_process_agent WHERE AGENT_PROCESS_AGENT_ID = :id")
+								.setParameter("id", _p.getId()).executeUpdate();
+						this.em.flush();
+						it.remove();
+					} else {
+						this.em.merge(_p);
+					}
+				}
+			}
 			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
 
 				RunningProcess process = new RunningProcess();
 				process.setName(p.getName());
+				RunningProcess tmp = this.softwareService.getProcess(process.getName());
+				process = tmp != null ? tmp : process;
 
 				AgentRunningProcess cross = new AgentRunningProcess();
 				cross.setCpuPercent(p.getCpuPercent() != null ? p.getCpuPercent().toString() : null);
@@ -339,6 +379,20 @@ public class AgentController {
 		// CPU
 		//
 		if (message.getCpu() != null) {
+			// Remove CPUs
+			if (agent.getAgentCpus() != null) {
+				Iterator<AgentCpu> it = agent.getAgentCpus().iterator();
+				while (it.hasNext()) {
+					AgentCpu _c = it.next();
+					if (_c.getId() != null) {
+						this.em.remove(_c);
+						this.em.flush();
+						it.remove();
+					} else {
+						this.em.persist(_c);
+					}
+				}
+			}
 			Cpu cpu = new Cpu();
 			cpu.setArch(message.getCpu().getArch());
 			cpu.setBits(message.getCpu().getBits() != null ? message.getCpu().getBits().toString() : null);
@@ -379,10 +433,26 @@ public class AgentController {
 		// Peripherals
 		//
 		if (message.getPeripheralDevices() != null) {
+			// Remove peripherals
+			if (agent.getAgentPeripheralDevices() != null) {
+				Iterator<AgentPeripheralDevice> it = agent.getAgentPeripheralDevices().iterator();
+				while (it.hasNext()) {
+					AgentPeripheralDevice _p = it.next();
+					if (_p.getId() != null) {
+						this.em.remove(_p);
+						this.em.flush();
+						it.remove();
+					} else {
+						this.em.persist(_p);
+					}
+				}
+			}
 			for (tr.com.agem.alfa.agent.sysinfo.PeripheralDevice p : message.getPeripheralDevices()) {
 				PeripheralDevice peripheral = new PeripheralDevice();
 				peripheral.setShowInSurvey(false);
 				peripheral.setTag(p.getTag());
+				PeripheralDevice tmp = this.peripheralService.getPeripheral(peripheral.getTag());
+				peripheral = tmp != null ? tmp : peripheral;
 
 				AgentPeripheralDevice cross = new AgentPeripheralDevice();
 				cross.setDeviceId(p.getDevice());

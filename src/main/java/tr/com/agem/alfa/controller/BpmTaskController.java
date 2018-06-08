@@ -90,11 +90,11 @@ public class BpmTaskController
 		return "redirect:/bpm-process/" + processId;
 	}
 	
-//	@RequestMapping("/bpm-task/list")
-//	public ResponseEntity<?>  listTasks(Authentication authentication) 
-//	{
-//		RestResponseBody result = new RestResponseBody();
-//		
+	@RequestMapping("/bpm-task/list")
+	public ResponseEntity<?>  listTasks(Authentication authentication) 
+	{
+		RestResponseBody result = new RestResponseBody();
+		
 //		try {
 //			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 //			List<String> role = new ArrayList<String>();
@@ -131,9 +131,9 @@ public class BpmTaskController
 //			result.setMessage(e.getMessage());
 //			return ResponseEntity.badRequest().body(result);
 //		}
-//		
-//		return ResponseEntity.ok(result);
-//	}
+		
+		return ResponseEntity.ok(result);
+	}
 	
 	@RequestMapping("/bpm-task/list-all")
 	public String getListPage() {
