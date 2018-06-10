@@ -2,6 +2,7 @@ package tr.com.agem.alfa.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -16,7 +17,7 @@ public class SurveyResult extends BaseModel {
 
 	private static final long serialVersionUID = 1881803300273251270L;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "AGENT_ID", nullable = false)
 	private Agent agent;
 
