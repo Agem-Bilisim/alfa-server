@@ -44,6 +44,7 @@ import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
 import tr.com.agem.alfa.model.enums.ProblemReferenceType;
+import tr.com.agem.alfa.service.BpmProcessService;
 import tr.com.agem.alfa.service.HardwareService;
 import tr.com.agem.alfa.service.PeripheralService;
 import tr.com.agem.alfa.service.ProblemService;
@@ -63,6 +64,7 @@ public class ProblemController {
 	private final SoftwareService softwareService;
 	private final HardwareService hardwareService;
 	private final PeripheralService peripheralService;
+	private final BpmProcessService bpmProcessService;
 	private final MessageSource messageSource;
 	private final SysMapper mapper;
 
@@ -74,12 +76,13 @@ public class ProblemController {
 
 	@Autowired
 	public ProblemController(ProblemService problemService, SoftwareService softwareService,
-			HardwareService hardwareService, PeripheralService peripheralService, MessageSource messageSource,
+			HardwareService hardwareService, PeripheralService peripheralService, BpmProcessService bpmProcessService, MessageSource messageSource,
 			SysMapper mapper) {
 		this.problemService = problemService;
 		this.softwareService = softwareService;
 		this.hardwareService = hardwareService;
 		this.peripheralService = peripheralService;
+		this.bpmProcessService = bpmProcessService;
 		this.messageSource = messageSource;
 		this.mapper = mapper;
 	}
@@ -199,7 +202,8 @@ public class ProblemController {
 	}
 
 	@GetMapping("/problem/list")
-	public String getListPage() {
+	public String getListPage(Model model) {
+		model.addAttribute("processes", bpmProcessService.getDeployedBpmProcesses());
 		return "problem/list";
 	}
 

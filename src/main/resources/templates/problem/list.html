@@ -41,14 +41,35 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Process Selection Modal -->
+		<div layout:insert="layouts/default-modal :: modal(modalId='processSelectModal', modalHeader='Süreç Başlat', modalButton='Başlat')"
+			th:remove="tag">
+			<div layout:fragment="modal-content" class="form-group">
+				<select class="form-control" id="bpmProcess" name="bpmProcess" style="width: 100%;">
+					<option th:each="process : ${processes}" th:text="${process.name + ' [' + process.version + ']'}" th:value="${process.id}"></option>
+				</select>
+			</div>
+		</div>	
+			
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
 		var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy';
 		
+		var startProcess = function(id) {
+			$("#processSelectModalBtn").on("click", function(){
+				$('#processSelectModal').modal('hide');
+				window.location.href = "/alfa/bpm-task/startForm/" + $("#bpmProcess").val() + "?relatedComponent=Sorun&relatedComponentId="+id + "&redirect=problem%2Flist";
+			});
+			
+			$('#processSelectModal').modal('show');
+		};
+
 		$(function() {
-			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?redirect=problem/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
-			};
+				var fnActionBtns = function(row, type, val, meta) {
+					return "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?redirect=problem/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>" +
+					   "<button class=\"btn btn-outline-dark\" onclick=\"startProcess("+ row['id']+")\"><i class=\"fa fa-step-forward\"></i> Süreç Başlat</button>";
+				};
 			
 			var drawCallback = function(settings) {
 				if ($("#newProblemBtn").length == 0) {
@@ -76,6 +97,7 @@
 			
 			$('#problemTable').paginatedTable("/alfa/problem/list-paginated", "problems", cols, drawCallback);
 		});
+		
 	</script>
 </body>
 </html>

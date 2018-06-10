@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class BpmTaskController
 
 	@RequestMapping("/bpm-task/startForm/{processId}")
 	public ModelAndView getProcessStartForm(@PathVariable Long processId, @RequestParam(required=false, value="relatedComponent") String component, 
-			@RequestParam(required = false, value="relatedComponentId") Long componentId) 
+			@RequestParam(required = false, value="relatedComponentId") Long componentId, @RequestParam(required=false, value="redirect") String redirect) 
 	{
 		checkNotNull(processId, "Invalid process id");
 		
@@ -68,6 +69,7 @@ public class BpmTaskController
 		form.setFormString(formString);
 		form.setProcessId(bpmn.getId());
 		form.setProcessName(bpmn.getName());
+		form.setRedirect(redirect);
 		
 		return new ModelAndView("bpm-task/start", "form", form);
 	}
@@ -87,7 +89,7 @@ public class BpmTaskController
 
 		log.debug("The bpm process is started: {} ", bpmn.getProcessDeploymentId());
 		
-		return "redirect:/bpm-process/" + processId;
+		return "redirect:/" + (StringUtils.trimToNull(queryMap.get("redirect")) == null ?  ("bpm-process/" + processId) : queryMap.get("redirect").toString());
 	}
 	
 	@RequestMapping("/bpm-task/list")
@@ -102,27 +104,30 @@ public class BpmTaskController
 			
 			List<BpmTaskForm> list = new ArrayList<BpmTaskForm>();
 			
-			List<Task> tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getUsername(), role);
-			if (tasks != null) {
-				for (Task t : tasks) {
-					BpmTaskForm f = new BpmTaskForm();
-					f.setTaskId(t.getId());
-					f.setTaskDescription(t.getDescription());
-					f.setCreatedDate(t.getCreateTime());
-					list.add(f);
+			if (user != null && user.getUsername() != null) {
+				List<Task> tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getUsername(), role);
+				if (tasks != null) {
+					for (Task t : tasks) {
+						BpmTaskForm f = new BpmTaskForm();
+						f.setTaskId(t.getId());
+						f.setTaskDescription(t.getDescription());
+						f.setCreatedDate(t.getCreateTime());
+						list.add(f);
+					}
 				}
+				
+				tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getId().toString(), null);
+				if (tasks != null) {
+					for (Task t : tasks) {
+						BpmTaskForm f = new BpmTaskForm();
+						f.setTaskId(t.getId());
+						f.setTaskDescription(t.getDescription());
+						f.setCreatedDate(t.getCreateTime());
+						list.add(f);
+					}
+				}			
 			}
 			
-			tasks = AlfaBpmnProcessEngine.getInstance().getTasksInvolved(user.getId().toString(), null);
-			if (tasks != null) {
-				for (Task t : tasks) {
-					BpmTaskForm f = new BpmTaskForm();
-					f.setTaskId(t.getId());
-					f.setTaskDescription(t.getDescription());
-					f.setCreatedDate(t.getCreateTime());
-					list.add(f);
-				}
-			}			
 			
 			result.add("tasks",  new PageImpl<BpmTaskForm>(list));
 			

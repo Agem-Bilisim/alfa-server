@@ -25,6 +25,7 @@
 						<h3 class="box-title" th:text="${form.processName}"></h3>
 					</div>
 					<form role="form" id="taskForm" th:action="@{'/bpm-task/start/' + ${form.processId}}" method="post" enctype="multipart/form-data">
+						<input type="hidden" id="redirect" name="redirect" th:value="@{${form.redirect}}" />
 						<input type="hidden" id="pact_component" name="pact_component" th:value="@{${form.relatedComponent}}" />
 						<input type="hidden" id="pact_componentId" name="pact_componentId" th:value="@{${form.relatedComponentId}}" />
 						<div class="box-body">

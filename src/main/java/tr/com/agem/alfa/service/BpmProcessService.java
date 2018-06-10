@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,5 +66,14 @@ public class BpmProcessService {
 		Assert.notNull(id, "ID must not be null.");
 		this.bpmProcessRepository.delete(id);
 	}
+	
+	public List<BpmProcess> getBpmProcesses() {
+		return this.bpmProcessRepository.findAll();
+	}
 
+	public List<BpmProcess> getDeployedBpmProcesses() {
+		return this.bpmProcessRepository.findAllDeployed();
+	}
+
+	
 }

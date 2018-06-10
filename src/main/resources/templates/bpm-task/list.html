@@ -36,10 +36,13 @@
 			</div>
 		</div>
 	</div>
+	
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/bpm-task/get/" + row["taskId"] + "\"><i class=\"fa fa-edit\"></i> Git</a>";
+				return "<div class=\"btn-group\" role=\"group\">" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/bpm-task/get/" + row["taskId"] + "\"><i class=\"fa fa-step-forward\"></i> Göreve Git</a>"
+				+ "</div>";
 			};
 			
 			var drawCallback = function(settings) {
@@ -51,7 +54,70 @@
 				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
-			$('#processTable').paginatedTable("/alfa/bpm-task/list", "tasks", cols, drawCallback);
+//			$('#processTable').DataTable("/alfa/bpm-task/list", "tasks", cols, drawCallback);
+			var url = "/alfa/bpm-task/list";
+			var resultingProp = "tasks";
+			$('#processTable').DataTable({
+				"paging": false,
+				"filter" : false,
+				"ajax": function(data, callback, settings) {
+					var finalUrl = url;
+					var drawCount = data.draw;
+					$.ajax({
+						type: "GET",
+						contentType: "application/json",
+						url: finalUrl,
+						cache: false,
+						timeout: 600000,
+						beforeSend: function(xhr) {
+							var token = $('#_csrf').attr('content');
+							var header = $('#_csrf_header').attr('content');
+							xhr.setRequestHeader(header, token);
+						},
+						success: function(result) {
+							if (result && result.data) {
+								callback({
+									"draw": drawCount,
+									"recordsTotal": result.data[resultingProp].totalElements ? result.data[resultingProp].totalElements : result.data[resultingProp].length,
+									"recordsFiltered": result.data[resultingProp].totalElements ? result.data[resultingProp].totalElements : result.data[resultingProp].length,
+									"data": result.data[resultingProp].content ? result.data[resultingProp].content : result.data[resultingProp]
+								});
+							}
+						},
+						error: function(result) {
+							callback({
+								"error": "Unexpected error occurred."
+							});
+						} 
+					});
+				},
+				"language": {
+				    "sDecimal":        ",",
+				    "sEmptyTable":     "Tabloda herhangi bir veri mevcut değil",
+				    "sInfo":           "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+				    "sInfoEmpty":      "Kayıt yok",
+				    "sInfoFiltered":   "(_MAX_ kayıt içerisinden bulunan)",
+				    "sInfoPostFix":    "",
+				    "sInfoThousands":  ".",
+				    "sLengthMenu":     "Sayfada _MENU_ kayıt göster",
+				    "sLoadingRecords": "Yükleniyor...",
+				    "sProcessing":     "İşleniyor...",
+				    "sSearch":         "Ara:",
+				    "sZeroRecords":    "Eşleşen kayıt bulunamadı",
+				    "oPaginate": {
+				        "sFirst":    "İlk",
+				        "sLast":     "Son",
+				        "sNext":     "Sonraki",
+				        "sPrevious": "Önceki"
+				    },
+				    "oAria": {
+				        "sSortAscending":  ": artan sütun sıralamasını aktifleştir",
+				        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
+				    }
+				},
+				"columns": cols,
+				"drawCallback": drawCallback
+			});
 		});
 	</script>
 </body>

@@ -49,5 +49,4 @@ public class BpmTaskStartForm extends BaseForm {
 		this.formString = formString;
 	}
 
-
 }
