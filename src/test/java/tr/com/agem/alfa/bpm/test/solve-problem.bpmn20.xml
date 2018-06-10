@@ -5,6 +5,7 @@
       <extensionElements>
         <activiti:formProperty id="responsibleRole" name="Sorumlu Rol" type="role" variable="responsibleRole"></activiti:formProperty>
         <activiti:formProperty id="explanation" name="Açıklama" type="textbox" variable="explanation" datePattern="dd/mm/yyyy"></activiti:formProperty>
+        <activiti:formProperty id="startDate" name="Başlama Tarihi" type="date" variable="startDate"></activiti:formProperty>
         <activiti:formProperty id="estimatedDate" name="Tahmini Bitiş Tarihi" type="date" variable="estimatedDate"></activiti:formProperty>
         <activiti:formProperty id="notes" name="Notlar" type="textarea" variable="notes">
           <activiti:value id="width" name="500"></activiti:value>
