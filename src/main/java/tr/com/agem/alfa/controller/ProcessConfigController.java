@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -88,11 +90,46 @@ public class ProcessConfigController {
 		return new ModelAndView("bpm-process/edit", "form", toBpmProcessForm(_bpmProcess));
 	}
 
-	@GetMapping("/bpm-process/deploy/{id}")
+	@RequestMapping("/bpm-process/{id}/delete")
+	public ResponseEntity<?> deleteProcess(@PathVariable Long id, @RequestParam(value = "undeploy", required = false) String undeploy) 
+	{
+		
+		RestResponseBody result = new RestResponseBody();
+		
+		try {
+			BpmProcess _bpmProcess = bpmProcessService.getBpmProcess(id);
+			
+			checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
+			
+			bpmProcessService.delete(id);;
+			
+			if ("true".equals(undeploy) && _bpmProcess.getProcessDeploymentId() != null) {
+				try {
+					ProcessDefinition process = AlfaBpmnProcessEngine.getInstance().getProcessEngine().getRepositoryService().getProcessDefinition(_bpmProcess.getProcessDeploymentId());
+					if (process != null) {
+						AlfaBpmnProcessEngine.getInstance().deleteProcessDeploymentsById(process.getDeploymentId());
+					}
+				} catch (ActivitiObjectNotFoundException e) {
+					log.error(_bpmProcess.getProcessDeploymentId() + " : process with id is not found...");
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);			
+		}
+		
+		return  ResponseEntity.ok(result);
+		
+	}
+
+	
+	@RequestMapping("/bpm-process/deploy/{id}")
 	public ModelAndView deploy(@PathVariable Long id, Authentication authentication) {
 		BpmProcess _bpmProcess = bpmProcessService.getBpmProcess(id);
 		
 		checkNotNull(_bpmProcess, String.format("Process:%d not found.", id));
+		
+		checkNotNull(_bpmProcess.getContent(), String.format("Process definition not found. (%d)", id));
 		
 		ProcessDefinition deployment = AlfaBpmnProcessEngine.getInstance()
 				.deployModelProcessDefinition(_bpmProcess.getName(), "process_" + _bpmProcess.getId() + ".bpmn20.xml", new String(_bpmProcess.getContent()));

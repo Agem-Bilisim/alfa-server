@@ -35,12 +35,58 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Delete confirmation modal -->
+		<div
+			layout:insert="layouts/default-modal :: modal(modalId='deleteConfirmModal', modalHeader='Kayıt silinecek?', modalButton='Devam')"
+			th:remove="tag">
+			<p layout:fragment="modal-content">
+				Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?<br/>
+				<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="undeploy" id="undeploy"> Sürecin başlatılan ve biten olgularını da sil ve sistemden kaldır.</label>
+			</p>
+		</div>
+		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		var tables = {};
+		
+		var handleDelete = function(url, tableToRefresh) {
+			$("#deleteConfirmModalBtn").on("click", function(){
+				$('#deleteConfirmModal').modal('hide');
+				
+				if ($("#undeploy").is(':checked')) {
+					url = url + '?undeploy=true';
+				}
+				
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : url,
+					dataType : 'json',
+					cache : false,
+					timeout : 600000,
+					beforeSend: function(xhr) {
+						var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						alertify.success('Süreç kaydı silindi, sistemden kaldırıldı.');
+						tables.processTable.ajax.reload();
+					}
+				});
+			});
+			$('#deleteConfirmModal').modal('show');
+		};
+	
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn\" href=\"/alfa/bpm-process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a> &nbsp;&nbsp;"
-				       +  (!row.processDeploymentId ? "<a class=\"btn\" href=\"/alfa/bpm-process/deploy/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Deploy</a>" : "");
+				return "<div class=\"btn-group\" role=\"group\">" 
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/bpm-process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a> "
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/bpm-process/" + row['id'] + "/delete', 'processTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
+				+  (!row.processDeploymentId ? "<button class=\"btn btn-outline-danger\" onclick=\"/alfa/bpm-process/deploy/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Deploy</button>" : "")	
+				+  (row.processDeploymentId ? "<a class=\"btn btn-outline-dark\" href=\"/alfa/bpm-task/startForm/" + row["id"] + "\"><i class=\"fa fa-step-forward\"></i> Start</a>" : "")
+				+ "</div>";
 			};
 			
 			var drawCallback = function(settings) {
@@ -58,7 +104,8 @@
 				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
 			
-			$('#processTable').paginatedTable("/alfa/bpm-process/list-paginated", "processes", cols, drawCallback);
+			tables.processTable = $('#processTable').paginatedTable("/alfa/bpm-process/list-paginated", "processes", cols, drawCallback);
+			
 		});
 	</script>
 </body>

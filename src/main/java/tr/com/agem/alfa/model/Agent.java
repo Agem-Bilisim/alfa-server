@@ -54,6 +54,7 @@ public class Agent extends BaseModel {
 	@Column(name = "MAC_ADDRESSES", nullable = false, unique = true)
 	private String macAddresses; // network.mac_addresses
 
+	// windows'dan linux'e geçiş tarihi
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_INSTALLATION_DATE", nullable = false)
 	private Date lastInstallationDate;

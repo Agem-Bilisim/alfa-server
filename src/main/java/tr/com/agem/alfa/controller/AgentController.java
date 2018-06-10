@@ -139,9 +139,20 @@ public class AgentController {
 			result.setMessage(error);
 			return ResponseEntity.badRequest().body(result);
 		}
+		boolean oldWindows = false;
 		try {
 			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
+
+			if (agent != null && AgentType.WINDOWS_BASED.equals(agent.getType())) {
+				oldWindows= true;
+			}
+			
 			agent = toAgentEntity(message, agent);
+			
+			if (AgentType.DEBIAN_BASED.equals(agent.getType()) && oldWindows) {
+				agent.setLastInstallationDate(new Date());
+			}
+			
 			agentService.saveOrUpdate(agent, true);
 			log.info("Agent and its system info created/updated successfully.");
 		} catch (Exception e) {
@@ -246,7 +257,6 @@ public class AgentController {
 				.toArray(new String[message.getNetwork().getIpAddresses().size()])));
 		agent.setMacAddresses(CommonUtils.join(",", message.getNetwork().getMacAddresses()
 				.toArray(new String[message.getNetwork().getMacAddresses().size()])));
-		agent.setLastInstallationDate(new Date());
 		agent.setSysinfo(new ObjectMapper().writeValueAsBytes(message));
 		//
 		// Disk
