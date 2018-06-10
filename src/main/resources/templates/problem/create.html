@@ -40,6 +40,26 @@
 									placeholder="Açıklama" th:field="*{description}"></textarea>
 								<span class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Hata</span>
 							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('workStartDate')} ? 'has-error' : ''">
+								<label for="workStartDate">Çalışma başlangıç tarihi</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" id="workStartDate"
+										name="workStartDate" th:field="*{workStartDate}" />
+								</div>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('estimatedSolutionDate')} ? 'has-error' : ''">
+								<label for="estimatedSolutionDate">Tahmini bitiş tarihi</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" id="estimatedSolutionDate"
+										name="estimatedSolutionDate" th:field="*{estimatedSolutionDate}" />
+								</div>
+							</div>
 							<div class="form-group" th:classappend="${#fields.hasErrors('references')} ? 'has-error' : ''">
 								<label>Varsa soruna ilişkin yazılım/donanım</label>
 								<select class="form-control" id="references" name="references" style="width: 100%;" th:field="*{strReferences}" multiple>
@@ -52,6 +72,16 @@
 									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="solved"
 										id="solved" th:field="*{solved}"> Sorun çözüldü mü?
 									</label>
+								</div>
+							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('solutionDate')} ? 'has-error' : ''">
+								<label for="solutionDate">Sorun çözülme tarihi</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" id="solutionDate"
+										name="solutionDate" th:field="*{solutionDate}" />
 								</div>
 							</div>
 						</div>
@@ -78,6 +108,12 @@
 			$('input[type="checkbox"].minimal').iCheck({
 		      checkboxClass: 'icheckbox_minimal-blue'
 		    });
+			
+			$(".datepicker").datepicker({
+				todayHighlight: true,
+				autoclose: true
+			});
+			$.datepicker.regional['tr'];
 		});
 	</script>
 </body>

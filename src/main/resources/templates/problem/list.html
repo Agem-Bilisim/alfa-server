@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/dashboard">
+<head>
+	<title>Sorun Listesi</title>
+	<!-- DataTables -->
+	<link th:href="@{/plugins/DataTables/datatables.min.css}" rel="stylesheet" />
+</head>
+<body>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Sorun Listesi</li>
+	</th:block>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Sorun Listesi</h3>
+					</div>
+					<div class="box-body">
+						<table id="problemTable" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Kısa tanım</th>
+									<th>Durum</th>
+									<th>Başlangıç tarihi</th>
+									<th>Tahmini bitiş tarihi</th>
+									<th>İlişkili olduğu çevresel birimler</th>
+									<th>İlişkili olduğu donanımlar</th>
+									<th>İlişkili olduğu yazılım</th>
+									<th>İşlem</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script layout:fragment="custom-script" th:inline="javascript">
+		$(function() {
+			var fnActionBtns = function(row, type, val, meta) {
+				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+			};
+			
+			var drawCallback = function(settings) {
+				if ($("#newProblemBtn").length == 0) {
+					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
+					$("#newProblemBtn").on("click", function() {
+						window.location.href = '/alfa/problem/create';
+					});
+				}
+			};
+			
+			const cols = [
+				{"data": "label", "searchable": true, "orderable": true }, 
+				{"data": "solved", "searchable": true, "orderable": true }, 
+				{"data": "workStartDate", "searchable": true, "orderable": true }, 
+				{"data": "estimatedSolutionDate", "searchable": true, "orderable": true }, 
+				{"data": "relatedPeripherals", "searchable": false, "orderable": false }, 
+				{"data": "relatedHardwares", "searchable": false, "orderable": false }, 
+				{"data": "relatedSoftwares", "searchable": false, "orderable": false }, 
+				{"data": fnActionBtns, "searchable": false, "orderable": false }
+			];
+			
+			$('#problemTable').paginatedTable("/alfa/problem/list-paginated", "problems", cols, drawCallback);
+		});
+	</script>
+</body>
+</html>

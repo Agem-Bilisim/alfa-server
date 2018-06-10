@@ -1,6 +1,7 @@
 package tr.com.agem.alfa.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +23,43 @@ public class ProblemForm extends BaseForm {
 
 	private Boolean solved;
 
+	private Date estimatedSolutionDate;
+
+	private Date workStartDate;
+
+	private Date solutionDate;
+
+	private String relatedPeripherals;
+
+	private String relatedHardwares;
+
+	private String relatedSoftwares;
+
 	private String[] strReferences;
 
 	private Set<ProblemReferenceForm> references = new HashSet<ProblemReferenceForm>(0);
+
+	public ProblemForm() {
+	}
+
+	public ProblemForm(Long id, Date createdDate, String createdBy, Date lastModifiedDate, String lastModifiedBy,
+			String label, String description, Boolean solved, Date estimatedSolutionDate, Date workStartDate,
+			Date solutionDate, String relatedPeripherals, String relatedHardwares, String relatedSoftwares) {
+		this.setId(id);
+		this.setCreatedDate(createdDate);
+		this.setCreatedBy(createdBy);
+		this.setLastModifiedDate(lastModifiedDate);
+		this.setLastModifiedBy(lastModifiedBy);
+		this.label = label;
+		this.description = description;
+		this.solved = solved;
+		this.estimatedSolutionDate = estimatedSolutionDate;
+		this.workStartDate = workStartDate;
+		this.solutionDate = solutionDate;
+		this.relatedPeripherals = relatedPeripherals;
+		this.relatedHardwares = relatedHardwares;
+		this.relatedSoftwares = relatedSoftwares;
+	}
 
 	public String getLabel() {
 		return label;
@@ -78,6 +113,54 @@ public class ProblemForm extends BaseForm {
 			this.references = new HashSet<>(_references);
 		}
 		this.strReferences = strReferences;
+	}
+
+	public Date getEstimatedSolutionDate() {
+		return estimatedSolutionDate;
+	}
+
+	public void setEstimatedSolutionDate(Date estimatedSolutionDate) {
+		this.estimatedSolutionDate = estimatedSolutionDate;
+	}
+
+	public Date getWorkStartDate() {
+		return workStartDate;
+	}
+
+	public void setWorkStartDate(Date workStartDate) {
+		this.workStartDate = workStartDate;
+	}
+
+	public String getRelatedPeripherals() {
+		return relatedPeripherals;
+	}
+
+	public void setRelatedPeripherals(String relatedPeripherals) {
+		this.relatedPeripherals = relatedPeripherals;
+	}
+
+	public String getRelatedHardwares() {
+		return relatedHardwares;
+	}
+
+	public void setRelatedHardwares(String relatedHardwares) {
+		this.relatedHardwares = relatedHardwares;
+	}
+
+	public String getRelatedSoftwares() {
+		return relatedSoftwares;
+	}
+
+	public void setRelatedSoftwares(String relatedSoftwares) {
+		this.relatedSoftwares = relatedSoftwares;
+	}
+
+	public Date getSolutionDate() {
+		return solutionDate;
+	}
+
+	public void setSolutionDate(Date solutionDate) {
+		this.solutionDate = solutionDate;
 	}
 
 }
