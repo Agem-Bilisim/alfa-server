@@ -56,7 +56,7 @@ public class Agent extends BaseModel {
 
 	// windows'dan linux'e geçiş tarihi
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_INSTALLATION_DATE", nullable = false)
+	@Column(name = "LAST_INSTALLATION_DATE")
 	private Date lastInstallationDate;
 
 	@JsonIgnore

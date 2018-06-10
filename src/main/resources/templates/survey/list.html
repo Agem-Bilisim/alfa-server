@@ -81,7 +81,7 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		// Hook handler for sending survey
 		var handleSend = function(surveyId) {
-			$("#sendSurveyModalBtn").on("click", function(){
+			$("#sendSurveyModalBtn").off("click").on("click", function(){
 				$('#sendSurveyModal').modal('hide');
 				for (var i=0; i < $("#agents").val().length; i++) {
 					var messagingId = $("#agents").val()[i];
@@ -111,7 +111,7 @@
 		var handleResult = function(surveyId) {
 			SurveyEditor.editorLocalization.currentLocale = "tr";
 			SurveyEditor.StylesManager.applyTheme("bootstrap");
-			$("#agents_result").on("change", function(){
+			$("#agents_result").off("change").on("change", function(){
 				var messagingId = $("#agents_result").val();
 				if (!messagingId) {
 					alertify.warning("Geçerli bir ajan kaydı seçiniz.");
@@ -144,6 +144,7 @@
 					}
 				});
 			});
+			$("#surveyElement").html("");
 			$('#surveyResultModal').modal('show');
 		};
 		

@@ -302,7 +302,10 @@
 				{"searchable": false, "orderable": false, "render": fnCheckboxBtnsAgent },
 				{"data": "hostName", "searchable": true, "orderable": true }, 
 				{"data": "ipAddresses", "searchable": true, "orderable": true }, 
-				{"data": "macAddresses", "searchable": true, "orderable": true }, 
+				{"data": function(row){  
+					row["macAddressesStr"] = (row["macAddresses"].length > 40 ? row["macAddresses"].substring(0, 40) + "..." : row["macAddresses"]);
+					return row["macAddressesStr"]; 
+				}, "searchable": true, "orderable": true }, 
 				{"data": "platform.system", "searchable": true, "orderable": true }, 
 				{"data": "tagsStr", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtnsAgent, "searchable": false, "orderable": false }

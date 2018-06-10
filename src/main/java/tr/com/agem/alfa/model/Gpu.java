@@ -26,7 +26,7 @@ public class Gpu extends BaseModel {
 	@Column(name = "KERNEL", nullable = false, length = 100)
 	private String kernel;
 
-	@Column(name = "MEMORY", nullable = false, length = 20)
+	@Column(name = "MEMORY", nullable = false, length = 200)
 	private String memory;
 
 	@Column(name = "DRIVER_DATE", length = 100)
