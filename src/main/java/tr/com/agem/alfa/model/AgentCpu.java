@@ -75,7 +75,7 @@ public class AgentCpu implements Serializable {
 	}
 
 	public void setCommaSeparatedFlags(String commaSeparatedFlags) {
-		this.commaSeparatedFlags = commaSeparatedFlags;
+		this.commaSeparatedFlags = commaSeparatedFlags.substring(0, 499);
 	}
 
 	public Long getId() {

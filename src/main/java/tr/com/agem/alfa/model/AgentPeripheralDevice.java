@@ -80,4 +80,24 @@ public class AgentPeripheralDevice implements Serializable {
 		this.peripheralDevice = peripheralDevice;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((peripheralDevice == null) ? 0 : peripheralDevice.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		AgentPeripheralDevice other = (AgentPeripheralDevice) obj;
+		if (peripheralDevice == null) {
+			if (other.peripheralDevice != null) return false;
+		} else if (!peripheralDevice.equals(other.peripheralDevice)) return false;
+		return true;
+	}
+
 }

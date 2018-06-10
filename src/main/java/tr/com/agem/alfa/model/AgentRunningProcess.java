@@ -115,4 +115,24 @@ public class AgentRunningProcess implements Serializable {
 		this.runningProcess = runningProcess;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((runningProcess == null) ? 0 : runningProcess.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		AgentRunningProcess other = (AgentRunningProcess) obj;
+		if (runningProcess == null) {
+			if (other.runningProcess != null) return false;
+		} else if (!runningProcess.equals(other.runningProcess)) return false;
+		return true;
+	}
+
 }
