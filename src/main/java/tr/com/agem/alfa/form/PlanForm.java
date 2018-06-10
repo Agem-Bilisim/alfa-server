@@ -1,6 +1,11 @@
 package tr.com.agem.alfa.form;
 
-public class PlanForm {
+import java.io.Serializable;
+
+public class PlanForm implements Serializable {
+
+	private static final long serialVersionUID = 7351302012260021638L;
+
 	private TagForm[] tags;
 
 	public TagForm[] getTags() {

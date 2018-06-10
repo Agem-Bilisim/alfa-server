@@ -66,7 +66,7 @@ public class MonitorController {
 		return ResponseEntity.ok(result);
 	}
 	
-	@PostMapping("plan/save")
+	@PostMapping("/plan/save")
 	public ResponseEntity<?> handleSavePlan(@RequestBody PlanForm plan, Authentication authentication) {
 		RestResponseBody result = new RestResponseBody();
 		try {
