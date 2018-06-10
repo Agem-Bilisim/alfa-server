@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -22,6 +24,7 @@ public class LdapUserAttribute extends BaseModel {
 	@Column(name = "VALUE", nullable = false)
 	private String value;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "LDAP_USER_ID", nullable = false)
 	private LdapUser ldapUser;

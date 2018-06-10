@@ -18,7 +18,7 @@ public class ProblemForm extends BaseForm {
 	private String label;
 
 	@NotEmpty
-	private String description;
+	private String description = " ";
 
 	private Boolean solved;
 

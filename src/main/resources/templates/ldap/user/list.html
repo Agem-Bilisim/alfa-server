@@ -41,7 +41,7 @@
 		
 		<!-- User details modal -->
 		<div
-			layout:insert="layouts/info-modal :: modal(modalId='userDetailModal', modalHeader='User Details', modalButton='Kapat')"
+			layout:insert="layouts/info-modal :: modal(modalId='userDetailModal', modalHeader='Kullanıcı detayı', modalButton='Kapat')"
 			th:remove="tag">
 			<div class="nav-tabs-custom" layout:fragment="modal-content">
 				<ul class="nav nav-tabs">
@@ -109,7 +109,7 @@
 								$("#ldapIpAddress").html(result.data.user['ldapIpAddress']);
 								$("#ldapType").html(result.data.user['ldapType']);
 								$("#userCreatedDate").html(result.data.user['createdDate']);
-
+								console.log(result.data);
 								// Attributes
 								$("#userAttributesTableBody").html("");
 								if (result.data.user.attributes) {
@@ -120,7 +120,33 @@
 									if (userAttrTable) {
 										userAttrTable.draw('full-reset');
 									} else {
-										userAttrTable = $('#userAttributesTable').DataTable();
+										userAttrTable = $('#userAttributesTable').DataTable({
+											"language": {
+											    "sDecimal":        ",",
+											    "sEmptyTable":     "Tabloda herhangi bir veri mevcut değil",
+											    "sInfo":           "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+											    "sInfoEmpty":      "Kayıt yok",
+											    "sInfoFiltered":   "(_MAX_ kayıt içerisinden bulunan)",
+											    "sInfoPostFix":    "",
+											    "sInfoThousands":  ".",
+											    "sLengthMenu":     "Sayfada _MENU_ kayıt göster",
+											    "sLoadingRecords": "Yükleniyor...",
+											    "sProcessing":     "İşleniyor...",
+											    "sSearch":         "Ara:",
+											    "sZeroRecords":    "Eşleşen kayıt bulunamadı",
+											    "oPaginate": {
+											        "sFirst":    "İlk",
+											        "sLast":     "Son",
+											        "sNext":     "Sonraki",
+											        "sPrevious": "Önceki"
+											    },
+											    "oAria": {
+											        "sSortAscending":  ": artan sütun sıralamasını aktifleştir",
+											        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
+											    }
+											},
+											"deferRender": true,
+										});
 									}
 								}
 								
