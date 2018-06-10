@@ -67,23 +67,6 @@
 								</select>
 								<span class="help-block" th:if="${#fields.hasErrors('references')}" th:errors="*{references}">Hata</span>
 							</div>
-							<div class="form-group">
-								<div class="checkbox">
-									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="solved"
-										id="solved" th:field="*{solved}"> Sorun çözüldü mü?
-									</label>
-								</div>
-							</div>
-							<div class="form-group" th:classappend="${#fields.hasErrors('solutionDate')} ? 'has-error' : ''">
-								<label for="solutionDate">Sorun çözülme tarihi</label>
-								<div class="input-group date">
-									<div class="input-group-addon">
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right datepicker" id="solutionDate"
-										name="solutionDate" th:field="*{solutionDate}" />
-								</div>
-							</div>
 						</div>
 						<div class="box-footer">
 							<button type="button" id="cancelBtn" class="btn btn-default">İptal</button>
@@ -111,9 +94,9 @@
 			
 			$(".datepicker").datepicker({
 				todayHighlight: true,
-				autoclose: true
+				autoclose: true,
+				language: 'tr'
 			});
-			$.datepicker.regional['tr'];
 		});
 	</script>
 </body>

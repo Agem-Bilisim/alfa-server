@@ -235,7 +235,7 @@ var trStrings = {
   },
   //questionTypes
   qt: {
-    default: "Varsayılan",
+    'default': "Varsayılan",
     checkbox: "Onay kutusu",
     comment: "Yorum",
     dropdown: "Seçimli kutu",

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -23,10 +24,13 @@ public class ProblemForm extends BaseForm {
 
 	private Boolean solved;
 
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
 	private Date estimatedSolutionDate;
 
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
 	private Date workStartDate;
 
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
 	private Date solutionDate;
 
 	private String relatedPeripherals;

@@ -44,14 +44,14 @@
 	<script layout:fragment="custom-script" th:inline="javascript">
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
-				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
+				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?redirect=problem/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
 			};
 			
 			var drawCallback = function(settings) {
 				if ($("#newProblemBtn").length == 0) {
 					$("#problemTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newProblemBtn\">Yeni</button>");
 					$("#newProblemBtn").on("click", function() {
-						window.location.href = '/alfa/problem/create';
+						window.location.href = '/alfa/problem/create?redirect=problem/list';
 					});
 				}
 			};
