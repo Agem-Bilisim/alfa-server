@@ -14,76 +14,98 @@
 	<link th:href="@{/monitor/main}" rel="stylesheet" />
 </head>
 <body>
-		<div layout:fragment="content">
-		<div class="row">
-			<div class="col-xs-12">
-				<!-- Nav tabs -->
-				<ul class="nav nav-tabs" role="tablist">
-					<li role="presentation" class="active"><a href="#current-state" aria-controls="current-state" role="tab" data-toggle="tab">Mevcut Durum</a></li>
-					<li role="presentation"><a href="#monthly-migration" aria-controls="monthly-migration" role="tab" data-toggle="tab">Göç Durumu</a></li>
-					<li role="presentation"><a href="#monthly-problem" aria-controls="monthly-problem" role="tab" data-toggle="tab">Sorun İzleme</a></li>
-					<li role="presentation"><a href="#egitim" aria-controls="egitim" role="tab" data-toggle="tab">Eğitim</a></li>
-			  	</ul>
-			
-				<!-- Tab panes -->
-				<div class="tab-content">
-					<div role="tabpanel" class="tab-pane active" id="current-state">
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">Mevcut Durum</h3>
+	<th:block layout:fragment="breadcrumb-list">
+		<li class="active">Göç Takip Merkezi</li>
+	</th:block>
+	<div layout:fragment="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#current-state" aria-controls="current-state" role="tab" data-toggle="tab">Mevcut Durum</a></li>
+				<li role="presentation"><a href="#monthly-migration" aria-controls="monthly-migration" role="tab" data-toggle="tab">Göç Durumu</a></li>
+				<li role="presentation"><a href="#monthly-problem" aria-controls="monthly-problem" role="tab" data-toggle="tab">Sorun İzleme</a></li>
+				<li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle="tab">Göç Planlama</a></li>
+		  	</ul>
+		
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="current-state">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Mevcut Durum</h3>
+						</div>
+						<div class="box-body" style="height: 300px">
+							<div style="position: absolute; top: 80px; width: 200px; 
+								height: 150px; text-align: center; padding: 10px; 
+								background-color: rgba(54, 162, 235, 0.5); font-size: 600%;
+								border-radius: 10px;
+								border: 2px solid rgba(54, 162, 235)">
+								84
+								<br>
+								<small style="font-size: 11px; position: relative; top: -95px">Linux Sistem</small>
 							</div>
-							<div class="box-body" style="height: 300px">
-								<div style="position: absolute; top: 80px; width: 200px; 
-									height: 150px; text-align: center; padding: 10px; 
-									background-color: rgba(54, 162, 235, 0.5); font-size: 600%;
-									border-radius: 10px;
-									border: 2px solid rgba(54, 162, 235)">
-									84
-									<br>
-									<small style="font-size: 11px; position: relative; top: -95px">Linux Sistem</small>
-								</div>
-								<div style="position: absolute; top: 80px; left: 220px; width: 200px; 
-									height: 150px; text-align: center; padding: 10px; 
-									background-color: rgba(255, 99, 132, 0.5); font-size: 600%;
-									border-radius: 10px;
-									border: 2px solid rgba(255, 99, 132)">
-									238
-									<br>
-									<small style="font-size: 11px; position: relative; top: -95px">Windows Sistem</small>
-								</div>
+							<div style="position: absolute; top: 80px; left: 220px; width: 200px; 
+								height: 150px; text-align: center; padding: 10px; 
+								background-color: rgba(255, 99, 132, 0.5); font-size: 600%;
+								border-radius: 10px;
+								border: 2px solid rgba(255, 99, 132)">
+								238
+								<br>
+								<small style="font-size: 11px; position: relative; top: -95px">Windows Sistem</small>
 							</div>
-						</div>					
-					</div>
-					<div role="tabpanel" class="tab-pane" id="monthly-migration">
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">Göç Durumu</h3>
+						</div>
+					</div>					
+				</div>
+				<div role="tabpanel" class="tab-pane" id="monthly-migration">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Göç Durumu</h3>
+						</div>
+						<div class="box-body">
+							<div id="container" style="width: 75%">
+								<canvas id="monthly-migration-canvas"></canvas>
 							</div>
-							<div class="box-body">
-								<div id="container" style="width: 75%">
-									<canvas id="monthly-migration-canvas"></canvas>
-								</div>
-								<div id="container" style="width: 75%">
-									<canvas id="monthly-migration-canvas2"></canvas>
-								</div>
+							<div id="container" style="width: 75%">
+								<canvas id="monthly-migration-canvas2"></canvas>
 							</div>
-						</div>					
-					</div>
-					<div role="tabpanel" class="tab-pane" id="monthly-problem">
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">Sorun İzleme</h3>
+						</div>
+					</div>					
+				</div>
+				<div role="tabpanel" class="tab-pane" id="monthly-problem">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Sorun İzleme</h3>
+						</div>
+						<div class="box-body">
+							<div id="container" style="width: 75%">
+								<canvas id="monthly-problem-canvas"></canvas>
 							</div>
-							<div class="box-body">
-								<div id="container" style="width: 75%">
-									<canvas id="monthly-problem-canvas"></canvas>
-								</div>
-							</div>
-						</div>					
-					</div>
+						</div>
+					</div>					
+				</div>
+				<div role="tabpanel" class="tab-pane" id="plan">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Göç Planlama</h3>
+						</div>
+						<div class="box-body">
+							<table id="planTable" class="table table-bordered table-striped">
+								<thead>
+									<tr>
+										<th>Eitket</th>
+										<th>Planlanan Tarih</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>								
+						</div>
+					</div>					
 				</div>
 			</div>
 		</div>
+	</div>
 		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
@@ -360,6 +382,62 @@
 				}
 			}
 		});
+		
+		
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			var fnDateInput = function(row) {
+				var v = row["plannedMigrationDate"] ? moment(row["plannedMigrationDate"], "DD-MM-YYYY hh:mm:ss").format('DD.MM.YYYY') : null;
+				var html = '<div class="input-group date">' +
+						   '<div class="input-group-addon">' + 
+						   '<i class="fa fa-calendar"></i>' +
+						   '</div>'+
+				 		   '<input type="text" tag-id="'+row["id"] +'" class="form-control pull-right datepicker" ' + (v != null ? 'value="' + v + '"' : '') + ' />'+
+						   '</div>';
+				return html;
+			}
+			
+			var drawCallback = function(settings) {
+				$("#planTable .datepicker").datepicker({
+					todayHighlight: true,
+					autoclose: true,
+					language: 'tr'
+				});
+				$("#planTable .input-group").each( function () {
+					$(this).parent().css("padding", "2px");
+				});
+				if ($("#savePlanBtn").length == 0) {
+					$("#planTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"savePlanBtn\">Kaydet</button>");
+					
+					$("#savePlanBtn").on("click", function() {
+						var d = [];
+						$("#planTable [tag-id]").each(function() {
+							var tag = {};
+							tag["id"] = $(this).attr("tag-id");
+							tag["plannedMigrationDate"] = $(this).val();;
+							d.push(tag);
+						});
+						console.log(d);
+						Alfa.ajax({url: "/alfa/plan/save", data: {"tags": d}}, 
+							function(result){
+								alertify.success("Plan başarıyla kaydedildi.");
+							}, 
+							function() {
+								alertify.error("Plan kaydedilirken hata oluştu.");
+							}
+						);
+					});
+				}
+			};
+			const colsTag = [
+				{"data": "name", "searchable": true, "orderable": false }, 
+				{"data": fnDateInput, "searchable": false, "orderable": false }
+			];
+			var order = [ [0, 'desc'] ];
+			if ($(e.target).attr('href') == "#plan") {
+				var table = $('#planTable').paginatedTable("/alfa/plan/list-paginated", "tags", colsTag, drawCallback, order);
+			}
+		});
+
 	});
 
 	</script>

@@ -114,5 +114,6 @@ public interface SysMapper {
 	NetworkInterfaceForm toNetworkInterfaceForm(NetworkInterface entity);
 
 	PeripheralDeviceForm toPeripheralDeviceForm(PeripheralDevice entity);
+	
 
 }

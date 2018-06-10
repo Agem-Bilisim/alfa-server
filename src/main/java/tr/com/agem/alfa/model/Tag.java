@@ -1,5 +1,6 @@
 package tr.com.agem.alfa.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,9 @@ public class Tag extends BaseModel {
 
 	@Column(name = "NAME", length = 100, nullable = false, unique = true)
 	private String name;
+
+	@Column(name = "PLANNED_MIGRATION_DATE")
+	private Date plannedMigrationDate;
 
 	@JsonIgnore
 	@ManyToMany(mappedBy = "tags")
@@ -74,4 +78,12 @@ public class Tag extends BaseModel {
 		return true;
 	}
 
+
+	public Date getPlannedMigrationDate() {
+		return plannedMigrationDate;
+	}
+
+	public void setPlannedMigrationDate(Date plannedMigrationDate) {
+		this.plannedMigrationDate = plannedMigrationDate;
+	}
 }

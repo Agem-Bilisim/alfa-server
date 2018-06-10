@@ -1,7 +1,10 @@
 package tr.com.agem.alfa.form;
 
+import java.util.Date;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -13,6 +16,9 @@ public class TagForm extends BaseForm {
 	@NotEmpty
 	@Length(max = 100)
 	private String name;
+	
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	private Date plannedMigrationDate;
 
 	public String getName() {
 		return name;
@@ -25,6 +31,14 @@ public class TagForm extends BaseForm {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public Date getPlannedMigrationDate() {
+		return plannedMigrationDate;
+	}
+
+	public void setPlannedMigrationDate(Date plannedMigrationDate) {
+		this.plannedMigrationDate = plannedMigrationDate;
 	}
 
 }
