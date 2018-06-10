@@ -41,7 +41,7 @@
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
-				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/bpm-task/get/" + row["taskId"] + "\"><i class=\"fa fa-step-forward\"></i> Göreve Git</a>"
+				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/bpm-task/get/" + row["taskId"] + "\"><i class=\"fa fa-play\"></i> Göreve Git</a>"
 				+ "</div>";
 			};
 			
@@ -49,7 +49,7 @@
 			};
 			
 			const cols = [
-				{"data": "taskDescription", "searchable": false, "orderable": false }, 
+				{"data": "taskDescription", "searchable": false, "orderable": false },  
 				{"data": "createdDate", "searchable": false, "orderable": false },
 				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
@@ -60,6 +60,7 @@
 			$('#processTable').DataTable({
 				"paging": false,
 				"filter" : false,
+				"ordering": false,
 				"ajax": function(data, callback, settings) {
 					var finalUrl = url;
 					var drawCount = data.draw;

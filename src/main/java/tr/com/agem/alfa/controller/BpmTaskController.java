@@ -2,9 +2,17 @@ package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
@@ -12,12 +20,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tr.com.agem.alfa.bpmn.AlfaBpmnFormService;
@@ -129,6 +142,15 @@ public class BpmTaskController
 			}
 			
 			
+			Collections.sort(list, new Comparator<BpmTaskForm>() {
+			    @Override
+			    public int compare(BpmTaskForm left, BpmTaskForm right) {
+			    	return right.getCreatedDate().compareTo(left.getCreatedDate());
+			    }
+			});
+
+			
+			
 			result.add("tasks",  new PageImpl<BpmTaskForm>(list));
 			
 		} catch (Exception e) {
@@ -175,4 +197,34 @@ public class BpmTaskController
 		return "redirect:/bpm-task/list-all";
 	}
 
+	
+	@GetMapping(value="/bpm-task/image/{taskId}", produces = "image/png")
+	@ResponseBody
+	public ResponseEntity<byte[]> image(HttpServletRequest request, HttpServletResponse response, @PathVariable String taskId) 
+	{
+		 final HttpHeaders httpHeaders= new HttpHeaders();
+		 httpHeaders.setContentType(MediaType.IMAGE_PNG);
+
+		try {
+			checkNotNull(taskId,"Error in retrieving task");
+			
+			Task t = AlfaBpmnProcessEngine.getInstance().getTask(taskId);
+			
+			BufferedImage image = AlfaBpmnProcessEngine.getInstance().getProcessDiagramForInstance(t.getProcessInstanceId(), null, null, false);
+			
+			log.debug("image is retrieved for process : " + taskId);
+			
+			ByteArrayOutputStream bos=new ByteArrayOutputStream();
+			ImageIO.write(image, "png", bos);
+			byte[] fileBytes=bos.toByteArray();
+			bos.close();
+			
+			 return new ResponseEntity<byte[]>(fileBytes, httpHeaders, HttpStatus.OK);
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<byte[]>(new byte[]{}, httpHeaders, HttpStatus.NOT_FOUND);
+	}
 }

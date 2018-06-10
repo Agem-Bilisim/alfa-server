@@ -189,9 +189,29 @@
 			th:remove="tag">
 			<p layout:fragment="modal-content">Seçili kayıt silinmek üzere. Devam etmek istiyor musunuz?</p>
 		</div>
+		
+		<!-- Process Selection Modal -->
+		<div layout:insert="layouts/default-modal :: modal(modalId='processSelectModal', modalHeader='Süreç Başlat', modalButton='Başlat')"
+			th:remove="tag">
+			<div layout:fragment="modal-content" class="form-group">
+				<select class="form-control" id="bpmProcess" name="bpmProcess" style="width: 100%;">
+					<option th:each="process : ${processes}" th:text="${process.name + ' [' + process.version + ']'}" th:value="${process.id}"></option>
+				</select>
+			</div>
+		</div>		
 	</div>
 	<!-- Delete confirmation modal -->
 	<script layout:fragment="custom-script" th:inline="javascript">
+	
+		var startProcess = function(id) {
+			$("#processSelectModalBtn").on("click", function(){
+				$('#processSelectModal').modal('hide');
+				window.location.href = "/alfa/bpm-task/startForm/" + $("#bpmProcess").val() + "?relatedComponent=Sorun&relatedComponentId="+id + "&redirect=hardware%2Flist";
+			});
+			
+			$('#processSelectModal').modal('show');
+		};
+	
 		var tables = {};
 		var handleDelete = function(url, tableToRefresh) {
 			console.log(url);
@@ -356,7 +376,8 @@
 			var fnActionBtnsProblem = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
 				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?referenceType=6&redirect=hardware/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
-				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
+				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/problem/" + row['id'] + "/delete', 'problemTable')\"><i class=\"fa fa-trash\"></i> Sil</button>"
+				+ "<button class=\"btn btn-outline-dark\" onclick=\"startProcess("+ row['id']+")\"><i class=\"fa fa-play\"></i> Süreç Başlat</button>"				
 				+ "</div>";
 			};
 			var drawCallbackProblem = function(settings) {

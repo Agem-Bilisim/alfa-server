@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +37,7 @@ import tr.com.agem.alfa.model.AgentPeripheralDevice;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.service.AgentService;
+import tr.com.agem.alfa.service.BpmProcessService;
 import tr.com.agem.alfa.service.PeripheralService;
 
 /**
@@ -49,6 +51,7 @@ public class PeripheralController {
 
 	private final PeripheralService peripheralService;
 	private final AgentService agentService;
+	private final BpmProcessService bpmProcessService;
 	private final SysMapper mapper;
 
 	@PersistenceContext
@@ -58,9 +61,10 @@ public class PeripheralController {
 	private Integer sysPageSize;
 
 	@Autowired
-	public PeripheralController(PeripheralService peripheralService, AgentService agentService, SysMapper mapper) {
+	public PeripheralController(PeripheralService peripheralService, AgentService agentService, BpmProcessService bpmProcessService, SysMapper mapper) {
 		this.peripheralService = peripheralService;
 		this.agentService = agentService;
+		this.bpmProcessService = bpmProcessService;
 		this.mapper = mapper;
 	}
 
@@ -112,7 +116,8 @@ public class PeripheralController {
 	}
 
 	@GetMapping("/peripheral/list")
-	public String getPeripheralListPage() {
+	public String getPeripheralListPage(Model model) {
+		model.addAttribute("processes", bpmProcessService.getDeployedBpmProcesses());
 		return "peripheral/list";
 	}
 

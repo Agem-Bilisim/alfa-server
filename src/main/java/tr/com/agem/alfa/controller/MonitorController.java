@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import tr.com.agem.alfa.form.TagForm;
 import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Tag;
+import tr.com.agem.alfa.service.BpmProcessService;
 import tr.com.agem.alfa.service.MonitorService;
 
 /**
@@ -34,21 +36,24 @@ public class MonitorController {
 	private static final Logger log = LoggerFactory.getLogger(MonitorController.class);
 
 	private MonitorService monitorService;
+	private final BpmProcessService bpmProcessService;
 	private SysMapper sysMapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
-	public MonitorController(MonitorService monitorService, SysMapper sysMapper) {
+	public MonitorController(MonitorService monitorService, BpmProcessService bpmProcessService, SysMapper sysMapper) {
 		this.monitorService = monitorService;
+		this.bpmProcessService = bpmProcessService;
 		this.sysMapper = sysMapper;
 		
 	}
 	
 	@GetMapping("/monitor/main")
-	public String mainPage() { 
+	public String mainPage(Model model) { 
 		log.debug("Monitor page");
+		model.addAttribute("processes", bpmProcessService.getDeployedBpmProcesses());
 		return "monitor/main";
 	}
 
@@ -58,6 +63,7 @@ public class MonitorController {
 		try {
 			Page<Tag> tags = monitorService.getTags(pageable, search);
 			result.add("tags", checkNotNull(tags, "Tags not found."));
+			
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find tags, assuming invalid parameters", e);
 			result.setMessage(e.getMessage());

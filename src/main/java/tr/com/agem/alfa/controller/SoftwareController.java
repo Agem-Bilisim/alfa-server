@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,7 @@ import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.RunningProcess;
+import tr.com.agem.alfa.service.BpmProcessService;
 import tr.com.agem.alfa.service.SoftwareService;
 
 /**
@@ -40,14 +42,16 @@ public class SoftwareController {
 	private static final Logger log = LoggerFactory.getLogger(SoftwareController.class);
 
 	private final SoftwareService softwareService;
+	private final BpmProcessService bpmProcessService;
 	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
 	@Autowired
-	public SoftwareController(SoftwareService softwareService, SysMapper mapper) {
+	public SoftwareController(SoftwareService softwareService, BpmProcessService bpmProcessService, SysMapper mapper) {
 		this.softwareService = softwareService;
+		this.bpmProcessService = bpmProcessService;
 		this.mapper = mapper;
 	}
 
@@ -188,7 +192,8 @@ public class SoftwareController {
 	}
 
 	@GetMapping("/software/list")
-	public String getListPage() {
+	public String getListPage(Model model) {
+		model.addAttribute("processes", bpmProcessService.getDeployedBpmProcesses());
 		return "software/list";
 	}
 

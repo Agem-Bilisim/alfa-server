@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,6 +49,7 @@ import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.service.AgentService;
+import tr.com.agem.alfa.service.BpmProcessService;
 import tr.com.agem.alfa.service.HardwareService;
 
 /**
@@ -61,6 +63,7 @@ public class HardwareController {
 
 	private final HardwareService hardwareService;
 	private final AgentService agentService;
+	private final BpmProcessService bpmProcessService;
 	private final SysMapper mapper;
 
 	@PersistenceContext
@@ -70,14 +73,16 @@ public class HardwareController {
 	private Integer sysPageSize;
 
 	@Autowired
-	public HardwareController(HardwareService hardwareService, AgentService agentService, SysMapper mapper) {
+	public HardwareController(HardwareService hardwareService, AgentService agentService, BpmProcessService bpmProcessService, SysMapper mapper) {
 		this.hardwareService = hardwareService;
 		this.agentService = agentService;
+		this.bpmProcessService = bpmProcessService;
 		this.mapper = mapper;
 	}
 
 	@GetMapping("/hardware/list")
-	public String getListPage() {
+	public String getListPage(Model model) {
+		model.addAttribute("processes", bpmProcessService.getDeployedBpmProcesses());
 		return "hardware/list";
 	}
 	

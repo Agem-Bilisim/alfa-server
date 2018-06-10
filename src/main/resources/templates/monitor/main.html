@@ -18,97 +18,114 @@
 		<li class="active">Göç Takip Merkezi</li>
 	</th:block>
 	<div layout:fragment="content">
-	<div class="row">
-		<div class="col-xs-12">
-			<!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
-				<li role="presentation" class="active"><a href="#current-state" aria-controls="current-state" role="tab" data-toggle="tab">Mevcut Durum</a></li>
-				<li role="presentation"><a href="#monthly-migration" aria-controls="monthly-migration" role="tab" data-toggle="tab">Göç Durumu</a></li>
-				<li role="presentation"><a href="#monthly-problem" aria-controls="monthly-problem" role="tab" data-toggle="tab">Sorun İzleme</a></li>
-				<li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle="tab">Göç Planlama</a></li>
-		  	</ul>
-		
-			<!-- Tab panes -->
-			<div class="tab-content">
-				<div role="tabpanel" class="tab-pane active" id="current-state">
-					<div class="box">
-						<div class="box-header">
-							<h3 class="box-title">Mevcut Durum</h3>
-						</div>
-						<div class="box-body" style="height: 300px">
-							<div style="position: absolute; top: 80px; width: 200px; 
-								height: 150px; text-align: center; padding: 10px; 
-								background-color: rgba(54, 162, 235, 0.5); font-size: 600%;
-								border-radius: 10px;
-								border: 2px solid rgba(54, 162, 235)">
-								84
-								<br>
-								<small style="font-size: 11px; position: relative; top: -95px">Linux Sistem</small>
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#current-state" aria-controls="current-state" role="tab" data-toggle="tab">Mevcut Durum</a></li>
+					<li role="presentation"><a href="#monthly-migration" aria-controls="monthly-migration" role="tab" data-toggle="tab">Göç Durumu</a></li>
+					<li role="presentation"><a href="#monthly-problem" aria-controls="monthly-problem" role="tab" data-toggle="tab">Sorun İzleme</a></li>
+					<li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle="tab">Göç Planlama</a></li>
+			  	</ul>
+			
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="current-state">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Mevcut Durum</h3>
 							</div>
-							<div style="position: absolute; top: 80px; left: 220px; width: 200px; 
-								height: 150px; text-align: center; padding: 10px; 
-								background-color: rgba(255, 99, 132, 0.5); font-size: 600%;
-								border-radius: 10px;
-								border: 2px solid rgba(255, 99, 132)">
-								238
-								<br>
-								<small style="font-size: 11px; position: relative; top: -95px">Windows Sistem</small>
+							<div class="box-body" style="height: 300px">
+								<div style="position: absolute; top: 80px; width: 200px; 
+									height: 150px; text-align: center; padding: 10px; 
+									background-color: rgba(54, 162, 235, 0.5); font-size: 600%;
+									border-radius: 10px;
+									border: 2px solid rgba(54, 162, 235)">
+									84
+									<br>
+									<small style="font-size: 11px; position: relative; top: -95px">Linux Sistem</small>
+								</div>
+								<div style="position: absolute; top: 80px; left: 220px; width: 200px; 
+									height: 150px; text-align: center; padding: 10px; 
+									background-color: rgba(255, 99, 132, 0.5); font-size: 600%;
+									border-radius: 10px;
+									border: 2px solid rgba(255, 99, 132)">
+									238
+									<br>
+									<small style="font-size: 11px; position: relative; top: -95px">Windows Sistem</small>
+								</div>
 							</div>
-						</div>
-					</div>					
-				</div>
-				<div role="tabpanel" class="tab-pane" id="monthly-migration">
-					<div class="box">
-						<div class="box-header">
-							<h3 class="box-title">Göç Durumu</h3>
-						</div>
-						<div class="box-body">
-							<div id="container" style="width: 75%">
-								<canvas id="monthly-migration-canvas"></canvas>
+						</div>					
+					</div>
+					<div role="tabpanel" class="tab-pane" id="monthly-migration">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Göç Durumu</h3>
 							</div>
-							<div id="container" style="width: 75%">
-								<canvas id="monthly-migration-canvas2"></canvas>
+							<div class="box-body">
+								<div id="container" style="width: 75%">
+									<canvas id="monthly-migration-canvas"></canvas>
+								</div>
+								<div id="container" style="width: 75%">
+									<canvas id="monthly-migration-canvas2"></canvas>
+								</div>
 							</div>
-						</div>
-					</div>					
-				</div>
-				<div role="tabpanel" class="tab-pane" id="monthly-problem">
-					<div class="box">
-						<div class="box-header">
-							<h3 class="box-title">Sorun İzleme</h3>
-						</div>
-						<div class="box-body">
-							<div id="container" style="width: 75%">
-								<canvas id="monthly-problem-canvas"></canvas>
+						</div>					
+					</div>
+					<div role="tabpanel" class="tab-pane" id="monthly-problem">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Sorun İzleme</h3>
 							</div>
-						</div>
-					</div>					
-				</div>
-				<div role="tabpanel" class="tab-pane" id="plan">
-					<div class="box">
-						<div class="box-header">
-							<h3 class="box-title">Göç Planlama</h3>
-						</div>
-						<div class="box-body">
-							<table id="planTable" class="table table-bordered table-striped">
-								<thead>
-									<tr>
-										<th>Eitket</th>
-										<th>Planlanan Tarih</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>								
-						</div>
-					</div>					
+							<div class="box-body">
+								<div id="container" style="width: 75%">
+									<canvas id="monthly-problem-canvas"></canvas>
+								</div>
+							</div>
+						</div>					
+					</div>
+					<div role="tabpanel" class="tab-pane" id="plan">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Göç Planlama</h3>
+							</div>
+							<div class="box-body">
+								<table id="planTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Eitket</th>
+											<th>Planlanan Tarih</th>
+											<th>İşlem</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>								
+							</div>
+						</div>					
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-		
+		<!-- Process Selection Modal -->
+		<div layout:insert="layouts/default-modal :: modal(modalId='processSelectModal', modalHeader='Süreç Başlat', modalButton='Başlat')"
+			th:remove="tag">
+			<div layout:fragment="modal-content" class="form-group">
+				<select class="form-control" id="bpmProcess" name="bpmProcess" style="width: 100%;">
+					<option th:each="process : ${processes}" th:text="${process.name + ' [' + process.version + ']'}" th:value="${process.id}"></option>
+				</select>
+			</div>
+		</div>			
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+	var startProcess = function(id) {
+		$("#processSelectModalBtn").on("click", function(){
+			$('#processSelectModal').modal('hide');
+			window.location.href = "/alfa/bpm-task/startForm/" + $("#bpmProcess").val() + "?relatedComponent=Sorun&relatedComponentId="+id + "&redirect=hardware%2Flist";
+		});
+		
+		$('#processSelectModal').modal('show');
+	};
 	$(document).ready( function () {
 		var color = Chart.helpers.color;
 		var MONTHS = [];
@@ -391,8 +408,12 @@
 						   '<div class="input-group-addon">' + 
 						   '<i class="fa fa-calendar"></i>' +
 						   '</div>'+
-				 		   '<input type="text" tag-id="'+row["id"] +'" class="form-control pull-right datepicker" ' + (v != null ? 'value="' + v + '"' : '') + ' />'+
+				 		   '<input type="text" tag-id="'+row["id"] +'" class="form-control pull-right datepicker" ' + (v != null ? 'value="' + v + '"' : '') + ' />' +
 						   '</div>';
+						   
+				html += "<div class=\"btn-group\" role=\"group\">" 
+							+ "<button class=\"btn btn-outline-dark\" onclick=\"startProcess("+ row['id']+")\"><i class=\"fa fa-play\"></i> Süreç Başlat</button>"				
+							+ "</div>";						   
 				return html;
 			}
 			

@@ -84,8 +84,8 @@
 				return "<div class=\"btn-group\" role=\"group\">" 
 				+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/bpm-process/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a> "
 				+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/bpm-process/" + row['id'] + "/delete', 'processTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
-				+  (!row.processDeploymentId ? "<button class=\"btn btn-outline-danger\" onclick=\"/alfa/bpm-process/deploy/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Deploy</button>" : "")	
-				+  (row.processDeploymentId ? "<a class=\"btn btn-outline-dark\" href=\"/alfa/bpm-task/startForm/" + row["id"] + "\"><i class=\"fa fa-step-forward\"></i> Start</a>" : "")
+				+  (!row.processDeploymentId ? "<a class=\"btn btn-outline-danger\" href=\"/alfa/bpm-process/deploy/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Deploy</a>" : "")	
+				+  (row.processDeploymentId ? "<a class=\"btn btn-outline-dark\" href=\"/alfa/bpm-task/startForm/" + row["id"] + "\"><i class=\"fa fa-play\"></i> Start</a>" : "")
 				+ "</div>";
 			};
 			
@@ -103,7 +103,6 @@
 				{"data": "version", "searchable": true, "orderable": true }, 
 				{"data": fnActionBtns, "searchable": false, "orderable": false }
 			];
-			
 			tables.processTable = $('#processTable').paginatedTable("/alfa/bpm-process/list-paginated", "processes", cols, drawCallback);
 			
 		});
