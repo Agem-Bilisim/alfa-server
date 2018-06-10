@@ -1,5 +1,6 @@
 package tr.com.agem.alfa.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,15 @@ public class Problem extends BaseModel {
 
 	@Column(name = "SOLVED")
 	private Boolean solved;
+
+	@Column(name = "SOLUTION_DATE")
+	private Date solutionDate;
+
+	@Column(name = "ESTIMATED_SOLUTION_DATE")
+	private Date estimatedSolutionDate;
+
+	@Column(name = "WORK_START_DATE")
+	private Date workStartDate;
 
 	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
 	private Set<ProblemReference> references = new HashSet<ProblemReference>(0);
@@ -59,6 +69,30 @@ public class Problem extends BaseModel {
 
 	public void setReferences(Set<ProblemReference> references) {
 		this.references = references;
+	}
+
+	public Date getSolutionDate() {
+		return solutionDate;
+	}
+
+	public void setSolutionDate(Date solutionDate) {
+		this.solutionDate = solutionDate;
+	}
+
+	public Date getEstimatedSolutionDate() {
+		return estimatedSolutionDate;
+	}
+
+	public void setEstimatedSolutionDate(Date estimatedSolutionDate) {
+		this.estimatedSolutionDate = estimatedSolutionDate;
+	}
+
+	public Date getWorkStartDate() {
+		return workStartDate;
+	}
+
+	public void setWorkStartDate(Date workStartDate) {
+		this.workStartDate = workStartDate;
 	}
 
 }

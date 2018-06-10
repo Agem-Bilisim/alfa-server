@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -21,6 +23,37 @@ import tr.com.agem.alfa.repository.ProblemRepository;
 @Transactional
 public class ProblemService {
 
+	// @formatter:off
+	private static final String LIST_PROBLEMS_WITH_RELATED_ITEMS = 
+			"SELECT\n" + 
+			"  p.id,\n" + 
+			"  p.created_date,\n" + 
+			"  p.created_by,\n" + 
+			"  p.last_modified_date,\n" + 
+			"  p.last_modified_by,\n" + 
+			"  p.label,\n" + 
+			"  p.description,\n" + 
+			"  p.solved,\n" + 
+			"  p.estimated_solution_date,\n" + 
+			"  p.work_start_date,\n" + 
+			"  p.solution_date,\n" + 
+			"  (select group_concat(DISTINCT ap.tag SEPARATOR ', ')\n" + 
+			"   from c_problem_reference r\n" + 
+			"     inner join c_agent_peripheral ap on (ap.id = r.reference_id and r.reference_type = 2)\n" + 
+			"   where r.problem_id = p.id) as related_peripherals,\n" + 
+			"  (select group_concat(DISTINCT gpu.subsystem SEPARATOR ', ')\n" + 
+			"   from c_problem_reference r\n" + 
+			"     inner join c_agent_gpu gpu\n" + 
+			"       on (gpu.id = r.reference_id and r.reference_type = 6 and trim(gpu.subsystem) is not null and\n" + 
+			"           trim(gpu.subsystem) <> '')\n" + 
+			"   where r.problem_id = p.id) as related_hardwares,\n" + 
+			"  (select group_concat(DISTINCT pc.name SEPARATOR ', ')\n" + 
+			"   from c_problem_reference r\n" + 
+			"     inner join c_agent_package pc on (pc.id = r.reference_id and r.reference_type = 7)\n" + 
+			"   where r.problem_id = p.id) as related_softwares\n" + 
+			"from c_problem p";
+	// @formatter:on
+
 	@PersistenceContext
 	private EntityManager em;
 
@@ -41,7 +74,7 @@ public class ProblemService {
 		}
 		return this.problemRepository.findAll(pageable);
 	}
-
+	
 	public void saveProblem(Problem problem) {
 		Assert.notNull(problem, "Problem must not be null.");
 		// Update
@@ -71,6 +104,11 @@ public class ProblemService {
 	public void deleteProblem(Long id) {
 		Assert.notNull(id, "ID must not be null");
 		this.problemRepository.delete(id);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getProblemsWithDetails() {
+		return this.em.createNativeQuery(LIST_PROBLEMS_WITH_RELATED_ITEMS).getResultList();
 	}
 
 }

@@ -74,7 +74,8 @@ public class ProblemController {
 
 	@Autowired
 	public ProblemController(ProblemService problemService, SoftwareService softwareService,
-			HardwareService hardwareService, PeripheralService peripheralService, MessageSource messageSource, SysMapper mapper) {
+			HardwareService hardwareService, PeripheralService peripheralService, MessageSource messageSource,
+			SysMapper mapper) {
 		this.problemService = problemService;
 		this.softwareService = softwareService;
 		this.hardwareService = hardwareService;
@@ -91,11 +92,11 @@ public class ProblemController {
 			// @formatter:off
 			SelectboxBuilder builder = SelectboxBuilder
 										.newSelectbox();
-			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
+			if (referenceType != null && referenceType == ProblemReferenceType.PACKAGE.getId()) {
 				builder.add(toPackageFormList(softwareService.getPackages()));
-			} else if (referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
+			} else if (referenceType != null && referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
 				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
-			} else if (referenceType == ProblemReferenceType.GPU.getId()) {
+			} else if (referenceType != null && referenceType == ProblemReferenceType.GPU.getId()) {
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
@@ -140,11 +141,11 @@ public class ProblemController {
 			// @formatter:off
 			SelectboxBuilder builder = SelectboxBuilder
 										.newSelectbox();
-			if (referenceType == ProblemReferenceType.PACKAGE.getId()) {
+			if (referenceType != null && referenceType == ProblemReferenceType.PACKAGE.getId()) {
 				builder.add(toPackageFormList(softwareService.getPackages()));
-			} else if (referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
+			} else if (referenceType != null && referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
 				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
-			} else if (referenceType == ProblemReferenceType.GPU.getId()) {
+			} else if (referenceType != null && referenceType == ProblemReferenceType.GPU.getId()) {
 				builder.add(toGpuFormList(hardwareService.getGpus()));
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
@@ -207,8 +208,23 @@ public class ProblemController {
 			@RequestParam(value = "referenceType", required = false) Integer referenceType, Pageable pageable) {
 		RestResponseBody result = new RestResponseBody();
 		try {
-			Page<Problem> problems = problemService.getProblems(pageable, search, referenceType);
-			result.add("problems", checkNotNull(problems, "Problems not found."));
+			if (referenceType != null) {
+				Page<Problem> problems = problemService.getProblems(pageable, search, referenceType);
+				result.add("problems", checkNotNull(problems, "Problems not found."));
+			} else {
+				List<Object[]> _problems = problemService.getProblemsWithDetails();
+				List<ProblemForm> problems = new ArrayList<ProblemForm>();
+				if (_problems != null) {
+					for (Object[] _cols : _problems) {
+						ProblemForm problem = new ProblemForm(Long.parseLong(_cols[0].toString()), (Date) _cols[1], (String) _cols[2],
+								(Date) _cols[3], (String) _cols[4], (String) _cols[5], (String) _cols[6],
+								(Boolean) _cols[7], (Date) _cols[8], (Date) _cols[9], (Date) _cols[10],
+								(String) _cols[11], (String) _cols[12], (String) _cols[13]);
+						problems.add(problem);
+					}
+				}
+				result.add("problems", checkNotNull(problems, "Problems not found."));
+			}
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find problems, assuming invalid parameters", e);
 			result.setMessage(e.getMessage());
