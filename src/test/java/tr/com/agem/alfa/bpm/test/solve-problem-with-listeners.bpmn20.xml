@@ -11,6 +11,14 @@
           <activiti:value id="width" name="500"></activiti:value>
           <activiti:value id="rows" name="20"></activiti:value>
         </activiti:formProperty>
+        <activiti:executionListener event="end" class="tr.com.agem.alfa.form.bpm.listeners.ProblemUpdate">
+          <activiti:field name="startDateVar">
+            <activiti:string><![CDATA[startDate]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="estimatedDateVar">
+            <activiti:string><![CDATA[estimatedDate]]></activiti:string>
+          </activiti:field>
+        </activiti:executionListener>
       </extensionElements>
     </startEvent>
     <userTask id="assign-user" name="Sorumlu Ata" activiti:assignee="${responsibleRole}">
@@ -26,7 +34,11 @@
       </extensionElements>
     </userTask>
     <sequenceFlow id="sid-4FCB5C50-92ED-461C-931B-5B29856BDB98" sourceRef="start-process" targetRef="assign-user"></sequenceFlow>
-    <endEvent id="endevent1" name="End" />
+    <endEvent id="endevent1" name="End">
+      <extensionElements>
+        <activiti:executionListener event="end" class="tr.com.agem.alfa.form.bpm.listeners.ProblemComplete"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
     <userTask id="complete-task" name="Sorunu Tamamla" activiti:assignee="${responsible}">
       <documentation>Sorunu Tamamla - ${explanation}</documentation>
       <extensionElements>

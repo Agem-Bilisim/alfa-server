@@ -410,13 +410,15 @@
 						   '</div>'+
 				 		   '<input type="text" tag-id="'+row["id"] +'" class="form-control pull-right datepicker" ' + (v != null ? 'value="' + v + '"' : '') + ' />' +
 						   '</div>';
-						   
-				html += "<div class=\"btn-group\" role=\"group\">" 
+									   
+				return html;
+			}
+			var fnDateInput2 = function(row) {
+				var html = "<div class=\"btn-group\" role=\"group\">" 
 							+ "<button class=\"btn btn-outline-dark\" onclick=\"startProcess("+ row['id']+")\"><i class=\"fa fa-play\"></i> Süreç Başlat</button>"				
 							+ "</div>";						   
 				return html;
 			}
-			
 			var drawCallback = function(settings) {
 				$("#planTable .datepicker").datepicker({
 					todayHighlight: true,
@@ -451,7 +453,8 @@
 			};
 			const colsTag = [
 				{"data": "name", "searchable": true, "orderable": false }, 
-				{"data": fnDateInput, "searchable": false, "orderable": false }
+				{"data": fnDateInput, "searchable": false, "orderable": false },
+				{"data": fnDateInput2, "searchable": false, "orderable": false }
 			];
 			var order = [ [0, 'desc'] ];
 			if ($(e.target).attr('href') == "#plan") {
