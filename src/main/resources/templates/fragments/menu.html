@@ -20,6 +20,7 @@
 		<li><a th:href="@{/survey/list}"><i class="fa fa-clipboard"></i>Anketler</a></li>
         <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/sysuser/list}"><i class="fa fa-user-circle"></i> <span>Sistem Kullanıcıları</span></a></li>
         <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/bpm-process/list}"><i class="fa fa-circle-o"></i> Süreçler </a></li>
+        <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/monitor/main}"><i class="fa fa-line-chart"></i> Göç Takip Merkezi</a></li>
         <li><a th:href="@{/help}"><i class="fa fa-question"></i> <span>Yardım</span></a></li>
       </ul>
       <!-- /.sidebar-menu -->
