@@ -261,70 +261,82 @@ public class AgentController {
 		//
 		// Disk
 		//
-		for (Device d : message.getDisk().getDevices()) {
-			Disk disk = new Disk();
-			disk.setVendor(d.getVendor());
-			disk.setDescription(d.getDescription());
-			disk.setVersion(d.getVersion());
-			disk.setProduct(d.getProduct());
-			disk.setSerial(d.getSerial());
-			Disk tmp = this.hardwareService.getDisk(disk.getProduct(), disk.getVersion());
-			agent.addDisk(tmp != null ? tmp : disk);
+		if (message.getDisk() != null) {
+			for (Device d : message.getDisk().getDevices()) {
+				Disk disk = new Disk();
+				disk.setVendor(d.getVendor());
+				disk.setDescription(d.getDescription());
+				disk.setVersion(d.getVersion());
+				disk.setProduct(d.getProduct());
+				disk.setSerial(d.getSerial());
+				Disk tmp = this.hardwareService.getDisk(disk.getProduct(), disk.getVersion());
+				agent.addDisk(tmp != null ? tmp : disk);
+			}
 		}
 		//
 		// Network interfaces
 		//
-		for (Device d : message.getNetwork().getDevices()) {
-			NetworkInterface inet = new NetworkInterface();
-			inet.setVendor(d.getVendor());
-			inet.setVersion(d.getVersion());
-			inet.setProduct(d.getProduct());
-			inet.setCapabilities(toCapabilityString(d.getCapabilities()));
-			agent.addNetworkInterface(inet);
+		if (message.getNetwork() != null && message.getNetwork().getDevices() != null) {
+			for (Device d : message.getNetwork().getDevices()) {
+				NetworkInterface inet = new NetworkInterface();
+				inet.setVendor(d.getVendor());
+				inet.setVersion(d.getVersion());
+				inet.setProduct(d.getProduct());
+				inet.setCapabilities(toCapabilityString(d.getCapabilities()));
+				agent.addNetworkInterface(inet);
+			}
 		}
 		//
 		// Installed packages
 		//
-		for (InstalledPackage _package : message.getInstalledPackages()) {
-			tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
-			mPackage.setName(_package.getName());
-			mPackage.setVersion(_package.getVersion());
-			tr.com.agem.alfa.model.InstalledPackage tmp = this.softwareService.getPackage(mPackage.getName(), mPackage.getVersion());
-			agent.addInstalledPackage(tmp != null ? tmp : mPackage);
+		if (message.getInstalledPackages() != null) {
+			for (InstalledPackage _package : message.getInstalledPackages()) {
+				tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
+				mPackage.setName(_package.getName());
+				mPackage.setVersion(_package.getVersion());
+				tr.com.agem.alfa.model.InstalledPackage tmp = this.softwareService.getPackage(mPackage.getName(), mPackage.getVersion());
+				agent.addInstalledPackage(tmp != null ? tmp : mPackage);
+			}
 		}
 		//
 		// Memories
 		//
-		for (MemoryDevice d : message.getMemory().getDevices()) {
-			Memory mem = new Memory();
-			mem.setSpeed(d.getSpeed());
-			mem.setSize(d.getSize());
-			mem.setType(d.getType());
-			mem.setManufacturer(d.getManufacturer());
-			agent.addMemory(mem);
+		if (message.getMemory() != null) {
+			for (MemoryDevice d : message.getMemory().getDevices()) {
+				Memory mem = new Memory();
+				mem.setSpeed(d.getSpeed());
+				mem.setSize(d.getSize());
+				mem.setType(d.getType());
+				mem.setManufacturer(d.getManufacturer());
+				agent.addMemory(mem);
+			}
 		}
 		//
 		// GPU
 		//
-		for (GpuDevice d : message.getGpu().getDevices()) {
-			Gpu gpu = new Gpu();
-			gpu.setSubsystem(d.getSubsystem());
-			gpu.setKernel(d.getKernel());
-			gpu.setMemory(d.getMemory());
-			gpu.setDriverDate(d.getDriverDate());
-			gpu.setDriverVersion(d.getDriverVersion());
-			agent.addGpu(gpu);
+		if (message.getGpu() != null) {
+			for (GpuDevice d : message.getGpu().getDevices()) {
+				Gpu gpu = new Gpu();
+				gpu.setSubsystem(d.getSubsystem());
+				gpu.setKernel(d.getKernel());
+				gpu.setMemory(d.getMemory());
+				gpu.setDriverDate(d.getDriverDate());
+				gpu.setDriverVersion(d.getDriverVersion());
+				agent.addGpu(gpu);
+			}
 		}
 		//
 		// BIOS
 		//
-		tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
-				: new tr.com.agem.alfa.model.Bios();
-		bios.setVendor(message.getBios().getVendor());
-		bios.setVersion(message.getBios().getVersion());
-		bios.setReleaseDate(message.getBios().getReleaseDate());
-		tr.com.agem.alfa.model.Bios _tmp = this.hardwareService.getBios(bios.getVersion(), bios.getVendor());
-		agent.setBios(_tmp != null ? _tmp : bios);
+		if (message.getBios() != null) {
+			tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
+					: new tr.com.agem.alfa.model.Bios();
+			bios.setVendor(message.getBios().getVendor());
+			bios.setVersion(message.getBios().getVersion());
+			bios.setReleaseDate(message.getBios().getReleaseDate());
+			tr.com.agem.alfa.model.Bios _tmp = this.hardwareService.getBios(bios.getVersion(), bios.getVendor());
+			agent.setBios(_tmp != null ? _tmp : bios);
+		}
 		//
 		// Platform
 		//

@@ -5,8 +5,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Device implements Serializable {
 
 	private final static long serialVersionUID = -1558536484133907408L;

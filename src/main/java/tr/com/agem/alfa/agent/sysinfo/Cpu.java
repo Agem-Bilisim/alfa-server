@@ -4,8 +4,10 @@ package tr.com.agem.alfa.agent.sysinfo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Cpu implements Serializable {
 
 	private final static long serialVersionUID = 2285250068081656743L;

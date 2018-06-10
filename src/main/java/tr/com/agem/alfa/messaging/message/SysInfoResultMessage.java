@@ -47,11 +47,11 @@ public class SysInfoResultMessage extends AgentBaseMessage {
 	@JsonProperty("disk")
 	private Disk disk;
 
-	@NotNull
+//	@NotNull
 	@JsonProperty("cpu")
 	private Cpu cpu;
 
-	@NotNull
+//	@NotNull
 	@JsonProperty("bios")
 	private Bios bios;
 

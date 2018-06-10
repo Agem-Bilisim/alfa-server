@@ -4,6 +4,9 @@ package tr.com.agem.alfa.agent.sysinfo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Disk implements Serializable {
 
 	private final static long serialVersionUID = 1226800383991623511L;
