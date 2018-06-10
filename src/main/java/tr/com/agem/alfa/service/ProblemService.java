@@ -88,6 +88,9 @@ public class ProblemService {
 			p.setLabel(problem.getLabel());
 			p.setDescription(problem.getDescription());
 			p.setSolved(problem.getSolved());
+			p.setSolutionDate(problem.getSolutionDate());
+			p.setEstimatedSolutionDate(problem.getEstimatedSolutionDate());
+			p.setWorkStartDate(problem.getWorkStartDate());
 			p.getReferences().addAll(problem.getReferences());
 			this.em.merge(p);
 			return;

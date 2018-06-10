@@ -27,6 +27,7 @@
 									<th>Durum</th>
 									<th>Başlangıç tarihi</th>
 									<th>Tahmini bitiş tarihi</th>
+									<th>Çözüldüğü tarih</th>
 									<th>İlişkili olduğu çevresel birimler</th>
 									<th>İlişkili olduğu donanımlar</th>
 									<th>İlişkili olduğu yazılım</th>
@@ -42,6 +43,8 @@
 		</div>
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		var dateFormat = /*[[${applicationDateFormat}]]*/ 'dd/mm/yyyy';
+		
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
 				return "<a class=\"btn btn-outline-primary\" href=\"/alfa/problem/" + row["id"] + "?redirect=problem/list\"><i class=\"fa fa-edit\"></i> Düzenle</a>";
@@ -58,9 +61,13 @@
 			
 			const cols = [
 				{"data": "label", "searchable": true, "orderable": true }, 
-				{"data": "solved", "searchable": true, "orderable": true }, 
-				{"data": "workStartDate", "searchable": true, "orderable": true }, 
-				{"data": "estimatedSolutionDate", "searchable": true, "orderable": true }, 
+				{"data": function ( row, type, val, meta ) {
+					row["solved_str"] = row["solved"] == true ? "Çözüldü" : "Devam ediyor"; 
+					return row["solved_str"];
+				}, "searchable": true, "orderable": true },
+				{"data": function(row) { return row["workStartDate"] ? moment(row["workStartDate"], "DD-MM-YYYY hh:mm:ss").format(dateFormat) : null; }, "property": "workStartDate", "searchable": true, "orderable": true }, 
+				{"data": function(row) { return row["estimatedSolutionDate"] ? moment(row["estimatedSolutionDate"], "DD-MM-YYYY hh:mm:ss").format(dateFormat) : null; }, "property": "estimatedSolutionDate", "searchable": true, "orderable": true }, 
+				{"data": function(row) { return row["solutionDate"] ? moment(row["solutionDate"], "DD-MM-YYYY hh:mm:ss").format(dateFormat) : null; }, "property": "solutionDate", "searchable": true, "orderable": true }, 
 				{"data": "relatedPeripherals", "searchable": false, "orderable": false }, 
 				{"data": "relatedHardwares", "searchable": false, "orderable": false }, 
 				{"data": "relatedSoftwares", "searchable": false, "orderable": false }, 
