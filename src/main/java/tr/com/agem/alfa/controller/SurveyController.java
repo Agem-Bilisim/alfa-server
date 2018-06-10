@@ -131,13 +131,9 @@ public class SurveyController {
 			Survey survey = surveyService.getSurvey(surveyId);
 			checkNotNull(survey, String.format("Survey:%d not found.", surveyId));
 			result.add("survey", survey.getSurveyJson());
-			if (survey != null && survey.getSurveyResults() != null) {
-				for (SurveyResult _result : survey.getSurveyResults()) {
-					if (_result != null && messagingId.equals(_result.getAgent().getMessagingId())) {
-						result.add("result", new String(_result.getResult(), StandardCharsets.ISO_8859_1));
-						break;
-					}
-				}
+			SurveyResult surveyResult = this.surveyService.getLatestSurveyResult(messagingId, surveyId);
+			if (surveyResult != null) {
+				result.add("result", new String(surveyResult.getResult(), StandardCharsets.UTF_8));
 			}
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to send survey, assuming invalid parameters", e);
