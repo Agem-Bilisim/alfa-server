@@ -129,9 +129,9 @@ $.fn.paginatedTable = function(url, resultingProp, cols, drawCallback, order) {
 						console.log(JSON.stringify(result))
 						callback({
 							"draw": drawCount,
-							"recordsTotal": result.data[resultingProp].totalElements ? result.data[resultingProp].totalElements : result.data[resultingProp].length,
-							"recordsFiltered": result.data[resultingProp].totalElements ? result.data[resultingProp].totalElements : result.data[resultingProp].length,
-							"data": result.data[resultingProp].content ? result.data[resultingProp].content : result.data[resultingProp]
+							"recordsTotal": result.data[resultingProp].hasOwnProperty('totalElements') ? result.data[resultingProp].totalElements : result.data[resultingProp].length,
+							"recordsFiltered": result.data[resultingProp].hasOwnProperty('totalElements') ? result.data[resultingProp].totalElements : result.data[resultingProp].length,
+							"data": result.data[resultingProp].hasOwnProperty('content') ? result.data[resultingProp].content : result.data[resultingProp]
 						});
 					}
 				},
