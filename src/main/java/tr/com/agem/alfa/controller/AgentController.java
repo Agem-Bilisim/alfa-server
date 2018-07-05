@@ -116,11 +116,25 @@ public class AgentController {
 		log.info("Getting details for agent with agent id:{}", agentId);
 		RestResponseBody result = new RestResponseBody();
 		try {
-			Agent agent = agentService.getAgent(agentId);
+			Agent agent = agentService.getAgentDetail(agentId, true);
 			result.add("agent", checkNotNull(agent, "Agent not found."));
-			result.add("online-status", messagingService.isOnline(agent));
 			result.add("agent-type",
 					messageSource.getMessage(agent.getTypeLabel(), null, Locale.forLanguageTag(locale)));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find agent", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/agent/{agentId}/online")
+	public @ResponseBody ResponseEntity<?> isAgentOnline(@PathVariable Long agentId) {
+		log.info("Checking agent online status with agent id:{}", agentId);
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Agent agent = agentService.getAgentDetail(agentId, false);
+			result.add("online-status", messagingService.isOnline(agent));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find agent", e);
 			result.setMessage(e.getMessage());

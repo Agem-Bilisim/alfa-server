@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.AgentUser;
+import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.repository.AgentRepository;
 import tr.com.agem.alfa.repository.AgentUserRepository;
@@ -99,6 +100,46 @@ public class AgentService {
 
 	public AgentUser getAgentUser(String name) {
 		return this.agentUserRepository.findByNameIgnoreCase(name);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Agent getAgentDetail(Long id, boolean fetchChildren) {
+		Assert.notNull(id, "Agent ID must not be null.");
+		Query query = em.createNativeQuery("SELECT TYPE, HOST_NAME, IP_ADDRESSES, MAC_ADDRESSES FROM c_agent WHERE ID = :id");
+		query.setParameter("id", id);
+		Agent agent = new Agent((Object[]) query.getSingleResult());
+		em.detach(agent); // So that, it wont query children!
+		if (fetchChildren && agent != null) {
+			// Users
+			// @formatter:off
+			Query query2 = em.createNativeQuery(
+					"SELECT au.NAME, au.GROUPS FROM c_agent_user au "
+					+ "INNER JOIN c_agent_user_agent aua ON (au.id = aua.user_id AND aua.agent_id = :agentId)");
+			// @formatter:on
+			query2.setParameter("agentId", id);
+			List<Object[]> users = query2.getResultList();
+			for (Object[] user : users) {
+				AgentUser aUser = new AgentUser();
+				aUser.setName(user[0].toString());
+				aUser.setCommaSeparatedGroups(user[1] != null ? user[1].toString() : null);
+				agent.addUser(aUser);
+			}
+			// Packages
+			// @formatter:off
+			Query query3 = em.createNativeQuery(
+					"SELECT ap.NAME, ap.VERSION FROM c_agent_package ap "
+					+ "INNER JOIN c_agent_package_agent apa ON (ap.id = apa.installed_package_id AND apa.agent_id = :agentId)");
+			// @formatter:on
+			query3.setParameter("agentId", id);
+			List<Object[]> packages = query3.getResultList();
+			for (Object[] pkg : packages) {
+				InstalledPackage aPackage = new InstalledPackage();
+				aPackage.setName(pkg[0].toString());
+				aPackage.setVersion(pkg[1] != null ? pkg[1].toString() : null);
+				agent.addInstalledPackage(aPackage);
+			}
+		}
+		return agent;
 	}
 
 }

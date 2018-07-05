@@ -129,6 +129,13 @@ public class Agent extends BaseModel {
 	public Agent() {
 	}
 
+	public Agent(Object[] columns) {
+		this.type = Integer.parseInt(columns[0].toString());
+		this.hostName = columns[1].toString();
+		this.ipAddresses = columns[2].toString();
+		this.macAddresses = columns[3].toString();
+	}
+
 	public Boolean getDeleted() {
 		return deleted;
 	}

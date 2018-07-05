@@ -1,10 +1,12 @@
 package tr.com.agem.alfa.messaging.client;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.util.Assert;
 
@@ -17,9 +19,25 @@ import tr.com.agem.alfa.messaging.message.ServerBaseMessage;
  */
 public class HttpClient extends BaseMessagingClient {
 
+	private Integer timeout;
+	
+	public HttpClient(Integer timeout) {
+		this.timeout = timeout;
+	}
+
 	@Override
 	public void sendMessage(String host, String url, ServerBaseMessage message) throws Exception {
-		CloseableHttpClient client = HttpClients.createDefault();
+		CloseableHttpClient client = null;
+		if (timeout != null) {
+			RequestConfig config = RequestConfig.custom()
+					.setConnectTimeout(timeout)
+					.setConnectionRequestTimeout(timeout)
+					.setSocketTimeout(timeout).build();
+			client = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+		} else {
+			client = HttpClients.createDefault();
+		}
+		
 		HttpPost httpPost = new HttpPost(host + url);
 
 		if (message != null) {

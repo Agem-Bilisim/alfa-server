@@ -156,6 +156,20 @@
 			$.ajax({
 				type : "GET",
 				contentType : "application/json",
+				url : "/alfa/agent/" + agentId + "/online",
+				dataType : 'json',
+				cache : false,
+				timeout : 600000,
+				success : function(result) {
+					if (result && result.data && result.data) {
+						$("#agentOnline").html(result.data['online-status'] ? "<i class=\"fa fa-circle text-success\"></i> Çevrimiçi" 
+								: "<i class=\"fa fa-circle text-error\"></i> Çevrimdışı");
+					}
+				}
+			});
+			$.ajax({
+				type : "GET",
+				contentType : "application/json",
 				url : "/alfa/agent/" + agentId + "/detail",
 				dataType : 'json',
 				cache : false,
@@ -164,11 +178,9 @@
 					if (result && result.data && result.data.agent) {
 						// General
 						$("#agentHostname").html(result.data.agent['hostName']);
-						$("#agentOnline").html(result.data['online-status'] ? "<i class=\"fa fa-circle text-success\"></i> Çevrimiçi" 
-								: "<i class=\"fa fa-circle text-error\"></i> Çevrimdışı");
 						$("#agentMacAddresses").html(result.data.agent['macAddresses']);
 						$("#agentIpAddresses").html(result.data.agent['ipAddresses']);
-						$("#agentType").html(result.data.agent['agent-type']);
+						$("#agentType").html(result.data['agent-type']);
 						$("#agentLastInstallationDate").html(result.data.agent['lastInstallationDate']);
 						
 						// Packages
