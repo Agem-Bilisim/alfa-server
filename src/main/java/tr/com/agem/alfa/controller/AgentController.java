@@ -267,9 +267,9 @@ public class AgentController {
 		agent.setDeleted(false);
 		agent.setInstallPath(message.getAgentInstallPath());
 		agent.setHostName(message.getPlatform().getNode());
-		agent.setIpAddresses(CommonUtils.join(",", message.getNetwork().getIpAddresses()
+		agent.setIpAddresses(CommonUtils.join(",", excludeLocalhost(message.getNetwork().getIpAddresses())
 				.toArray(new String[message.getNetwork().getIpAddresses().size()])));
-		agent.setMacAddresses(CommonUtils.join(",", message.getNetwork().getMacAddresses()
+		agent.setMacAddresses(CommonUtils.join(",", excludeInvalid(message.getNetwork().getMacAddresses())
 				.toArray(new String[message.getNetwork().getMacAddresses().size()])));
 		agent.setSysinfo(new ObjectMapper().writeValueAsBytes(message));
 		//
@@ -500,6 +500,28 @@ public class AgentController {
 			}
 		}
 		return agent;
+	}
+
+	private List<String> excludeInvalid(List<String> macAddresses) {
+		Iterator<String> it = macAddresses.iterator();
+		while (it.hasNext()) {
+			String macAddr = it.next();
+			if ("00:00:00:00:00:00".equals(macAddr) || "00-00-00-00-00-00-00-E0".equalsIgnoreCase(macAddr)) {
+				it.remove();
+			}
+		}
+		return macAddresses;
+	}
+
+	private List<String> excludeLocalhost(List<String> ipAddresses) {
+		Iterator<String> it = ipAddresses.iterator();
+		while(it.hasNext()) {
+			String ipAddr = it.next();
+			if ("127.0.0.1".equals(ipAddr) || "localhost".equalsIgnoreCase(ipAddr)) {
+				it.remove();
+			}
+		}
+		return ipAddresses;
 	}
 
 	private String toCapabilityString(Map<String, String> capabilities) {
