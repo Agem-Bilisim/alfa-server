@@ -19,4 +19,6 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
 	Page<Agent> findByHostNameContainingOrIpAddressesContainingOrPlatformSystemContainingAllIgnoringCase(
 			String hostName, String ipAddresses, String system, Pageable pageable);
 
+	Agent getOneAgentByMacAddressesContainingIgnoreCase(String macAddr);
+
 }

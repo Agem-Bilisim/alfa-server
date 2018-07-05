@@ -155,7 +155,7 @@ public class AgentController {
 		}
 		boolean oldWindows = false;
 		try {
-			Agent agent = agentService.getAgentByMessagingId(message.getFrom());
+			Agent agent = agentService.getAgentByMessagingIdOrMacAddresses(message.getFrom(), excludeInvalid(message.getNetwork().getMacAddresses()));
 
 			if (agent != null && AgentType.WINDOWS_BASED.equals(agent.getType())) {
 				oldWindows= true;

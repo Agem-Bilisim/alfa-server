@@ -142,4 +142,21 @@ public class AgentService {
 		return agent;
 	}
 
+	public Agent getAgentByMessagingIdOrMacAddresses(String messagingId, List<String> macAddresses) {
+		Assert.notNull(messagingId, "Messaging ID must not be null.");
+		Agent agent = this.agentRepository.getAgentByMessagingId(messagingId);
+		if (agent == null) {
+			// Cannot find by messaging ID, try to find by one of the MAC addresses...
+			if (macAddresses != null) {
+				for (String macAddr : macAddresses) {
+					agent = this.agentRepository.getOneAgentByMacAddressesContainingIgnoreCase(macAddr);
+					if (agent != null) {
+						return agent;
+					}
+				}
+			}
+		}
+		return agent;
+	}
+
 }
