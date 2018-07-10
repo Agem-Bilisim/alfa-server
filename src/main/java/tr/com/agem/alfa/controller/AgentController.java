@@ -167,7 +167,7 @@ public class AgentController {
 				agent.setLastInstallationDate(new Date());
 			}
 			
-			agentService.saveOrUpdate(agent, true);
+			agentService.saveOrUpdate(agent);
 			log.info("Agent and its system info created/updated successfully.");
 		} catch (Exception e) {
 			String error = "Exception occurred when trying to handle system info.";

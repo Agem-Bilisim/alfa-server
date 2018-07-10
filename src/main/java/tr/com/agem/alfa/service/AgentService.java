@@ -43,11 +43,9 @@ public class AgentService {
 		this.agentUserRepository = agentUserRepository;
 	}
 
-	public Agent saveOrUpdate(Agent agent, boolean updateCrossTables) {
+	public Agent saveOrUpdate(Agent agent) {
 		Assert.notNull(agent, "Agent must not be null.");
 		if (agent.getId() != null) {
-			if (updateCrossTables) {
-			}
 			return this.em.merge(agent);
 		}
 		return this.agentRepository.save(agent);
