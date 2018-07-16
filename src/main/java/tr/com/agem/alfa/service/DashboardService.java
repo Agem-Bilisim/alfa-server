@@ -194,7 +194,7 @@ public class DashboardService {
 				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
-				"  left outer join c_agent a on (DATE_FORMAT(a.last_installation_date, '%m-%Y') = DATE_FORMAT(d2.m1, '%m-%Y'))\n" + 
+				"  left outer join c_agent a on (DATE_FORMAT(a.last_installation_date, '%m-%Y') < DATE_FORMAT(d2.m1, '%m-%Y'))\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
 				"order by d2.m1";
@@ -248,7 +248,7 @@ public class DashboardService {
 				"                    from c_agent_tag_agent ta\n" + 
 				"                      inner join c_agent_tag t ON (ta.tag_id = t.id)\n" + 
 				"                    group by ta.agent_id\n" + 
-				"                  ) d3 on DATE_FORMAT(d3.planned_migration_date, '%m-%Y') = DATE_FORMAT(d2.m1, '%m-%Y')\n" + 
+				"                  ) d3 on DATE_FORMAT(d3.planned_migration_date, '%m-%Y') < DATE_FORMAT(d2.m1, '%m-%Y')\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
 				"order by d2.m1";
