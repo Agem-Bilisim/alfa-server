@@ -1,7 +1,12 @@
 package tr.com.agem.alfa.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -21,6 +26,12 @@ public class Education extends BaseModel {
 
 	@Column(name = "URL", length = 500)
 	private String url;
+
+	@Column(name = "LMS_EDUCATION_ID")
+	private Long lmsEducationId;
+
+	@OneToMany(mappedBy = "education", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	private Set<EducationLdapUser> educationUsers = new HashSet<EducationLdapUser>(0);
 
 	public String getLabel() {
 		return label;
@@ -44,6 +55,22 @@ public class Education extends BaseModel {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Set<EducationLdapUser> getEducationUsers() {
+		return educationUsers;
+	}
+
+	public void setEducationUsers(Set<EducationLdapUser> educationUsers) {
+		this.educationUsers = educationUsers;
+	}
+
+	public Long getLmsEducationId() {
+		return lmsEducationId;
+	}
+
+	public void setLmsEducationId(Long lmsEducationId) {
+		this.lmsEducationId = lmsEducationId;
 	}
 
 }

@@ -24,25 +24,37 @@
 							<div class="box-header">
 								<h3 class="box-title">Mevcut Durum</h3>
 							</div>
-							<div class="box-body" style="height: 300px">
-								<div style="position: absolute; top: 80px; width: 200px; 
-									height: 150px; text-align: center; padding: 10px; 
-									background-color: rgba(54, 162, 235, 0.5); font-size: 600%;
-									border-radius: 10px;
-									border: 2px solid rgba(54, 162, 235)">
-									84
-									<br>
-									<small style="font-size: 11px; position: relative; top: -95px">Linux Sistem</small>
+							<div class="box-body">
+								<div class="col-md-3 col-sm-6 col-xs-12">
+								  <div class="info-box">
+								    <span class="info-box-icon bg-aqua"><i class="fa fa-linux"></i></span>
+								    <div class="info-box-content">
+								      <span class="info-box-text">Linux Sistem</span>
+								      <span class="info-box-number" id="debian-agent-count">0</span>
+								    </div>
+								  </div>
 								</div>
-								<div style="position: absolute; top: 80px; left: 220px; width: 200px; 
-									height: 150px; text-align: center; padding: 10px; 
-									background-color: rgba(255, 99, 132, 0.5); font-size: 600%;
-									border-radius: 10px;
-									border: 2px solid rgba(255, 99, 132)">
-									238
-									<br>
-									<small style="font-size: 11px; position: relative; top: -95px">Windows Sistem</small>
+								
+								<div class="col-md-3 col-sm-6 col-xs-12">
+								  <div class="info-box">
+								    <span class="info-box-icon bg-yellow"><i class="fa fa-windows"></i></span>
+								    <div class="info-box-content">
+								      <span class="info-box-text">Windows Sistem</span>
+								      <span class="info-box-number" id="win-agent-count">0</span>
+								    </div>
+								  </div>
 								</div>
+								
+								<div class="col-md-3 col-sm-6 col-xs-12">
+								  <div class="info-box">
+								    <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
+								    <div class="info-box-content">
+								      <span class="info-box-text">Kullanıcı</span>
+								      <span class="info-box-number" id="user-count">0</span>
+								    </div>
+								  </div>
+								</div>
+								
 							</div>
 						</div>					
 					</div>
@@ -128,7 +140,7 @@
 			if (m < 10) {
 				m = "0"+m;
 			}
-			MONTHS.push(date.getFullYear()+"-"+m);
+			MONTHS.push(m+"-"+date.getFullYear());
 		}
 		for (var i=0; i<14; i++) {
 			var date = new Date(now.getFullYear(), now.getMonth()+i, 1);
@@ -136,12 +148,20 @@
 			if (m < 10) {
 				m = "0"+m;
 			}
-			MONTHS.push(date.getFullYear()+"-"+m);
+			MONTHS.push(m+"-"+date.getFullYear());
 		}
 		
+		// OZET
+		Alfa.ajax({url: '/alfa/dashboard/summary', type: 'POST'}, function(res){
+			console.log(JSON.stringify(res));
+			$("#win-agent-count").html(res.data['win-agent-count']);
+			$("#debian-agent-count").html(res.data['debian-agent-count']);
+			$("#user-count").html(res.data['user-count']);
+		});
+		
 		// BASARILI GOC YAPILMIS SISTEMLER
-		Alfa.ajax({url: '/alfa/dashboard/monthly-migration', type: 'GET', 
-			data: { 'startDate': MONTHS[0], 'endDate': MONTHS[MONTHS.length-1] }}, function(data){
+		Alfa.ajax({url: '/alfa/dashboard/monthly-migration', type: 'POST', 
+			data: { 'startDate': MONTHS[0], 'endDate': MONTHS[MONTHS.length-1] }}, function(res){
 			var barChartData = {
 				labels: MONTHS,
 				datasets: [
@@ -150,13 +170,13 @@
 						backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
 						borderColor: window.chartColors.blue,
 						borderWidth: 1,
-						data: data.migrated
+						data: res.data.migrated
 					}, {
 						label: 'Planlanan Göç Yapılan/Yapılacak Sistemler',
 						backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
 						borderColor: window.chartColors.yellow,
 						borderWidth: 1,
-						data: data.planned
+						data: res.data.planned
 					}
 				]
 			};
@@ -179,8 +199,8 @@
 		});
 		
 		// AYLIK GOC PROBLEMLERI DURUMU
-		Alfa.ajax({url: '/alfa/dashboard/monthly-problem', type: 'GET', 
-				data: { 'startDate': MONTHS[0], 'endDate': MONTHS[MONTHS.length-1] }}, function(data){
+		Alfa.ajax({url: '/alfa/dashboard/monthly-problem', type: 'POST', 
+				data: { 'startDate': MONTHS[0], 'endDate': MONTHS[MONTHS.length-1] }}, function(res){
 			var color = Chart.helpers.color;
 			var barChartData = {
 				labels: MONTHS,
@@ -189,21 +209,20 @@
 					backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.yellow, 
 					borderWidth: 1,
-					data: data.continuing
+					data: res.data.continuing
 				}, {
 					label: 'Yeni Problemler',
 					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.red,
 					borderWidth: 1,
-					data: data.newly_opened
+					data: res.data.newly_opened
 				}, {
 					label: 'Çözülen Problemler',
 					backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.blue, 
 					borderWidth: 1,
-					data: data.solved
+					data: res.data.solved
 				}]
-		
 			};
 			
 			var ctx = document.getElementById('monthly-problem-canvas').getContext('2d');
@@ -224,10 +243,8 @@
 		});
 
 		// AYLIK BASARILI GOC YAPILAN SISTEMLER (KUMULATIF)
-		Alfa.ajax({url: '/alfa/dashboard/monthly-migration-cumulative', type: 'GET', 
-				data: { 'startDate': MONTHS[0], 'endDate': MONTHS[MONTHS.length-1] }}, function(data){
-			migrated_x = data.migrated;
-			planned_x = data.planned;
+		Alfa.ajax({url: '/alfa/dashboard/monthly-cumulative-migration', type: 'POST', 
+				data: { 'startDate': MONTHS[0], 'endDate': MONTHS[MONTHS.length-1] }}, function(res){
 			var barChartData = {
 				labels: MONTHS,
 				datasets: [
@@ -236,13 +253,13 @@
 						backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
 						borderColor: window.chartColors.blue,
 						borderWidth: 1,
-						data: migrated_x
+						data: res.data.migrated
 					}, {
 						label: 'Planlanan Göç Yapılan/Yapılacak Sistemler',
 						backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
 						borderColor: window.chartColors.yellow,
 						borderWidth: 1,
-						data: planned_x
+						data: res.data.planned
 					}
 				]
 			};
@@ -303,7 +320,6 @@
 							tag["plannedMigrationDate"] = $(this).val();;
 							d.push(tag);
 						});
-						console.log(d);
 						Alfa.ajax({url: "/alfa/plan/save", data: {"tags": d}}, 
 							function(result){
 								alertify.success("Plan başarıyla kaydedildi.");

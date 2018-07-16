@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import tr.com.agem.alfa.model.Problem;
+import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.repository.AgentRepository;
 import tr.com.agem.alfa.repository.LdapUserRepository;
 import tr.com.agem.alfa.repository.ProblemRepository;
@@ -23,7 +24,6 @@ import tr.com.agem.alfa.repository.ProblemRepository;
 @Transactional
 public class DashboardService {
 
-	// TODO EntityManager can be used to execute native SQL queries!
 	@PersistenceContext
 	private EntityManager em;
 
@@ -39,8 +39,8 @@ public class DashboardService {
 		this.problemRepository = problemRepository;
 	}
 
-	public long getAgentCount() {
-		return this.agentRepository.count();
+	public long getAgentCount(AgentType type) {
+		return this.agentRepository.countByType(type == null ? AgentType.ALL.getId() : type.getId());
 	}
 
 	public long getUserCount() {
@@ -68,7 +68,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -90,7 +90,7 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"  left outer join c_agent a on (DATE_FORMAT(a.last_installation_date, '%m-%Y') = DATE_FORMAT(d2.m1, '%m-%Y'))\n" + 
@@ -98,7 +98,7 @@ public class DashboardService {
 				"group by d2.m1\n" + 
 				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
@@ -115,7 +115,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -137,7 +137,7 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"  left outer join (\n" + 
@@ -150,9 +150,9 @@ public class DashboardService {
 				"                  ) d3 on DATE_FORMAT(d3.planned_migration_date, '%m-%Y') = DATE_FORMAT(d2.m1, '%m-%Y')\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
-				"order by d2.m1;";
+				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
@@ -169,7 +169,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -191,7 +191,7 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"  left outer join c_agent a on (DATE_FORMAT(a.last_installation_date, '%m-%Y') = DATE_FORMAT(d2.m1, '%m-%Y'))\n" + 
@@ -199,7 +199,7 @@ public class DashboardService {
 				"group by d2.m1\n" + 
 				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
@@ -216,7 +216,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -238,7 +238,7 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"  left outer join (\n" + 
@@ -251,9 +251,9 @@ public class DashboardService {
 				"                  ) d3 on DATE_FORMAT(d3.planned_migration_date, '%m-%Y') = DATE_FORMAT(d2.m1, '%m-%Y')\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
-				"order by d2.m1;";
+				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
@@ -275,7 +275,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -297,14 +297,14 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
-				"order by d2.m1;";
+				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
@@ -325,7 +325,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -347,14 +347,14 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
-				"order by d2.m1;";
+				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
@@ -375,7 +375,7 @@ public class DashboardService {
 				"           + INTERVAL m MONTH as m1\n" + 
 				"    from\n" + 
 				"      (\n" + 
-				"        select @rownum := @rownum + 1 as m\n" + 
+				"        select @rownum \\:= @rownum + 1 as m\n" + 
 				"        from\n" + 
 				"          (select 1\n" + 
 				"           union select 2\n" + 
@@ -397,14 +397,14 @@ public class DashboardService {
 				"           union select 2\n" + 
 				"           union select 3\n" + 
 				"           union select 4) t5,\n" + 
-				"          (select @rownum := -1) t0\n" + 
+				"          (select @rownum \\:= -1) t0\n" + 
 				"      ) d1\n" + 
 				"  ) d2\n" + 
 				"where d2.m1 <= STR_TO_DATE(:endDate, '%m-%Y')\n" + 
 				"group by d2.m1\n" + 
-				"order by d2.m1;";
+				"order by d2.m1";
 		// @formatter:on
-		Query query = em.createNativeQuery(sql, Integer.class);
+		Query query = em.createNativeQuery(sql);
 		query.setParameter("startDate", "01-" + startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();

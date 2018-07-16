@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
@@ -43,8 +45,15 @@ public class LdapUser extends BaseModel {
 	@JoinColumn(name = "LDAP_INTEGRATION_ID", nullable = false)
 	private LdapIntegration ldapIntegration;
 
-	@OneToMany(fetch=FetchType.EAGER, mappedBy = "ldapUser", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Column(name = "LMS_USER_ID")
+	private Long lmsUserId;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "ldapUser", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<LdapUserAttribute> attributes = new HashSet<LdapUserAttribute>(0);
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ldapUser")
+	private Set<EducationLdapUser> educationUsers = new HashSet<EducationLdapUser>(0);
 
 	public String getDn() {
 		return dn;
@@ -86,9 +95,25 @@ public class LdapUser extends BaseModel {
 		this.attributes = attributes;
 	}
 
+	public Long getLmsUserId() {
+		return lmsUserId;
+	}
+
+	public void setLmsUserId(Long lmsUserId) {
+		this.lmsUserId = lmsUserId;
+	}
+
 	public void addAttribute(LdapUserAttribute attr) {
 		attr.setLdapUser(this);
 		attributes.add(attr);
+	}
+
+	public Set<EducationLdapUser> getEducationUsers() {
+		return educationUsers;
+	}
+
+	public void setEducationUsers(Set<EducationLdapUser> educationUsers) {
+		this.educationUsers = educationUsers;
 	}
 
 	@Override
@@ -101,13 +126,18 @@ public class LdapUser extends BaseModel {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		LdapUser other = (LdapUser) obj;
 		if (userIdentifier == null) {
-			if (other.userIdentifier != null) return false;
-		} else if (!userIdentifier.equals(other.userIdentifier)) return false;
+			if (other.userIdentifier != null)
+				return false;
+		} else if (!userIdentifier.equals(other.userIdentifier))
+			return false;
 		return true;
 	}
 

@@ -20,5 +20,7 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
 			String hostName, String ipAddresses, String system, Pageable pageable);
 
 	Agent getOneAgentByMacAddressesContainingIgnoreCase(String macAddr);
+	
+	Long countByType(Integer type);
 
 }
