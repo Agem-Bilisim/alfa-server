@@ -12,17 +12,19 @@ Sistem Envanteri ekranında; Ajan kurulu sistemlerin listesi ve kurulu sistemler
 
 ![alt text](assets/img/sistem_envanteri.png "Sistem Envanteri")
 
-Ayrıca, listeden bir kayıt seçilip **Detaylar** butonuna basılarak ajan detayları görüntülenebilir.
+Ayrıca, listeden bir sistem kaydı seçilip **Detaylar** butonuna basılarak ajan detayları (üzerinde kurulu olan işletim sistemi, yazılımlar, kullanıcılar vb) görüntülenebilir.
 
 ![alt text](assets/img/sistem_envanter_detay.png "Sistem Envanter Detay")
 
-**Etiket düzenle** butonuna basılarak kayıtlı etiketlerden birden fazla seçim yapılabilir veya yeni etiket eklenebilir.
+**Etiket düzenle** butonuna basılarak kayıtlı etiketlerden birden fazla seçim yapılabilir veya yeni etiket eklenebilir. Bu etiketler ileride bu sistemlerin gruplanması, bu etiketlere atanacak olası sorunların çözüm sürecinin izlenmesi ve dolayısı ile ilgili sistemin göçe hazır olup olmadığının belirlenmesine yardımcı olur.
 
 ![alt text](assets/img/sistem_envanter_etiket.png "Sistem Envanter Etiket")
 
+##NOT: YENİ ETİKET EKLEME ??
+
 ### Yazılım Envanteri
 
-Yazılım envanteri; kuruma ait olan tüm yazılım envanterlerinin bulunduğu ekrandır. Yazılım, Hizmet, Sorunlar ve Uyumlu Yazılımlar listelerini içerir.
+Yazılım envanteri; kuruma ait olan tüm yazılım envanterlerinin bulunduğu ekrandır. Bu yazılım envanteri sistemler üzerinde kurulu uygulamalarını (applications) ve sistem hizmetlerini (services) kapsar. Bu uygulama ve hizmetler Alfa ajanı tarafından GBYS'ne dahil olan sistemlerinden toparlanıp otomatik olarak kayıt altına alınabildikleri gibi ayrıca kullanıcı tarafından elle de eklenebilir.
 
 ![alt text](assets/img/yazilim_envanteri.png "Yazılım Envanter")
 
