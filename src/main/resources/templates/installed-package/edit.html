@@ -47,6 +47,14 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<label>Göç'e Uyumlu </label>
+								<select class="form-control" id="compatible" name="compatible" style="width: 100%;" th:field="*{compatible}">
+									<option value="">Belirsiz</option>
+									<option value="E">Evet</option>
+									<option value="H">Hayır</option>
+								</select>
+							</div>
+							<div class="form-group">
 								<div class="checkbox">
 									<label style="padding-left:0px;"> <input type="checkbox" class="minimal" name="institutional"
 										id="institutional" th:field="*{institutional}"> Kurumsal yazılım

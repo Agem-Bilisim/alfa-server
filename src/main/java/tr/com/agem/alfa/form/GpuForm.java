@@ -25,6 +25,8 @@ public class GpuForm extends BaseForm implements OptionFormConvertable {
 
 	private String driverVersion;
 
+	private String compatible;
+	
 	private Long[] agentIds;
 
 	public String getSubsystem() {
@@ -83,6 +85,14 @@ public class GpuForm extends BaseForm implements OptionFormConvertable {
 	@Override
 	public String getOptionValue() {
 		return ProblemReferenceType.GPU.getId() + "-" + this.getId();
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 
 }

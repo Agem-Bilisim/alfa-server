@@ -47,6 +47,15 @@
 									name="product" placeholder="Ürün" th:field="*{product}" />
 								<span class="help-block" th:if="${#fields.hasErrors('product')}" th:errors="*{product}">Hata</span>
 							</div>
+							<div class="form-group" th:classappend="${#fields.hasErrors('compatible')} ? 'has-error' : ''">
+								<label>Göç'e Uyumlu </label>
+								<select class="form-control" id="compatible" name="compatible" style="width: 100%;" th:field="*{compatible}">
+									<option value="">Belirsiz</option>
+									<option value="E">Evet</option>
+									<option value="H">Hayır</option>
+								</select>
+								<span class="help-block" th:if="${#fields.hasErrors('compatible')}" th:errors="*{compatible}">Hata</span>
+							</div>							
 							<div class="form-group" th:classappend="${#fields.hasErrors('capabilities')} ? 'has-error' : ''">
 								<label for="capabilities">Yetenekler</label>
 								<input type="text" class="form-control" id="capabilities"

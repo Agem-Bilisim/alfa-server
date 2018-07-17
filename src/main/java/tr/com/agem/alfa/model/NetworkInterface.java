@@ -30,6 +30,10 @@ public class NetworkInterface extends BaseModel {
 	@Lob
 	@Column(name = "CAPABILITIES")
 	private String capabilities;
+	
+	@Column(name = "COMPATIBLE")
+	private String compatible;
+	
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "networkInterfaces")
@@ -109,6 +113,14 @@ public class NetworkInterface extends BaseModel {
 			if (other.version != null) return false;
 		} else if (!version.equals(other.version)) return false;
 		return true;
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 
 }

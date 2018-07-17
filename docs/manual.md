@@ -24,15 +24,15 @@ Ayrıca, listeden bir sistem kaydı seçilip **Detaylar** butonuna basılarak aj
 
 ### Yazılım Envanteri
 
-Yazılım envanteri; kuruma ait olan tüm yazılım envanterlerinin bulunduğu ekrandır. Bu yazılım envanteri sistemler üzerinde kurulu uygulamalarını (applications) ve sistem hizmetlerini (services) kapsar. Bu uygulama ve hizmetler Alfa ajanı tarafından GBYS'ne dahil olan sistemlerinden toparlanıp otomatik olarak kayıt altına alınabildikleri gibi ayrıca kullanıcı tarafından elle de eklenebilir.
+Yazılım envanteri; kuruma ait olan tüm yazılım envanterlerinin bulunduğu ekrandır. Bu yazılım envanteri sistemler üzerinde kurulu uygulamalarını (applications) ve sistem hizmetlerini (services) kapsar. Bu uygulama ve hizmetler Alfa ajanı tarafından GBYS'ne dahil olan sistemlerinden toparlanıp otomatik olarak kayıt altına alınabildikleri gibi ayrıca kullanıcı tarafından elle de eklenebilir. Yazımlara ait sorunlar ve göç'te bir sorun teşkil etmeyecek uyumlu yazılımlar yine bu arayüzden izlenebilir.
 
 ![alt text](assets/img/yazilim_envanteri.png "Yazılım Envanter")
 
-Yazılım listesinde; yazılımın adı ve sürüm bilgileri mevcuttur. **Yeni** butonuna basılarak yeni bir yazılım bilgisi girilebilir. Yazılım bilgisi **Düzenle** butonuna basılarak düzenlenebilir veya **Sil** butonuyla silinebilir. Düzenle işleminden; Yazılımın Adı, Sürümü, Ankette gösterilebilir ve Kurumsal yazılım seçenekleri düzenlenebilir.
+Yazılım listesinde; yukarıda belirtildiği gibi kuruma ait sistemlerde koşan uygulamaların adı ve sürüm bilgileri mevcuttur. **Yeni** butonuna basılarak yeni bir yazılım bilgisi girilebilir. Yazılım bilgisi **Düzenle** butonuna basılarak düzenlenebilir veya **Sil** butonuyla silinebilir. Düzenle işleminden; Yazılımın Adı, Sürümü, Ankette gösterilebilir ve Kurumsal yazılım seçenekleri düzenlenebilir.
 
 ![alt text](assets/img/yazilim_duzenle.png "Yazılım Düzenle")
 
-Hizmet listesinde; sorunları çözülmüş yada uyumlu yazılımların listesi mevcuttur. **Yeni** butonuna basılarak yeni bir hizmet bilgisi girilebilir. **Düzenle** butonuna basılarak düzenlenebilir veya **Sil** butonuyla silinebilir. Düzenle işleminden; Hizmetin Adı düzenlenebilir.
+Hizmet listesinde; kurum sistemlerinde koşan hizmetlerin (services) listesi mevcuttur. **Yeni** butonuna basılarak yeni bir hizmet bilgisi girilebilir. **Düzenle** butonuna basılarak düzenlenebilir veya **Sil** butonuyla silinebilir. Düzenle işleminden; Hizmetin Adı düzenlenebilir.
 
 ![alt text](assets/img/hizmet_listesi.png "Hizmet Listesi")
 
@@ -40,11 +40,11 @@ Sorunlar listesinde; yazılım kaynaklı sorunların listesi mevcuttur. **Yeni**
 
 ![alt text](assets/img/yazilim_sorunlar.png "Sorunlar Listesi")
 
-Yazılım sorunlarını düzenleme işleminde; soruna ait Tanım, Açıklama, Çalışma başlangıç tarihi, Tahmini bitiş tarihi, Varsa soruna ilişkin yazılım/donanım bilgisi, Sorunun çözülüp çözülmediğine dair seçenek ve Sorun çözülme tarihi bilgileri mevcuttur.
+Yazılım sorunlarını düzenleme işleminde; soruna ait Tanım, Açıklama, Çalışma başlangıç tarihi, Tahmini bitiş tarihi, Varsa soruna ilişkin yazılım/donanım bilgisi, Sorunun çözülüp çözülmediğine dair seçenek ve Sorun çözülme tarihi bilgileri mevcuttur. Eğer tanımlanan süreç izin veriyor ise, süreç dahilinde bu tarihler otomatik olarak güncellenecektir. Bu tarihler aynı zamanda bu ekran aracılığı ile de elle güncellenebilir.
 
 ![alt text](assets/img/sorun_duzenle.png "Sorun Düzenle")
 
-**Süreç Başlat** işleminde de soruna ait Sorumlu Rol, Açıklama, Tahmini Bitiş Tarihi ve Notlar bilgileri doldurulduktan sonra, **Başlat** butonuna basılarak süreç başlatılır.
+**Süreç Başlat** işleminde de soruna ait Sorumlu Rol, Açıklama, Tahmini Bitiş Tarihi ve Notlar bilgileri doldurulduktan sonra, **Başlat** butonuna basılarak süreç başlatılır. Bu arayüz, sisteme yüklenen ve başlatılacak süreç olarak  aktif süreçler arasından seçilen sürece ait bir başlangıç ekranıdır. Sistem dahilinde tasarlanan süreçlere ve süreç arayüzlerine göre bu ekran farklılık gösterecektir.
 
 ![alt text](assets/img/sorun_surec_baslat.png "Süreç Başlat")
 

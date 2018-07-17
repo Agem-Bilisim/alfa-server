@@ -183,6 +183,7 @@ public class HardwareService {
 			g.setDriverDate(gpu.getDriverDate());
 			g.setDriverVersion(gpu.getDriverVersion());
 			g.setAgents(gpu.getAgents());
+			g.setCompatible(gpu.getCompatible());
 			return this.gpuRepository.saveAndFlush(g);
 		}
 		// Create
@@ -243,6 +244,7 @@ public class HardwareService {
 			ni.setVersion(networkInterface.getVersion());
 			ni.setProduct(networkInterface.getProduct());
 			ni.setCapabilities(networkInterface.getCapabilities());
+			ni.setCompatible(networkInterface.getCompatible());
 			return this.inetRepository.save(ni);
 		}
 		// Create

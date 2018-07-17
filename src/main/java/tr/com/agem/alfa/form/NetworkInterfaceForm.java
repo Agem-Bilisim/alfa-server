@@ -19,6 +19,8 @@ public class NetworkInterfaceForm extends BaseForm implements OptionFormConverta
 
 	private String capabilities;
 	
+	private String compatible;
+	
 	private Long[] agentIds;
 
 	public String getVendor() {
@@ -69,6 +71,14 @@ public class NetworkInterfaceForm extends BaseForm implements OptionFormConverta
 	@Override
 	public String getOptionValue() {
 		return ProblemReferenceType.INET.getId() + "-" + this.getId();
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 
 }

@@ -66,6 +66,7 @@ public class SoftwareService {
 			p.setVersion(_package.getVersion());
 			p.setShowInSurvey(_package.getShowInSurvey());
 			p.setInstitutional(_package.getInstitutional());
+			p.setCompatible(_package.getCompatible());
 			this.packageRepository.save(p);
 			return;
 		}

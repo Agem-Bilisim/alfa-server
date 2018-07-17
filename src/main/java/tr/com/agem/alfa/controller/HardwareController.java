@@ -573,6 +573,7 @@ public class HardwareController {
 			gpuEntity.setSubsystem(form.getSubsystem());
 			gpuEntity.setKernel(form.getKernel());
 			gpuEntity.setMemory(form.getMemory());
+			gpuEntity.setCompatible(form.getCompatible());
 			hardwareService.saveGpu(gpuEntity);
 		} catch (Exception e) {
 			log.warn("Exception occurred when trying to save the GPU", e);
@@ -791,6 +792,7 @@ public class HardwareController {
 			networkInterfaceEntity.setVersion(form.getVersion());
 			networkInterfaceEntity.setProduct(form.getProduct());
 			networkInterfaceEntity.setCapabilities(form.getCapabilities());
+			networkInterfaceEntity.setCompatible(form.getCompatible());
 			hardwareService.saveNetworkInterface(networkInterfaceEntity);
 		} catch (Exception e) {
 			log.warn("Exception occurred when trying to save the NetworkInterface", e);

@@ -35,6 +35,9 @@ public class Gpu extends BaseModel {
 	@Column(name = "DRIVER_VERSION", length = 100)
 	private String driverVersion;
 
+	@Column(name = "COMPATIBLE")
+	private String compatible;
+	
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "gpus")
 	private Set<Agent> agents = new HashSet<Agent>(0);
@@ -128,6 +131,14 @@ public class Gpu extends BaseModel {
 			if (other.subsystem != null) return false;
 		} else if (!subsystem.equals(other.subsystem)) return false;
 		return true;
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 
 }

@@ -22,6 +22,8 @@ public class PackageForm extends BaseForm implements OptionFormConvertable {
 
 	private Boolean institutional;
 	
+	private String compatible;
+
 	public String getName() {
 		return name;
 	}
@@ -62,6 +64,14 @@ public class PackageForm extends BaseForm implements OptionFormConvertable {
 
 	public void setInstitutional(Boolean institutional) {
 		this.institutional = institutional;
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 
 }
