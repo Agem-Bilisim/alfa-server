@@ -73,4 +73,37 @@ public class Education extends BaseModel {
 		this.lmsEducationId = lmsEducationId;
 	}
 
+	public void addEducationUser(EducationLdapUser elu) {
+		if (this.educationUsers == null) {
+			this.educationUsers = new HashSet<EducationLdapUser>();
+		}
+		elu.setEducation(this);
+		this.educationUsers.add(elu);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((lmsEducationId == null) ? 0 : lmsEducationId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Education other = (Education) obj;
+		if (lmsEducationId == null) {
+			if (other.lmsEducationId != null)
+				return false;
+		} else if (!lmsEducationId.equals(other.lmsEducationId))
+			return false;
+		return true;
+	}
+
 }

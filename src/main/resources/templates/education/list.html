@@ -36,6 +36,26 @@
 			</div>
 		</div>
 		
+		<!-- Education-users info modal -->
+		<div
+			layout:insert="layouts/info-modal :: modal(modalId='usersInfoModal', modalHeader='Eğitimi alan kullanıcılar', modalButton='Kapat')"
+			th:remove="tag">
+			<div layout:fragment="modal-content">
+				<table id="usersTable" class="table table-bordered table-striped" style="width: 100%;">
+					<thead>
+						<tr>
+							<th>Kullanıcı ID</th>
+							<th>Ad Soyad</th>
+							<th>Durum</th>
+							<th>Süre</th>
+							<th>Sınav Puanı</th>
+						</tr>
+					</thead>
+					<tbody id="usersTableBody"></tbody>
+				</table>
+			</div>
+		</div>
+		
 		<!-- Send-education URL modal -->
 		<div
 			layout:insert="layouts/default-modal :: modal(modalId='sendUrlModal', modalHeader='Eğitim bağlantısı paylaş', modalButton='Paylaş')"
@@ -61,6 +81,8 @@
 		
 	</div>
 	<script layout:fragment="custom-script" th:inline="javascript">
+		var usersTable = null;
+	
 		// Hook handler for sending URL
 		var handleSend = function(educationId) {
 			$("#sendUrlModalBtn").on("click", function(){
@@ -114,20 +136,92 @@
 			$('#deleteConfirmModal').modal('show');
 		};
 		
+		var handleUsers = function(educationId) {
+			$.ajax({
+				type : "GET",
+				contentType : "application/json",
+				url : "/alfa/education/" + educationId + "/users/",
+				dataType : 'json',
+				cache : false,
+				timeout : 600000,
+				success : function(result) {
+					if (usersTable) {
+						usersTable.clear().draw();
+					}
+					if (result.data.users) {
+						if (!usersTable) {
+							usersTable = $("#usersTable").DataTable({
+								"language": {
+								    "sDecimal":        ",",
+								    "sEmptyTable":     "Tabloda herhangi bir veri mevcut değil",
+								    "sInfo":           "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+								    "sInfoEmpty":      "Kayıt yok",
+								    "sInfoFiltered":   "(_MAX_ kayıt içerisinden bulunan)",
+								    "sInfoPostFix":    "",
+								    "sInfoThousands":  ".",
+								    "sLengthMenu":     "Sayfada _MENU_ kayıt göster",
+								    "sLoadingRecords": "Yükleniyor...",
+								    "sProcessing":     "İşleniyor...",
+								    "sSearch":         "Ara:",
+								    "sZeroRecords":    "Eşleşen kayıt bulunamadı",
+								    "oPaginate": {
+								        "sFirst":    "İlk",
+								        "sLast":     "Son",
+								        "sNext":     "Sonraki",
+								        "sPrevious": "Önceki"
+								    },
+								    "oAria": {
+								        "sSortAscending":  ": artan sütun sıralamasını aktifleştir",
+								        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
+								    }
+								}
+							});
+						}
+						for (var index in result.data.users) {
+							var prop = result.data.users[index];
+							usersTable.row.add(
+									$('<tr><td>' + prop['ldapUser']['userIdentifier'] + '</td><td>' + prop['ldapUser']['name'] + '</td><td>'
+									+ prop['statusLabel'] + '</td><td>' + prop['duration'] + '</td><td>' + prop['examScore'] + '</td></tr>'));
+						}
+						usersTable.draw();
+						
+						// Show modal
+						$('#usersInfoModal').modal('show');
+					} else {
+						alertify.warning('Eğitimi alan kullanıcı bulunamadı.');
+					}
+				}
+			});
+		};
+		
 		$(function() {
 			var fnActionBtns = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
 					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/education/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
 					+ "<button class=\"btn btn-outline-secondary\" onclick=\"handleSend(" + row['id'] + ")\"><i class=\"fa fa-paper-plane\"></i> Paylaş</button>"
 					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/education/" + row['id'] + "/delete')\"><i class=\"fa fa-trash\"></i> Sil</button>"
+					+ "<button class=\"btn btn-outline-info\" onclick=\"handleUsers(" + row['id'] + ")\"><i class=\"fa fa-users\"></i> Eğitimi alan kullanıcılar</button>"
 					+ "</div>";
 			};
 			
 			var drawCallback = function(settings) {
 				if ($("#newEducationBtn").length == 0) {
+					$("#educationTable_filter").append("<button type=\"button\" class=\"btn btn-danger\" id=\"syncEducationBtn\">Senkronize et</button>");
 					$("#educationTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"newEducationBtn\">Yeni</button>");
-					$("#newEducationBtn").on("click", function() {
+					$("#newEducationBtn").off("click").on("click", function() {
 						window.location.href = '/alfa/education/create';
+					});
+					$("#syncEducationBtn").off("click").on("click", function() {
+						$.ajax({
+							type: "GET",
+							contentType: "application/json",
+							url: "/alfa/education/snyc",
+							cache: false,
+							timeout: 600000,
+							success: function(result) {
+								alertify.success(result.message);
+							}
+						});
 					});
 				}
 			};

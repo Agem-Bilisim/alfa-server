@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import tr.com.agem.alfa.model.enums.EducationStatus;
 
 /**
@@ -28,6 +30,7 @@ public class EducationLdapUser implements Serializable {
 	@Column(name = "EDUCATION_USER_EDUCATION_ID", unique = true, nullable = false, updatable = false)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "EDUCATION_ID")
 	private Education education;
@@ -47,6 +50,19 @@ public class EducationLdapUser implements Serializable {
 
 	@Column(name = "EXAM_STATUS", length = 500)
 	private String examStatus;
+
+	public EducationLdapUser() {
+	}
+
+	public EducationLdapUser(Education education, LdapUser ldapUser, Integer status, String duration, String examScore,
+			String examStatus) {
+		this.education = education;
+		this.ldapUser = ldapUser;
+		this.status = status;
+		this.duration = duration;
+		this.examScore = examScore;
+		this.examStatus = examStatus;
+	}
 
 	public Long getId() {
 		return id;
@@ -75,9 +91,10 @@ public class EducationLdapUser implements Serializable {
 	public EducationStatus getStatus() {
 		return EducationStatus.getType(status);
 	}
-	
+
 	public String getStatusLabel() {
-		return EducationStatus.getLabel(status);
+		return status != null ? EducationStatus.getLabel(status)
+				: EducationStatus.getLabel(EducationStatus.NOT_STARTED.getId());
 	}
 
 	public void setStatus(EducationStatus status) {
@@ -89,7 +106,7 @@ public class EducationLdapUser implements Serializable {
 	}
 
 	public String getDuration() {
-		return duration;
+		return duration != null ? duration : "00:00:00";
 	}
 
 	public void setDuration(String duration) {
@@ -97,7 +114,7 @@ public class EducationLdapUser implements Serializable {
 	}
 
 	public String getExamScore() {
-		return examScore;
+		return examScore != null ? examScore : "0";
 	}
 
 	public void setExamScore(String examScore) {
@@ -110,6 +127,37 @@ public class EducationLdapUser implements Serializable {
 
 	public void setExamStatus(String examStatus) {
 		this.examStatus = examStatus;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((education == null) ? 0 : education.hashCode());
+		result = prime * result + ((ldapUser == null) ? 0 : ldapUser.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EducationLdapUser other = (EducationLdapUser) obj;
+		if (education == null) {
+			if (other.education != null)
+				return false;
+		} else if (!education.equals(other.education))
+			return false;
+		if (ldapUser == null) {
+			if (other.ldapUser != null)
+				return false;
+		} else if (!ldapUser.equals(other.ldapUser))
+			return false;
+		return true;
 	}
 
 }

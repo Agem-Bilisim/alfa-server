@@ -45,5 +45,20 @@ public enum EducationStatus {
 		EducationStatus t = getType(id);
 		return "education-status." + t.toString().toLowerCase(Locale.US).replace("_", "-");
 	}
+	
+	// TODO think a better workaround
+	public static EducationStatus getTypeFromLabel(String label) {
+		if (label == null) {
+			return null;
+		}
+		if ("Tamamlandı".equalsIgnoreCase(label)) {
+			return EducationStatus.COMPLETED;
+		} else if ("Başlanmadı".equalsIgnoreCase(label)) {
+			return EducationStatus.NOT_STARTED;
+		} else if ("Başlandı".equalsIgnoreCase(label) || "Devam etmekte".equalsIgnoreCase(label)) {
+			return EducationStatus.STARTED;
+		}
+		throw new IllegalArgumentException("No matching type for label: " + label);
+	}
 
 }

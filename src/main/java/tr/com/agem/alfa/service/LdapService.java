@@ -91,4 +91,10 @@ public class LdapService {
 		this.ldapUserRepository.deleteByLdapIntegrationId(id);
 	}
 
+	public LdapUser getUserByLmsId(Long lmsUserId) {
+		Assert.notNull(lmsUserId, "ID must not be null");
+		// TODO this should be LMS user id....
+		return this.ldapUserRepository.findById(lmsUserId);
+	}
+
 }

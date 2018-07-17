@@ -3,6 +3,7 @@ package tr.com.agem.alfa.controller;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -22,16 +23,26 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import tr.com.agem.alfa.exception.AlfaException;
 import tr.com.agem.alfa.form.EducationForm;
+import tr.com.agem.alfa.lms.LmsUser;
 import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.messaging.factory.MessageFactory;
 import tr.com.agem.alfa.messaging.message.ServerBaseMessage;
 import tr.com.agem.alfa.messaging.service.MessagingService;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Education;
+import tr.com.agem.alfa.model.EducationLdapUser;
+import tr.com.agem.alfa.model.LdapUser;
+import tr.com.agem.alfa.model.enums.EducationStatus;
 import tr.com.agem.alfa.service.AgentService;
 import tr.com.agem.alfa.service.EducationService;
+import tr.com.agem.alfa.service.LdapService;
 
 /**
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
@@ -42,6 +53,7 @@ public class EducationController {
 	private static final Logger log = LoggerFactory.getLogger(EducationController.class);
 
 	private final EducationService educationService;
+	private final LdapService ldapService;
 	private final AgentService agentService;
 	private final MessagingService messagingService;
 	private final SysMapper mapper;
@@ -50,9 +62,10 @@ public class EducationController {
 	private Integer sysPageSize;
 
 	@Autowired
-	public EducationController(EducationService educationService, AgentService agentService,
+	public EducationController(EducationService educationService, LdapService ldapService, AgentService agentService,
 			MessagingService messagingService, SysMapper mapper) {
 		this.educationService = educationService;
+		this.ldapService = ldapService;
 		this.agentService = agentService;
 		this.messagingService = messagingService;
 		this.mapper = mapper;
@@ -149,7 +162,7 @@ public class EducationController {
 		}
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@PostMapping("/education/{id}/delete")
 	public ResponseEntity<?> handleDelete(@PathVariable Long id) {
 		RestResponseBody result = new RestResponseBody();
@@ -157,6 +170,52 @@ public class EducationController {
 			educationService.deleteEducation(checkNotNull(id, "ID not found."));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to delete education, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/education/snyc")
+	public ResponseEntity<?> handleLmsSync(Authentication authentication) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			CurrentUser user = (CurrentUser) authentication.getPrincipal();
+			checkNotNull(user, "Current user not found.");
+			// TODO real LMS integration instead of this bs
+			List<LmsUser> lmsUsers = new ObjectMapper().readValue(
+					this.getClass().getClassLoader().getResourceAsStream("lms-sync.json"),
+					new TypeReference<List<LmsUser>>() {
+					});
+			if (lmsUsers == null) {
+				throw new AlfaException("LMS sunucuya erişilemedi.");
+			}
+			for (LmsUser lmsUser : lmsUsers) {
+				Education education = educationService.getEducationByLmsId(lmsUser.getId());
+				LdapUser ldapUser = ldapService.getUserByLmsId(lmsUser.getUserId());
+				EducationLdapUser elu = new EducationLdapUser(education, ldapUser,
+						EducationStatus.getTypeFromLabel(lmsUser.getDurumu()).getId(), lmsUser.getSure(),
+						lmsUser.getSinavPuani(), lmsUser.getSinavDurumu());
+				education.addEducationUser(elu);
+				educationService.saveEducation(education);
+			}
+			result.setMessage(String.format("LMS eğitim kayıtları başarıyla senkronize edildi."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to sync LMS education records", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/education/{educationId}/users")
+	public @ResponseBody ResponseEntity<?> getEducationUsersPage(@PathVariable Long educationId) {
+		log.info("Getting details for education with education id:{}", educationId);
+		RestResponseBody result = new RestResponseBody();
+		try {
+			result.add("users", educationService.getEducationUsers(educationId));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find education", e);
 			result.setMessage(e.getMessage());
 			return ResponseEntity.badRequest().body(result);
 		}

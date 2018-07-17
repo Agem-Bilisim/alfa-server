@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Education;
+import tr.com.agem.alfa.model.EducationLdapUser;
+import tr.com.agem.alfa.repository.EducationLdapUserRepository;
 import tr.com.agem.alfa.repository.EducationRepository;
 
 /**
@@ -18,10 +22,12 @@ import tr.com.agem.alfa.repository.EducationRepository;
 public class EducationService {
 
 	private final EducationRepository educationRepository;
+	private final EducationLdapUserRepository educationLdapUserRepository;
 
 	@Autowired
-	public EducationService(EducationRepository educationRepository) {
+	public EducationService(EducationRepository educationRepository, EducationLdapUserRepository educationLdapUserRepository) {
 		this.educationRepository = educationRepository;
+		this.educationLdapUserRepository = educationLdapUserRepository;
 	}
 
 	public Education getEducation(Long id) {
@@ -37,6 +43,12 @@ public class EducationService {
 			e.setLabel(education.getLabel());
 			e.setDescription(education.getDescription());
 			e.setUrl(education.getUrl());
+			// Handle education users as well...
+			if (education.getEducationUsers() != null) {
+				for (EducationLdapUser elu : education.getEducationUsers()) {
+					e.addEducationUser(elu);
+				}
+			}
 			this.educationRepository.save(e);
 			return;
 		}
@@ -53,9 +65,24 @@ public class EducationService {
 		return this.educationRepository.findAll(pageable);
 	}
 
+	public List<Education> getEducations() {
+		return this.educationRepository.findAll();
+	}
+
 	public void deleteEducation(Long id) {
 		Assert.notNull(id, "ID must not be null.");
 		this.educationRepository.delete(id);
+	}
+
+	public Education getEducationByLmsId(Long lmsEducationId) {
+		Assert.notNull(lmsEducationId, "ID must not be null.");
+		// TODO this should be LMS id
+		return this.educationRepository.findById(lmsEducationId);
+	}
+
+	public List<EducationLdapUser> getEducationUsers(Long educationId) {
+		Assert.notNull(educationId, "ID must not be null.");
+		return this.educationLdapUserRepository.findByEducationId(educationId);
 	}
 
 }
