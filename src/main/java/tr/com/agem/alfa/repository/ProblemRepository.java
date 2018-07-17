@@ -16,7 +16,7 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
 	Page<Problem> findDistinctByLabelContainingOrDescriptionContainingAllIgnoringCase(String search, String search2,
 			Pageable pageable);
 
-	Page<Problem> findDistinctByReferencesReferenceType(Integer referenceType, Pageable pageable);
+	Page<Problem> findDistinctByReferencesReferenceTypeIn(List<Integer> _referenceTypes, Pageable pageable);
 
 	List<Problem> findFirst5ByOrderByCreatedDateDesc();
 

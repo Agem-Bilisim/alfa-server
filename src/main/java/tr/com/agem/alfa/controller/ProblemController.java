@@ -3,6 +3,7 @@ package tr.com.agem.alfa.controller;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import tr.com.agem.alfa.form.GpuForm;
+import tr.com.agem.alfa.form.NetworkInterfaceForm;
 import tr.com.agem.alfa.form.PackageForm;
 import tr.com.agem.alfa.form.PeripheralDeviceForm;
 import tr.com.agem.alfa.form.ProblemForm;
@@ -40,6 +42,7 @@ import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.InstalledPackage;
+import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.PeripheralDevice;
 import tr.com.agem.alfa.model.Problem;
 import tr.com.agem.alfa.model.ProblemReference;
@@ -76,8 +79,8 @@ public class ProblemController {
 
 	@Autowired
 	public ProblemController(ProblemService problemService, SoftwareService softwareService,
-			HardwareService hardwareService, PeripheralService peripheralService, BpmProcessService bpmProcessService, MessageSource messageSource,
-			SysMapper mapper) {
+			HardwareService hardwareService, PeripheralService peripheralService, BpmProcessService bpmProcessService,
+			MessageSource messageSource, SysMapper mapper) {
 		this.problemService = problemService;
 		this.softwareService = softwareService;
 		this.hardwareService = hardwareService;
@@ -89,24 +92,32 @@ public class ProblemController {
 
 	@GetMapping("/problem/create")
 	public ModelAndView getCreatePage(@RequestParam(value = "referenceType", required = false) Integer referenceType,
+			@RequestParam(value = "referenceTypes[]", required = false) Integer[] referenceTypes,
 			@RequestParam(name = "redirect", required = false) String redirect) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
-			// @formatter:off
-			SelectboxBuilder builder = SelectboxBuilder
-										.newSelectbox();
-			if (referenceType != null && referenceType == ProblemReferenceType.PACKAGE.getId()) {
-				builder.add(toPackageFormList(softwareService.getPackages()));
-			} else if (referenceType != null && referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
-				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
-			} else if (referenceType != null && referenceType == ProblemReferenceType.GPU.getId()) {
-				builder.add(toGpuFormList(hardwareService.getGpus()));
+			SelectboxBuilder builder = SelectboxBuilder.newSelectbox();
+			List<Integer> _referenceTypes = referenceTypes != null ? Arrays.asList(referenceTypes)
+					: (referenceType != null ? Arrays.asList(referenceType) : null);
+			if (_referenceTypes != null && !_referenceTypes.isEmpty()) {
+				if (_referenceTypes.contains(ProblemReferenceType.PACKAGE.getId())) {
+					builder.add(toPackageFormList(softwareService.getPackages()));
+				}
+				if (_referenceTypes.contains(ProblemReferenceType.PERIPHERAL.getId())) {
+					builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
+				}
+				if (_referenceTypes.contains(ProblemReferenceType.GPU.getId())) {
+					builder.add(toGpuFormList(hardwareService.getGpus()));
+				}
+				if (_referenceTypes.contains(ProblemReferenceType.INET.getId())) {
+					builder.add(toNetworkInterfaceFormList(hardwareService.getNetworkInterfaces()));
+				}
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
 				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
 				builder.add(toGpuFormList(hardwareService.getGpus()));
+				builder.add(toNetworkInterfaceFormList(hardwareService.getNetworkInterfaces()));
 			}
-			// @formatter:on
 			model.put("possiblerefs", builder.build());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -138,24 +149,32 @@ public class ProblemController {
 	@GetMapping("/problem/{id}")
 	public ModelAndView getProblem(@PathVariable Long id,
 			@RequestParam(value = "referenceType", required = false) Integer referenceType,
+			@RequestParam(value = "referenceTypes[]", required = false) Integer[] referenceTypes,
 			@RequestParam(name = "redirect", required = false) String redirect) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
-			// @formatter:off
-			SelectboxBuilder builder = SelectboxBuilder
-										.newSelectbox();
-			if (referenceType != null && referenceType == ProblemReferenceType.PACKAGE.getId()) {
-				builder.add(toPackageFormList(softwareService.getPackages()));
-			} else if (referenceType != null && referenceType == ProblemReferenceType.PERIPHERAL.getId()) {
-				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
-			} else if (referenceType != null && referenceType == ProblemReferenceType.GPU.getId()) {
-				builder.add(toGpuFormList(hardwareService.getGpus()));
+			SelectboxBuilder builder = SelectboxBuilder.newSelectbox();
+			List<Integer> _referenceTypes = referenceTypes != null ? Arrays.asList(referenceTypes)
+					: (referenceType != null ? Arrays.asList(referenceType) : null);
+			if (_referenceTypes != null && !_referenceTypes.isEmpty()) {
+				if (_referenceTypes.contains(ProblemReferenceType.PACKAGE.getId())) {
+					builder.add(toPackageFormList(softwareService.getPackages()));
+				}
+				if (_referenceTypes.contains(ProblemReferenceType.PERIPHERAL.getId())) {
+					builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
+				}
+				if (_referenceTypes.contains(ProblemReferenceType.GPU.getId())) {
+					builder.add(toGpuFormList(hardwareService.getGpus()));
+				}
+				if (_referenceTypes.contains(ProblemReferenceType.INET.getId())) {
+					builder.add(toNetworkInterfaceFormList(hardwareService.getNetworkInterfaces()));
+				}
 			} else { // ALL
 				builder.add(toPackageFormList(softwareService.getPackages()));
 				builder.add(toPeripheralFormList(peripheralService.getPeripherals()));
 				builder.add(toGpuFormList(hardwareService.getGpus()));
+				builder.add(toNetworkInterfaceFormList(hardwareService.getNetworkInterfaces()));
 			}
-			// @formatter:on
 			model.put("possiblerefs", builder.build());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -209,21 +228,24 @@ public class ProblemController {
 
 	@GetMapping("/problem/list-paginated")
 	public ResponseEntity<?> handleList(@RequestParam(value = "search", required = false) String search,
-			@RequestParam(value = "referenceType", required = false) Integer referenceType, Pageable pageable) {
+			@RequestParam(value = "referenceType", required = false) Integer referenceType,
+			@RequestParam(value = "referenceTypes[]", required = false) Integer[] referenceTypes, Pageable pageable) {
 		RestResponseBody result = new RestResponseBody();
 		try {
-			if (referenceType != null) {
-				Page<Problem> problems = problemService.getProblems(pageable, search, referenceType);
+			List<Integer> _referenceTypes = referenceTypes != null ? Arrays.asList(referenceTypes)
+					: (referenceType != null ? Arrays.asList(referenceType) : null);
+			if (_referenceTypes != null && !_referenceTypes.isEmpty()) {
+				Page<Problem> problems = problemService.getProblems(pageable, search, _referenceTypes);
 				result.add("problems", checkNotNull(problems, "Problems not found."));
 			} else {
 				List<Object[]> _problems = problemService.getProblemsWithDetails();
 				List<ProblemForm> problems = new ArrayList<ProblemForm>();
 				if (_problems != null) {
 					for (Object[] _cols : _problems) {
-						ProblemForm problem = new ProblemForm(Long.parseLong(_cols[0].toString()), (Date) _cols[1], (String) _cols[2],
-								(Date) _cols[3], (String) _cols[4], (String) _cols[5], (String) _cols[6],
-								(Boolean) _cols[7], (Date) _cols[8], (Date) _cols[9], (Date) _cols[10],
-								(String) _cols[11], (String) _cols[12], (String) _cols[13]);
+						ProblemForm problem = new ProblemForm(Long.parseLong(_cols[0].toString()), (Date) _cols[1],
+								(String) _cols[2], (Date) _cols[3], (String) _cols[4], (String) _cols[5],
+								(String) _cols[6], (Boolean) _cols[7], (Date) _cols[8], (Date) _cols[9],
+								(Date) _cols[10], (String) _cols[11], (String) _cols[12], (String) _cols[13]);
 						problems.add(problem);
 					}
 				}
@@ -255,7 +277,8 @@ public class ProblemController {
 	}
 
 	private List<? extends OptionFormConvertable> toPackageFormList(List<InstalledPackage> entities) {
-		if (entities == null || entities.isEmpty()) return null;
+		if (entities == null || entities.isEmpty())
+			return null;
 		List<PackageForm> forms = new ArrayList<PackageForm>();
 		for (InstalledPackage entity : entities) {
 			forms.add(mapper.toPackageForm(entity));
@@ -264,7 +287,8 @@ public class ProblemController {
 	}
 
 	private List<? extends OptionFormConvertable> toPeripheralFormList(List<PeripheralDevice> entities) {
-		if (entities == null || entities.isEmpty()) return null;
+		if (entities == null || entities.isEmpty())
+			return null;
 		List<PeripheralDeviceForm> forms = new ArrayList<PeripheralDeviceForm>();
 		for (PeripheralDevice entity : entities) {
 			forms.add(mapper.toPeripheralDeviceForm(entity));
@@ -273,10 +297,21 @@ public class ProblemController {
 	}
 
 	private List<? extends OptionFormConvertable> toGpuFormList(List<Gpu> entities) {
-		if (entities == null || entities.isEmpty()) return null;
+		if (entities == null || entities.isEmpty())
+			return null;
 		List<GpuForm> forms = new ArrayList<GpuForm>();
 		for (Gpu entity : entities) {
 			forms.add(mapper.toGpuForm(entity));
+		}
+		return forms;
+	}
+
+	private List<? extends OptionFormConvertable> toNetworkInterfaceFormList(List<NetworkInterface> entities) {
+		if (entities == null || entities.isEmpty())
+			return null;
+		List<NetworkInterfaceForm> forms = new ArrayList<NetworkInterfaceForm>();
+		for (NetworkInterface entity : entities) {
+			forms.add(mapper.toNetworkInterfaceForm(entity));
 		}
 		return forms;
 	}

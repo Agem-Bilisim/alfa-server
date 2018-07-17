@@ -64,13 +64,13 @@ public class ProblemService {
 		this.problemRepository = problemRepository;
 	}
 
-	public Page<Problem> getProblems(Pageable pageable, String search, Integer referenceType) {
+	public Page<Problem> getProblems(Pageable pageable, String search, List<Integer> _referenceTypes) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			return this.problemRepository.findDistinctByLabelContainingOrDescriptionContainingAllIgnoringCase(search,
 					search, pageable);
-		} else if (referenceType != null) {
-			return this.problemRepository.findDistinctByReferencesReferenceType(referenceType, pageable);
+		} else if (_referenceTypes != null && !_referenceTypes.isEmpty()) {
+			return this.problemRepository.findDistinctByReferencesReferenceTypeIn(_referenceTypes, pageable);
 		}
 		return this.problemRepository.findAll(pageable);
 	}
