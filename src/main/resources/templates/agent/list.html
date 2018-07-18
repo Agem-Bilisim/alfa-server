@@ -184,15 +184,11 @@
 						$("#agentLastInstallationDate").html(result.data.agent['lastInstallationDate']);
 						
 						// Packages
-						$('#agentPackagesTableBody').html("");
+						if (agentPackagesTable) {
+							agentPackagesTable.clear().draw();
+						}
 						if (result.data.agent.installedPackages) {
-							for (var index in result.data.agent['installedPackages']) {
-								var prop = result.data.agent['installedPackages'][index];
-								$('#agentPackagesTableBody').append('<tr><td>' + prop['name'] + '</td><td>' + prop['version'] + '</td></tr>');
-							}
-							if (agentPackagesTable) {
-								agentPackagesTable.draw('full-reset');
-							} else {
+							if (!agentPackagesTable) {
 								agentPackagesTable = $('#agentPackagesTable').DataTable({
 									"language": {
 									    "sDecimal":        ",",
@@ -218,21 +214,21 @@
 									        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
 									    }
 									},
-									"deferRender": true,
 								});
 							}
+							for (var index in result.data.agent['installedPackages']) {
+								var prop = result.data.agent['installedPackages'][index];
+								agentPackagesTable.row.add($('<tr><td>' + prop['name'] + '</td><td>' + prop['version'] + '</td></tr>'));
+							}
+							agentPackagesTable.draw();
 						}
 						
 						// Users
-						$('#agentUsersTableBody').html("");
+						if (agentUsersTable) {
+							agentUsersTable.clear().draw();
+						}
 						if (result.data.agent.users) {
-							for (var index in result.data.agent['users']) {
-								var prop = result.data.agent['users'][index];
-								$('#agentUsersTableBody').append('<tr><td>' + prop['name'] + '</td></tr>');
-							}
-							if (agentUsersTable) {
-								agentUsersTable.draw('full-reset');
-							} else {
+							if (!agentUsersTable) {
 								agentUsersTable = $('#agentUsersTable').DataTable({
 									"language": {
 									    "sDecimal":        ",",
@@ -258,10 +254,14 @@
 									        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
 									    }
 									},
-									"deferRender": true,
 									"responsive": true,
 								});
 							}
+							for (var index in result.data.agent['users']) {
+								var prop = result.data.agent['users'][index];
+								agentUsersTable.row.add($('<tr><td>' + prop['name'] + '</td></tr>'));
+							}
+							agentUsersTable.draw();
 						}
 						
 						// Show modal

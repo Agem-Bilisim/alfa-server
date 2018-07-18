@@ -109,17 +109,12 @@
 								$("#ldapIpAddress").html(result.data.user['ldapIpAddress']);
 								$("#ldapType").html(result.data.user['ldapType']);
 								$("#userCreatedDate").html(result.data.user['createdDate']);
-								console.log(result.data);
 								// Attributes
-								$("#userAttributesTableBody").html("");
+								if (userAttrTable) {
+									userAttrTable.clear().draw();
+								}
 								if (result.data.user.attributes) {
-									for (var index in result.data.user['attributes']) {
-										var attr = result.data.user['attributes'][index];
-										$('#userAttributesTableBody').append('<tr><td>' + attr['name'] + '</td><td>' + attr['value'] + '</td></tr>');
-									}
-									if (userAttrTable) {
-										userAttrTable.draw('full-reset');
-									} else {
+									if (!userAttrTable) {
 										userAttrTable = $('#userAttributesTable').DataTable({
 											"language": {
 											    "sDecimal":        ",",
@@ -145,9 +140,13 @@
 											        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
 											    }
 											},
-											"deferRender": true,
 										});
 									}
+									for (var index in result.data.user['attributes']) {
+										var attr = result.data.user['attributes'][index];
+										userAttrTable.row.add($('<tr><td>' + attr['name'] + '</td><td>' + attr['value'] + '</td></tr>'));
+									}
+									userAttrTable.draw();
 								}
 								
 								// Show modal
