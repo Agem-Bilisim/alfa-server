@@ -18,6 +18,8 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 
 	private Boolean showInSurvey;
 
+	private String compatible;
+	
 	@NotEmpty
 	private String deviceId;
 
@@ -74,5 +76,13 @@ public class PeripheralDeviceForm extends BaseForm implements OptionFormConverta
 	@Override
 	public String getOptionValue() {
 		return ProblemReferenceType.PERIPHERAL.getId() + "-" + this.getId();
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 }

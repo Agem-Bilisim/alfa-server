@@ -136,6 +136,21 @@ public class PeripheralController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/peripheral-compatible/list-paginated")
+	public ResponseEntity<?> handleCompatiblePeripheralList(@RequestParam(value = "compatible", required = false, defaultValue="E") String compatible, @RequestParam(value = "search", required = false) String search,
+			Pageable pageable) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<PeripheralDevice> peripherals = peripheralService.getCompatiblePeripherals(pageable, compatible, search);
+			result.add("compatiblePeripherals", checkNotNull(peripherals, "Compatible Peripherals not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find compatible peripherals, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
 	private PeripheralDevice toPeripheralDeviceEntity(PeripheralDeviceForm form, String username) {
 		PeripheralDevice entity = mapper.toPeripheralDeviceEntity(form);
 		Date date = new Date();
@@ -165,6 +180,7 @@ public class PeripheralController {
 			peripheralForm.setDevicePath(agent.getDevicePath());
 		}
 		peripheralForm.setAgentIds(agentIds.toArray(new Long[] {}));
+		
 		model.put("form", peripheralForm);
 		
 		return new ModelAndView("/peripheral/edit", model);
@@ -183,6 +199,8 @@ public class PeripheralController {
 			PeripheralDevice peripheralEntity = peripheralService.getPeripheralDevice(id);
 			peripheralEntity.setTag(form.getTag());
 			peripheralEntity.setShowInSurvey(form.getShowInSurvey());
+			peripheralEntity.setCompatible(form.getCompatible());
+			
 			peripheralService.savePeripheralDevice(peripheralEntity, form.getDeviceId(), form.getDevicePath(), form.getAgentIds());
 		} catch (Exception e) {
 			log.warn("Exception occurred when trying to save the Peripheral", e);

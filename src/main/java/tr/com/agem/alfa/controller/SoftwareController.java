@@ -212,6 +212,20 @@ public class SoftwareController {
 		return ResponseEntity.ok(result);
 	}
 	
+	@GetMapping("/installed-compatible-package/list-paginated")
+	public ResponseEntity<?> handleCompatiblePackageList(@RequestParam(value = "search", required = false) String search, Pageable pageable) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<InstalledPackage> packages = softwareService.getCompatiblePackages(pageable, search);
+			result.add("compatiblePackages", checkNotNull(packages, "Packages not found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find compatible packages, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/process/list-paginated")
 	public ResponseEntity<?> handleProcessList(@RequestParam(value = "search", required = false) String search,
 			Pageable pageable) {

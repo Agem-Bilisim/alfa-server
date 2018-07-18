@@ -21,4 +21,8 @@ public interface PackageRepository extends JpaRepository<InstalledPackage, Long>
 	Page<InstalledPackage> findByNameContainingOrVersionContainingAllIgnoringCase(String name, String version,
 			Pageable pageable);
 
+	Page<InstalledPackage> findByCompatibleAndNameContainingAllIgnoringCase(String compatible, String name, Pageable pageable);
+
+	Page<InstalledPackage> findByCompatible(String compatible, Pageable pageable);
+
 }

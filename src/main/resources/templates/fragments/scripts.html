@@ -66,8 +66,6 @@
 				Alfa.ajax(
 						{"url":"/alfa/bpm-task/list"},
 						function(result) { //successHandler
-							console.log(result);
-					
 							if (result && result.data) {
 								$(".tasks-menu a span").html(result.data["tasks"].content.length);
 								$(".tasks-menu .header").html(result.data["tasks"].content.length + " tane göreviniz var");

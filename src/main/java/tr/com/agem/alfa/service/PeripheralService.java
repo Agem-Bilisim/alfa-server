@@ -60,6 +60,17 @@ public class PeripheralService {
 		return this.peripheralRepository.findAll(pageable);
 	}
 
+	public Page<PeripheralDevice> getCompatiblePeripherals(Pageable pageable, String compatible, String search) {
+		Assert.notNull(pageable, "Pageable must not be null.");
+		if (compatible != null && !compatible.isEmpty()) {
+			compatible = "E";
+		}
+		if (search != null && !search.isEmpty()) {
+			return this.peripheralRepository.findByCompatibleAndTagContainingAllIgnoringCase(compatible, search, pageable);
+		}
+		return this.peripheralRepository.findByCompatible(compatible, pageable);
+	}
+
 	public List<PeripheralDevice> getPeripherals() {
 		return this.peripheralRepository.findAll();
 	}

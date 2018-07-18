@@ -19,6 +19,7 @@
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#peripheral" aria-controls="peripheral" role="tab" data-toggle="tab">Çevresel Cihazlar</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
+			    	<li role="presentation"><a href="#compatiblePeripheral" aria-controls="problem" role="tab" data-toggle="tab">Uyumlu Cihazlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -64,6 +65,27 @@
 							</div>
 						</div>
 					</div>
+					<div role="tabpanel" class="tab-pane" id="compatiblePeripheral">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Uyumlu Cihaz listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="compatiblePeripheralTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Cihaz adı</th>
+											<th>Ankete dahil edilebilir</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>				
+					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -178,11 +200,33 @@
 				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 			
+			// Compatible Peripheral
+			var fnActionBtnsCompatiblePeripheral = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/peripheral/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/peripheral/" + row['id'] + "/delete', 'compatiblePeripheralTable')\"><i class=\"fa fa-trash\"></i> Sil</button>" 
+					+ "</div>";
+			};
+			var drawCallbackCompatiblePeripheral = function(settings) {
+			};
+			const colsCompatiblePeripheral = [
+				{"data": "tag", "searchable": true, "orderable": true }, 
+				{"data": function ( row, type, val, meta ) { 
+						row["show_in_survey_str"] = (row["showInSurvey"] == true ? "Evet" : "Hayır"); 
+						return row["show_in_survey_str"]; 
+					}
+				, "searchable": false, "orderable": true }, 
+				{"data": fnActionBtnsCompatiblePeripheral, "searchable": false, "orderable": false }
+			];
+
+			
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				if ($(e.target).attr('href') == "#problem") {
 					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=2", "problems", colsProblem, drawCallbackProblem);
-				}
+				} else if ($(e.target).attr('href') == "#compatiblePeripheral") {
+					tables.compatiblePeripheralTable = $('#compatiblePeripheralTable').paginatedTable("/alfa/peripheral-compatible/list-paginated?referenceType=2&compatible=E", "compatiblePeripherals", colsCompatiblePeripheral, drawCallbackCompatiblePeripheral);
+				} 
 			});
 		});
 	</script>

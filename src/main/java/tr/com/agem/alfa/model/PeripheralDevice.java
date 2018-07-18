@@ -27,6 +27,9 @@ public class PeripheralDevice extends BaseModel {
 	@Column(name = "SHOW_IN_SURVEY")
 	private Boolean showInSurvey;
 
+	@Column(name = "COMPATIBLE")
+	private String compatible;
+
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "peripheralDevice", cascade = CascadeType.REMOVE)
 	private Set<AgentPeripheralDevice> agentPeripheralDevices = new HashSet<AgentPeripheralDevice>(0);
@@ -73,6 +76,14 @@ public class PeripheralDevice extends BaseModel {
 			if (other.tag != null) return false;
 		} else if (!tag.equals(other.tag)) return false;
 		return true;
+	}
+
+	public String getCompatible() {
+		return compatible;
+	}
+
+	public void setCompatible(String compatible) {
+		this.compatible = compatible;
 	}
 
 }

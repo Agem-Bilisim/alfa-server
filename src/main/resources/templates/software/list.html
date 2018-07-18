@@ -20,7 +20,7 @@
 					<li role="presentation" class="active"><a href="#software" aria-controls="software" role="tab" data-toggle="tab">Yazılım</a></li>
 					<li role="presentation"><a href="#process" aria-controls="process" role="tab" data-toggle="tab">Hizmet</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
-			    	<li role="presentation"><a href="#compatible" aria-controls="compatible" role="tab" data-toggle="tab">Uyumlu Yazılımlar</a></li>
+			    	<li role="presentation"><a href="#compatiblePackage" aria-controls="compatiblePackage" role="tab" data-toggle="tab">Uyumlu Yazılımlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -85,13 +85,13 @@
 							</div>
 						</div>
 					</div>
-					<div role="tabpanel" class="tab-pane" id="compatible">
+					<div role="tabpanel" class="tab-pane" id="compatiblePackage">
 						<div class="box">
 							<div class="box-header">
 								<h3 class="box-title">Uyumlu Yazılımlar</h3>
 							</div>
 							<div class="box-body">
-								<table id="compatibleTable" class="table table-bordered table-striped">
+								<table id="compatiblePackageTable" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th>Yazılım Adı</th>
@@ -181,6 +181,7 @@
 					});
 				}
 			};
+			
 			const colsSoftware = [
 				{"data": "name", "searchable": true, "orderable": true }, 
 				{"data": "version", "searchable": true, "orderable": true }, 
@@ -236,12 +237,30 @@
 				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 			
+			// Compatible Software
+			var fnActionBtnsCompatibleSoftware = function(row, type, val, meta) {
+				return "<div class=\"btn-group\" role=\"group\">" 
+					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
+					+ "<button class=\"btn btn-outline-danger\" onclick=\"handleDelete('/alfa/installed-package/" + row['id'] + "/delete', 'compatiblePackageTable')\"><i class=\"fa fa-trash\"></i> Sil</button>"
+					+ "</div>";
+			};
+			var drawCallbackCompatibleSoftware = function(settings) {
+			};
+			
+			const colsCompatibleSoftware = [
+				{"data": "name", "searchable": false, "orderable": true }, 
+				{"data": "version", "searchable": false, "orderable": true }, 
+				{"data": fnActionBtnsCompatibleSoftware, "searchable": false, "orderable": false }
+			];
+			
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				if ($(e.target).attr('href') == "#problem") {
 					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=7", "problems", colsProblem, drawCallbackProblem);
 				} else if ($(e.target).attr('href') == "#process") {
 					tables.processTable = $('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
+				} else if ($(e.target).attr('href') == "#compatiblePackage") {
+					tables.compatiblePackageTable = $('#compatiblePackageTable').paginatedTable("/alfa/installed-compatible-package/list-paginated", "compatiblePackages", colsCompatibleSoftware, drawCallbackCompatibleSoftware);
 				}
 			});
 		});

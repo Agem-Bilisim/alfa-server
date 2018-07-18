@@ -57,6 +57,15 @@ public class SoftwareService {
 		return this.packageRepository.findAll(pageable);
 	}
 
+	public Page<InstalledPackage> getCompatiblePackages(Pageable pageable, String search) {
+		Assert.notNull(pageable, "Pageable must not be null.");
+		if (search != null && !search.isEmpty()) {
+			return this.packageRepository.findByCompatibleAndNameContainingAllIgnoringCase("E", search, pageable);
+		}
+		return this.packageRepository.findByCompatible("E", pageable);
+		
+	}
+	
 	public void savePackage(InstalledPackage _package) {
 		Assert.notNull(_package, "Package must not be null.");
 		InstalledPackage p = null;
