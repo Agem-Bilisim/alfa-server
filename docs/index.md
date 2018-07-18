@@ -22,8 +22,9 @@ Alfa kullanıcı arayüzüne dair tanımlar ve görsellerden oluşan tanıtım v
 Alfa; göç yönetim bilgi sisteminin merkezi rolünde yer alan, kullanıcı arayüzünü sunan ve göç sürecine tabi makinalar arası iletişimi yöneten *Alfa Sunucu* ile bu makinalarda servis olarak çalışan, Windows ve Debian-tabanlı (Pardus, Ubuntu, Mint vb.) işletim sistemleriyle uyumlu olarak geliştirilmiş, kurum içi envanter toplama ve son kullanıcı etkileşiminden sorumlu *Alfa Ajan* yazılım bileşenlerinden oluşmaktadır. 
 
 * Kuruma özel göç süreçlerinin modellenebilmesi için BPMN2.0 uyumlu iş akış motoru
-* Pardus eğitimleri amacıyla kullanılacak LMS Desk sistemiyle tam entegrasyon
+* Pardus eğitimleri amacıyla kullanılacak LMSDesk sistemiyle tam entegrasyon
 * Windows ve Debian-tabanlı (Pardus, Ubuntu, Mint vb.) işletim sistemi uyumlu ajan yazılım
+* Kurum içi OpenLDAP ve/veya ActiveDirectory sunucu ile tam entegrasyon
 * Göç odaklı bilgilendirme ve geribildirim amacıyla geliştirilmiş anket ve eğitim materyali
 * Mobil uyumlu web tabanlı kullanıcı arayüzü
 * Kurum içi tüm ağ, sistem (yazılım, donanım) ve çevresel birim envanteri çıkarabilme
@@ -33,3 +34,5 @@ Yazılım bileşenlerine dair teknik dokümantasyona ilgili proje sayfalarından
 
 * [Alfa sunucu](https://github.com/Agem-Bilisim/alfa-server/blob/master/README.md)
 * [Alfa ajan](https://github.com/Agem-Bilisim/alfa-agent/blob/master/README.rst)
+
+LMSDesk entegrasyon ile ilgili teknik dokümantasyona [buradan ulaşabilirsiniz](./lms-integration.md).
