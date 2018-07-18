@@ -2,122 +2,34 @@
 layout: default
 ---
 
+# Alfa nedir?
 
+*Pardus ve AKKY* göçünü bir süreç olarak tanımlayan, gereksinimleri belirten, yol haritası koyan, kaynak ve süre kestirimleri yapan bir göç metodolojisi ve tüm bu süreci yönetip yönlendirecek bir yönetim bilgi sistemidir. Proje kapsam ve ana bileşenleri aşağıdaki gibidir:
 
-[Göç Bileşenleri Tanıtım ve Kullanım Kılavuzu için tıklayınız](./manual.md).
+## Ana bileşenler
 
-There should be whitespace between paragraphs.
+* Pardus ve AKKY göç bileşenleri
+* Eğitim, destek ve bakım yönerge, içerik ve süreçleri
+* LibreOffice yerelleştirme ve geliştirmeleri
+* LibreOffice bulut sürümü yerelleştirme ve geliştirme
 
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
+# Göç bileşenleri tanıtım ve kullanım kılavuzu
 
-# Header 1
+Alfa kullanıcı arayüzüne dair tanımlar ve görsellerden oluşan tanıtım ve kullanım kılavuzuna [buradan erişebilirsiniz](./manual.md).
 
-This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
+# Teknik özellikler
 
-## Header 2
+Alfa; göç yönetim bilgi sisteminin merkezi rolünde yer alan, kullanıcı arayüzünü sunan ve göç sürecine tabi makinalar arası iletişimi yöneten *Alfa Sunucu* ile bu makinalarda servis olarak çalışan, Windows ve Debian-tabanlı (Pardus, Ubuntu, Mint vb.) işletim sistemleriyle uyumlu olarak geliştirilmiş, kurum içi envanter toplama ve son kullanıcı etkileşiminden sorumlu *Alfa Ajan* yazılım bileşenlerinden oluşmaktadır. 
 
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
+* Kuruma özel göç süreçlerinin modellenebilmesi için BPMN2.0 uyumlu iş akış motoru
+* Pardus eğitimleri amacıyla kullanılacak LMS Desk sistemiyle tam entegrasyon
+* Windows ve Debian-tabanlı (Pardus, Ubuntu, Mint vb.) işletim sistemi uyumlu ajan yazılım
+* Göç odaklı bilgilendirme ve geribildirim amacıyla geliştirilmiş anket ve eğitim materyali
+* Mobil uyumlu web tabanlı kullanıcı arayüzü
+* Kurum içi tüm ağ, sistem (yazılım, donanım) ve çevresel birim envanteri çıkarabilme
+* Envanter üzerinden göçe ilişkin sorun takibi ve iş akışı
 
-### Header 3
+Yazılım bileşenlerine dair teknik dokümantasyona ilgili proje sayfalarından ulaşabilirisiniz:
 
-```js
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
-```ruby
-# Ruby code with syntax highlighting
-GitHubPages::Dependencies.gems.each do |gem, version|
-  s.add_dependency(gem, "= #{version}")
-end
-```
-
-#### Header 4
-
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-
-##### Header 5
-
-1.  This is an ordered list following a header.
-2.  This is an ordered list following a header.
-3.  This is an ordered list following a header.
-
-###### Header 6
-
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
-
-### There's a horizontal rule below this.
-
-* * *
-
-### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-
-### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
-### Small image
-
-![Octocat](https://assets-cdn.github.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
-
-
-### Definition lists can be used with HTML syntax.
-
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
-
-```
-Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
-```
-
-```
-The final element.
-```
+* [Alfa sunucu](https://github.com/Agem-Bilisim/alfa-server/blob/master/README.md)
+* [Alfa ajan](https://github.com/Agem-Bilisim/alfa-agent/blob/master/README.rst)
