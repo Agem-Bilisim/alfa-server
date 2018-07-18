@@ -41,8 +41,10 @@ curl --request POST \
 
 ## Kullanıcıların içe aktarılması
 
-LMS sunucuda yer alan kullanıcılar aşağıdaki HTTP istemiyle listelenmekte ve dönen cevaptaki e-posta adresleri üzerinden Alfa sunucuda yer alan (LDAP/AD) kullanıcılar ile eşlenerek veritabanındaki bilgileri güncellenmektedir.  
-Geçmiş eğitim bilgisi ya da kullanıcıyla etkileşim içeren (anket doldurma, eğitime yönlendirme vb.) işlevlerin sekteye uğramaması adına e-posta üzerinden eşleme yapılamayan kullanıcılar sisteme atılmamaktadır. Bu nedenle LMS sunucu ile senkronizasyon işlemine başlamadan önce Alfa sunucunun, kuruma ait OpenLDAP yada ActiveDirectory sunucusuyla entegrasyonunun yapıldığından emin olunmalıdır. OpenLDAP/ActiveDirectory entegrasyonuyla kurum içi kullanıcılar otomatik olarak Alfa sunucuya aktarılacak ve bu sayede LMS entegrasyon sırasında e-posta öznitelikleri üzerinden başarıyla eşleştirme yapılabilecektir.
+LMS sunucuda yer alan kullanıcılar aşağıdaki HTTP istemiyle listelenmekte ve dönen cevaptaki e-posta adresleri üzerinden Alfa sunucuda yer alan (LDAP/AD) kullanıcılar ile eşlenerek veritabanındaki bilgileri güncellenmektedir.
+
+Geçmiş eğitim bilgisi ya da kullanıcıyla etkileşim içeren (anket doldurma, eğitime yönlendirme vb.) işlevlerin sekteye uğramaması adına e-posta üzerinden eşleme yapılamayan kullanıcılar sisteme atılmamaktadır. Bu nedenle LMS sunucu ile senkronizasyon işlemine başlamadan önce Alfa sunucunun, kuruma ait OpenLDAP yada ActiveDirectory sunucusuyla entegrasyonunun yapıldığından emin olunmalıdır.  
+OpenLDAP/ActiveDirectory entegrasyonuyla kurum içi kullanıcılar otomatik olarak Alfa sunucuya aktarılacak ve bu sayede LMS entegrasyon sırasında e-posta öznitelikleri üzerinden başarıyla eşleştirme yapılabilecektir.
 
 **URL**: `https://www.pardusegitim.org/api-documention.html#`  
 **Yöntem**: POST  
@@ -91,7 +93,7 @@ curl --request POST \
 
 ## Eğitimlerin içe aktarılması
 
-Kullanıcıların içe aktarılmasına benzer şekilde eğitim kayıtları da aşağıdaki HTTP istemiyle listelenip eğitim adı üzerinden Alfa sunucudaki kayıtlarla eşlenecek varsa ilgili kayıt güncellenecek yoksa yenisi oluşturularak her iki sunucu sistemdeki eğitim kayıtları senkronize hale getirilmiş olacaktır.
+Kullanıcıların içe aktarılmasına benzer şekilde eğitim kayıtları da aşağıdaki HTTP istemiyle listelenip eğitim adı üzerinden Alfa sunucudaki kayıtlarla eşlenmekte varsa ilgili kayıt güncellenmekte yoksa yenisi oluşturularak her iki sunucu sistemdeki eğitim kayıtları birbiriyle uyumlu hale getirilmektedir.  
 
 **URL**: `https://www.pardusegitim.org/api-documention.html`  
 **Yöntem**: POST  
