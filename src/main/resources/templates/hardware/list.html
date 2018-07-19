@@ -24,6 +24,7 @@
 			    	<li role="presentation"><a href="#bios" aria-controls="bios" role="tab" data-toggle="tab">BIOS</a></li>
 			    	<li role="presentation"><a href="#networkInterface" aria-controls="networkInterface" role="tab" data-toggle="tab">Ağ</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
+			    	<li role="presentation"><a href="#compatibleHardware" aria-controls="compatibleHardware" role="tab" data-toggle="tab">Uyumlu Donanımlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -181,6 +182,27 @@
 							</div>
 						</div>
 					</div>
+					<div role="tabpanel" class="tab-pane" id="compatibleHardware">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Uyumlu Donanım Listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="compatibleHardwareTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Ürün</th>
+											<th>Marka</th>
+											<th>Versiyon</th>
+											<th>Tür</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -214,8 +236,6 @@
 	
 		var tables = {};
 		var handleDelete = function(url, tableToRefresh) {
-			console.log(url);
-			console.log(tableToRefresh);
 			$("#deleteConfirmModalBtn").on("click", function(){
 				$('#deleteConfirmModal').modal('hide');
 				$.ajax({
@@ -400,6 +420,17 @@
 				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 
+			// Compatible Hardware
+			var drawCallbackCompatibleHardware = function(settings) {
+			};
+			const colsCompatibleHardware = [
+				{"data": "name", "searchable": false, "orderable": false }, 
+				{"data": "product", "searchable": false, "orderable": false }, 
+				{"data": "version", "searchable": false, "orderable": false }, 
+				{"data": "type", "searchable": false, "orderable": false } 
+			];
+
+			
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				if ($(e.target).attr('href') == "#gpu") {
@@ -414,6 +445,8 @@
 					tables.networkInterfaceTable = $('#networkInterfaceTable').paginatedTable("/alfa/hardware/networkInterface/list-paginated", "networkInterfaces", colsNetworkInterface, drawCallbackNetworkInterface);			
 				} else if ($(e.target).attr('href') == "#problem") {
 					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceTypes[]=6,8", "problems", colsProblem, drawCallbackProblem);
+				} else if ($(e.target).attr('href') == "#compatibleHardware") {
+					tables.compatibleHardwareTable = $('#compatibleHardwareTable').paginatedTable("/alfa/hardware/hardware-compatible/list-paginated?compatible=E", "compatibleHardwares", colsCompatibleHardware, drawCallbackCompatibleHardware);
 				}
 			});
 		});

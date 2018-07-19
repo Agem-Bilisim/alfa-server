@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import tr.com.agem.alfa.model.Bios;
+import tr.com.agem.alfa.model.CompatibleHardware;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Gpu;
@@ -21,6 +22,7 @@ import tr.com.agem.alfa.model.Memory;
 import tr.com.agem.alfa.model.NetworkInterface;
 import tr.com.agem.alfa.model.Platform;
 import tr.com.agem.alfa.repository.BiosRepository;
+import tr.com.agem.alfa.repository.CompatibleHardwareRepository;
 import tr.com.agem.alfa.repository.CpuRepository;
 import tr.com.agem.alfa.repository.DiskRepository;
 import tr.com.agem.alfa.repository.GpuRepository;
@@ -42,13 +44,15 @@ public class HardwareService {
 	private final InetRepository inetRepository;
 	private final MemoryRepository memoryRepository;
 	private final PlatformRepository platformRepository;
+	private final CompatibleHardwareRepository compatibleHardwareRepository;
 	
 	@PersistenceContext
 	private EntityManager em;
 
 	@Autowired
 	public HardwareService(BiosRepository biosRepository, CpuRepository cpuRepository, DiskRepository diskRepository,
-			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository, PlatformRepository platformRepository) {
+			GpuRepository gpuRepository, InetRepository inetRepository, MemoryRepository memoryRepository, PlatformRepository platformRepository,
+			CompatibleHardwareRepository compatibleHardwareRepository) {
 		this.biosRepository = biosRepository;
 		this.cpuRepository = cpuRepository;
 		this.diskRepository = diskRepository;
@@ -56,13 +60,14 @@ public class HardwareService {
 		this.inetRepository = inetRepository;
 		this.memoryRepository = memoryRepository;
 		this.platformRepository = platformRepository;
+		this.compatibleHardwareRepository = compatibleHardwareRepository;
 	}
 
 	public Page<Cpu> getCpus(Pageable pageable, String search) {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			// TODO
-			return null;
+			return this.cpuRepository.findByBrandContainingAllIgnoringCase(search, pageable);
 		}
 		return this.cpuRepository.findAll(pageable);
 	}
@@ -71,7 +76,7 @@ public class HardwareService {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			// TODO
-			return null;
+			return this.gpuRepository.findBySubsystemContainingAllIgnoringCase(search, pageable);
 		}
 		return this.gpuRepository.findAll(pageable);
 	}
@@ -80,7 +85,7 @@ public class HardwareService {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			// TODO
-			return null;
+			return this.diskRepository.findByDescriptionContainingAllIgnoringCase(search, pageable);
 		}
 		return this.diskRepository.findAll(pageable);
 	}
@@ -89,7 +94,7 @@ public class HardwareService {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			// TODO
-			return null;
+			return this.memoryRepository.findByManufacturerContainingAllIgnoringCase(search, pageable);
 		}
 		return this.memoryRepository.findAll(pageable);
 	}
@@ -98,7 +103,7 @@ public class HardwareService {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			// TODO
-			return null;
+			return this.biosRepository.findByVendorContainingAllIgnoringCase(search, pageable);
 		}
 		return this.biosRepository.findAll(pageable);
 	}
@@ -107,7 +112,7 @@ public class HardwareService {
 		Assert.notNull(pageable, "Pageable must not be null.");
 		if (search != null && !search.isEmpty()) {
 			// TODO
-			return null;
+			return  this.inetRepository.findByVendorContainingAllIgnoringCase(search, pageable);
 		}
 		return this.inetRepository.findAll(pageable);
 	}
@@ -295,6 +300,20 @@ public class HardwareService {
 
 	public Platform getPlatform(String system, String release) {
 		return this.platformRepository.findBySystemAndRelease(system, release);
+	}
+	
+	public Page<CompatibleHardware> getCompatibleHardware(Pageable pageable, String compatible, String search) 
+	{
+		
+		if (compatible != null && !compatible.isEmpty()) {
+			compatible = "E";
+		}
+		if (search != null && !search.isEmpty()) {
+			return compatibleHardwareRepository.findByCompatibleAndNameContainingAllIgnoringCase(compatible, search, pageable);
+		}
+		
+		return compatibleHardwareRepository.findByCompatible(compatible, pageable);
+
 	}
 
 }

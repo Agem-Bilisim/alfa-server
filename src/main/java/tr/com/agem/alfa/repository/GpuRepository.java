@@ -19,4 +19,8 @@ public interface GpuRepository extends JpaRepository<Gpu, Long> {
 	Page<Gpu> findByKernelContainingOrSubsystemContainingOrMemoryAllIgnoringCase(String kernel, String subsystem,
 			String memory, Pageable pageable);
 
+	Page<Gpu> findByKernelContainingAllIgnoringCase(String search, Pageable pageable);
+
+	Page<Gpu> findBySubsystemContainingAllIgnoringCase(String search, Pageable pageable);
+
 }

@@ -42,6 +42,7 @@ import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.model.Agent;
 import tr.com.agem.alfa.model.AgentCpu;
 import tr.com.agem.alfa.model.Bios;
+import tr.com.agem.alfa.model.CompatibleHardware;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.CurrentUser;
 import tr.com.agem.alfa.model.Disk;
@@ -908,4 +909,22 @@ public class HardwareController {
 		}
 		return ResponseEntity.ok(result);
 	}
+	
+	@GetMapping("/hardware/hardware-compatible/list-paginated")
+	public ResponseEntity<?> handleHardwareCompatibleList(@RequestParam(value = "compatible", required = false, defaultValue="E") String compatible,
+			@RequestParam(value = "search", required = false) String search,
+			Pageable pageable) {
+		RestResponseBody result = new RestResponseBody();
+		try {
+			Page<CompatibleHardware> compatibleHardwares = hardwareService.getCompatibleHardware(pageable, compatible, search);
+			result.add("compatibleHardwares", checkNotNull(compatibleHardwares, "No compatible hardware found."));
+		} catch (Exception e) {
+			log.error("Exception occurred when trying to find Compatible Hardwares, assuming invalid parameters", e);
+			result.setMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	
 }
