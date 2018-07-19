@@ -13,4 +13,6 @@ public interface CpuRepository extends JpaRepository<Cpu, Long> {
 
 	Page<Cpu> findByBrandContainingAllIgnoringCase(String brand, Pageable pageable);
 
+	Cpu findOneByBrandAndProcessor(String brand, String processor);
+
 }

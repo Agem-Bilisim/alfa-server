@@ -56,5 +56,17 @@ public class CommonUtils {
 		}
 		return true;
 	}
+	
+	public static boolean isNullOrEmpty(Object... objects) {
+		if (objects == null) return true;
+		for (Object o : objects) {
+	        if (o == null) {
+	            return true;
+	        } else if (o instanceof String && ((String) o).isEmpty()) {
+	        	return true;
+	        }
+	    }
+	    return false;
+	}
 
 }

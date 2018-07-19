@@ -316,4 +316,10 @@ public class HardwareService {
 
 	}
 
+	public Cpu getCpu(String brand, String processor) {
+		Assert.notNull(brand, "Brand must not be null");
+		Assert.notNull(processor, "Processor must not be null");
+		return this.cpuRepository.findOneByBrandAndProcessor(brand, processor);
+	}
+
 }

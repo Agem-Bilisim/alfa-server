@@ -21,10 +21,10 @@ public class InstalledPackage extends BaseModel {
 
 	private static final long serialVersionUID = -4829346133428733432L;
 
-	@Column(name = "NAME", length = 100)
+	@Column(name = "NAME", length = 100, nullable = false)
 	private String name;
 
-	@Column(name = "VERSION", length = 100)
+	@Column(name = "VERSION", length = 100, nullable = false)
 	private String version;
 
 	@Column(name = "INSTITUTIONAL")

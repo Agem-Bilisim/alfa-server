@@ -1,6 +1,7 @@
 package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static tr.com.agem.alfa.util.CommonUtils.isNullOrEmpty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -277,6 +278,10 @@ public class AgentController {
 		//
 		if (message.getDisk() != null) {
 			for (Device d : message.getDisk().getDevices()) {
+				if (isNullOrEmpty(d.getVersion(), d.getProduct())) {
+					log.warn("Disk version or product cannot be null! Skipping...");
+					continue;
+				}
 				Disk disk = new Disk();
 				disk.setVendor(d.getVendor());
 				disk.setDescription(d.getDescription());
@@ -292,6 +297,10 @@ public class AgentController {
 		//
 		if (message.getNetwork() != null && message.getNetwork().getDevices() != null) {
 			for (Device d : message.getNetwork().getDevices()) {
+				if (isNullOrEmpty(d.getVersion(), d.getProduct())) {
+					log.warn("Network interface version or product cannot be null! Skipping...");
+					continue;
+				}
 				NetworkInterface inet = new NetworkInterface();
 				inet.setVendor(d.getVendor());
 				inet.setVersion(d.getVersion());
@@ -305,6 +314,10 @@ public class AgentController {
 		//
 		if (message.getInstalledPackages() != null) {
 			for (InstalledPackage _package : message.getInstalledPackages()) {
+				if (isNullOrEmpty(_package.getName(), _package.getVersion())) {
+					log.warn("Package name or version cannot be null! Skipping...");
+					continue;
+				}
 				tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
 				mPackage.setName(_package.getName());
 				mPackage.setVersion(_package.getVersion());
@@ -317,6 +330,10 @@ public class AgentController {
 		//
 		if (message.getMemory() != null) {
 			for (MemoryDevice d : message.getMemory().getDevices()) {
+				if (isNullOrEmpty(d.getSize(), d.getSpeed(), d.getType(), d.getManufacturer())) {
+					log.warn("Memory speed, size, type, manufacturer cannot be null! Skipping...");
+					continue;
+				}
 				Memory mem = new Memory();
 				mem.setSpeed(d.getSpeed());
 				mem.setSize(d.getSize());
@@ -330,6 +347,10 @@ public class AgentController {
 		//
 		if (message.getGpu() != null) {
 			for (GpuDevice d : message.getGpu().getDevices()) {
+				if (isNullOrEmpty(d.getSubsystem(), d.getKernel(), d.getMemory())) {
+					log.warn("GPU kernel, subsystem, memory cannot be null! Skipping...");
+					continue;
+				}
 				Gpu gpu = new Gpu();
 				gpu.setSubsystem(d.getSubsystem());
 				gpu.setKernel(d.getKernel());
@@ -343,13 +364,17 @@ public class AgentController {
 		// BIOS
 		//
 		if (message.getBios() != null) {
-			tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
-					: new tr.com.agem.alfa.model.Bios();
-			bios.setVendor(message.getBios().getVendor());
-			bios.setVersion(message.getBios().getVersion());
-			bios.setReleaseDate(message.getBios().getReleaseDate());
-			tr.com.agem.alfa.model.Bios _tmp = this.hardwareService.getBios(bios.getVersion(), bios.getVendor());
-			agent.setBios(_tmp != null ? _tmp : bios);
+			if (isNullOrEmpty(message.getBios().getVendor(), message.getBios().getVersion())) {
+				log.warn("BIOS vendor, version cannot be null! Skipping...");
+			} else {
+				tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
+						: new tr.com.agem.alfa.model.Bios();
+				bios.setVendor(message.getBios().getVendor());
+				bios.setVersion(message.getBios().getVersion());
+				bios.setReleaseDate(message.getBios().getReleaseDate());
+				tr.com.agem.alfa.model.Bios _tmp = this.hardwareService.getBios(bios.getVersion(), bios.getVendor());
+				agent.setBios(_tmp != null ? _tmp : bios);
+			}
 		}
 		//
 		// Platform
@@ -376,15 +401,15 @@ public class AgentController {
 		// Processes
 		//
 		if (message.getProcesses() != null) {
-			agent.getAgentRunningProcesses().clear();
 			if (agent.getAgentRunningProcesses() != null) {
 				Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
 				while (it.hasNext()) {
 					AgentRunningProcess _p = it.next();
 					if (_p.getId() != null) {
-						this.em.createNativeQuery(
-								"DELETE FROM c_agent_process_agent WHERE AGENT_PROCESS_AGENT_ID = :id")
-								.setParameter("id", _p.getId()).executeUpdate();
+						this.em.remove(_p);;
+//						this.em.createNativeQuery(
+//								"DELETE FROM c_agent_process_agent WHERE AGENT_PROCESS_AGENT_ID = :id")
+//								.setParameter("id", _p.getId()).executeUpdate();
 						this.em.flush();
 						it.remove();
 					} else {
@@ -393,7 +418,10 @@ public class AgentController {
 				}
 			}
 			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
-
+				if (isNullOrEmpty(p.getName(), p.getUsername(), (p.getPid() != null ? p.getPid().toString() : null))) {
+					log.warn("Process name, username, pid cannot be null. Skipping...");
+					continue;
+				}
 				RunningProcess process = new RunningProcess();
 				process.setName(p.getName());
 				RunningProcess tmp = this.softwareService.getProcess(process.getName());
@@ -429,41 +457,47 @@ public class AgentController {
 					}
 				}
 			}
-			Cpu cpu = new Cpu();
-			cpu.setArch(message.getCpu().getArch());
-			cpu.setBits(message.getCpu().getBits() != null ? message.getCpu().getBits().toString() : null);
-			cpu.setBrand(message.getCpu().getBrand());
-			cpu.setCount(message.getCpu().getCount());
-			cpu.setExtendedFamily(
-					message.getCpu().getExtendedFamily() != null ? message.getCpu().getExtendedFamily().toString()
-							: null);
-			cpu.setFamily(message.getCpu().getFamily() != null ? message.getCpu().getFamily().toString() : null);
-			cpu.setHzAdvertised(message.getCpu().getHzAdvertised());
-			cpu.setL2CacheAssociativity(message.getCpu().getL2CacheAssociativity());
-			cpu.setL2CacheLineSize(
-					message.getCpu().getL2CacheLineSize() != null ? message.getCpu().getL2CacheLineSize().toString()
-							: null);
-			cpu.setL2CacheSize(message.getCpu().getL2CacheSize());
-			cpu.setLogicalCoreCount(message.getCpu().getLogicalCoreCount());
-			cpu.setModel(message.getCpu().getModel() != null ? message.getCpu().getModel().toString() : null);
-			cpu.setProcessor(message.getCpu().getProcessor());
-			cpu.setPyhsicalCoreCount(message.getCpu().getPyhsicalCoreCount());
-			cpu.setRawArchString(message.getCpu().getRawArchString());
-			cpu.setVendorId(message.getCpu().getVendorId());
-
-			AgentCpu cross = new AgentCpu();
-			cross.setCommaSeparatedCpuTimes(
-					message.getCpu().getCpuTimes() != null ? StringUtils.join(",", message.getCpu().getCpuTimes())
-							: null);
-			cross.setCommaSeparatedFlags(
-					message.getCpu().getFlags() != null ? StringUtils.join(",", message.getCpu().getFlags()) : null);
-			cross.setCommaSeparatedStats(
-					message.getCpu().getStats() != null ? StringUtils.join(",", message.getCpu().getStats()) : null);
-			cross.setHzActual(message.getCpu().getHzActual());
-			cross.setAgent(agent);
-			cross.setCpu(cpu);
-
-			agent.getAgentCpus().add(cross);
+			if (isNullOrEmpty(message.getCpu().getHzAdvertised(), message.getCpu().getProcessor(), message.getCpu().getPyhsicalCoreCount(), message.getCpu().getLogicalCoreCount())) {
+				log.warn("CPU processor, hz, pyhsical and logical core counts cannot be null! Skipping...");
+			} else {
+				Cpu cpu = new Cpu();
+				cpu.setArch(message.getCpu().getArch());
+				cpu.setBits(message.getCpu().getBits() != null ? message.getCpu().getBits().toString() : null);
+				cpu.setBrand(message.getCpu().getBrand());
+				cpu.setCount(message.getCpu().getCount());
+				cpu.setExtendedFamily(
+						message.getCpu().getExtendedFamily() != null ? message.getCpu().getExtendedFamily().toString()
+								: null);
+				cpu.setFamily(message.getCpu().getFamily() != null ? message.getCpu().getFamily().toString() : null);
+				cpu.setHzAdvertised(message.getCpu().getHzAdvertised());
+				cpu.setL2CacheAssociativity(message.getCpu().getL2CacheAssociativity());
+				cpu.setL2CacheLineSize(
+						message.getCpu().getL2CacheLineSize() != null ? message.getCpu().getL2CacheLineSize().toString()
+								: null);
+				cpu.setL2CacheSize(message.getCpu().getL2CacheSize());
+				cpu.setLogicalCoreCount(message.getCpu().getLogicalCoreCount());
+				cpu.setModel(message.getCpu().getModel() != null ? message.getCpu().getModel().toString() : null);
+				cpu.setProcessor(message.getCpu().getProcessor());
+				cpu.setPyhsicalCoreCount(message.getCpu().getPyhsicalCoreCount());
+				cpu.setRawArchString(message.getCpu().getRawArchString());
+				cpu.setVendorId(message.getCpu().getVendorId());
+				Cpu tmp = this.hardwareService.getCpu(cpu.getBrand(), cpu.getProcessor());
+				cpu = tmp != null ? tmp : cpu;
+				
+				AgentCpu cross = new AgentCpu();
+				cross.setCommaSeparatedCpuTimes(
+						message.getCpu().getCpuTimes() != null ? StringUtils.join(",", message.getCpu().getCpuTimes())
+								: null);
+				cross.setCommaSeparatedFlags(
+						message.getCpu().getFlags() != null ? StringUtils.join(",", message.getCpu().getFlags()) : null);
+				cross.setCommaSeparatedStats(
+						message.getCpu().getStats() != null ? StringUtils.join(",", message.getCpu().getStats()) : null);
+				cross.setHzActual(message.getCpu().getHzActual());
+				cross.setAgent(agent);
+				cross.setCpu(cpu);
+				
+				agent.getAgentCpus().add(cross);
+			}
 		}
 		//
 		// Peripherals
@@ -484,6 +518,10 @@ public class AgentController {
 				}
 			}
 			for (tr.com.agem.alfa.agent.sysinfo.PeripheralDevice p : message.getPeripheralDevices()) {
+				if (isNullOrEmpty(p.getTag())) {
+					log.warn("Peripheral device tag cannot be null! Skipping...");
+					continue;
+				}
 				PeripheralDevice peripheral = new PeripheralDevice();
 				peripheral.setShowInSurvey(false);
 				peripheral.setTag(p.getTag());
