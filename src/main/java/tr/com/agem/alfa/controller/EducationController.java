@@ -30,7 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tr.com.agem.alfa.exception.AlfaException;
 import tr.com.agem.alfa.form.EducationForm;
+import tr.com.agem.alfa.form.EducationLdapUserForm;
 import tr.com.agem.alfa.lms.LmsUser;
+import tr.com.agem.alfa.locale.MessageSourceDecorator;
 import tr.com.agem.alfa.mapper.SysMapper;
 import tr.com.agem.alfa.messaging.factory.MessageFactory;
 import tr.com.agem.alfa.messaging.message.ServerBaseMessage;
@@ -56,6 +58,7 @@ public class EducationController {
 	private final LdapService ldapService;
 	private final AgentService agentService;
 	private final MessagingService messagingService;
+	private final MessageSourceDecorator messageSourceDecorator;
 	private final SysMapper mapper;
 
 	@Value("${sys.page-size}")
@@ -63,11 +66,12 @@ public class EducationController {
 
 	@Autowired
 	public EducationController(EducationService educationService, LdapService ldapService, AgentService agentService,
-			MessagingService messagingService, SysMapper mapper) {
+			MessagingService messagingService, MessageSourceDecorator messageSourceDecorator, SysMapper mapper) {
 		this.educationService = educationService;
 		this.ldapService = ldapService;
 		this.agentService = agentService;
 		this.messagingService = messagingService;
+		this.messageSourceDecorator = messageSourceDecorator;
 		this.mapper = mapper;
 	}
 
@@ -226,7 +230,8 @@ public class EducationController {
 		log.info("Getting details for education with education id:{}", educationId);
 		RestResponseBody result = new RestResponseBody();
 		try {
-			result.add("users", educationService.getEducationUsers(educationId));
+			List<EducationLdapUserForm> forms = mapper.toEducationLdapUserFormList(educationService.getEducationUsers(educationId));
+			result.add("users", messageSourceDecorator.decorate("status", "statusLabel", forms));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find education", e);
 			result.setMessage(e.getMessage());

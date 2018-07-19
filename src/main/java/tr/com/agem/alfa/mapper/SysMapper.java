@@ -1,5 +1,7 @@
 package tr.com.agem.alfa.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -7,6 +9,7 @@ import tr.com.agem.alfa.form.BiosForm;
 import tr.com.agem.alfa.form.CpuForm;
 import tr.com.agem.alfa.form.DiskForm;
 import tr.com.agem.alfa.form.EducationForm;
+import tr.com.agem.alfa.form.EducationLdapUserForm;
 import tr.com.agem.alfa.form.GpuForm;
 import tr.com.agem.alfa.form.LdapIntegrationForm;
 import tr.com.agem.alfa.form.MemoryForm;
@@ -24,6 +27,7 @@ import tr.com.agem.alfa.model.Bios;
 import tr.com.agem.alfa.model.Cpu;
 import tr.com.agem.alfa.model.Disk;
 import tr.com.agem.alfa.model.Education;
+import tr.com.agem.alfa.model.EducationLdapUser;
 import tr.com.agem.alfa.model.Gpu;
 import tr.com.agem.alfa.model.InstalledPackage;
 import tr.com.agem.alfa.model.LdapIntegration;
@@ -115,5 +119,6 @@ public interface SysMapper {
 
 	PeripheralDeviceForm toPeripheralDeviceForm(PeripheralDevice entity);
 	
+	List<EducationLdapUserForm> toEducationLdapUserFormList(List<EducationLdapUser> entities);
 
 }
