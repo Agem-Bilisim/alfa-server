@@ -105,7 +105,7 @@ public class LdapService {
 		String sql = "select u.id\n" + 
 				"from c_ldap_user u left outer join c_ldap_user_attribute a\n" + 
 				"    on (u.id = a.ldap_user_id and a.name in ('userPrincipalName', 'email', 'mail'))\n" + 
-				"where u.id = :lmsUserId or u.lms_user_id = :lmsUserId or a.value = :email\n" + 
+				"where a.value = :email or u.id = :lmsUserId or u.lms_user_id = :lmsUserId\n" + 
 				"limit 0,1";
 		Query query = em.createNativeQuery(sql);
 		query.setParameter("lmsUserId", lmsUserId);
