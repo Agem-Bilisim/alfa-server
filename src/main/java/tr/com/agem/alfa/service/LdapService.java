@@ -2,6 +2,10 @@ package tr.com.agem.alfa.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,9 @@ import tr.com.agem.alfa.repository.LdapUserRepository;
 @Component
 @Transactional
 public class LdapService {
+	
+	@PersistenceContext
+	private EntityManager em;
 
 	private final LdapIntegrationRepository ldapIntegrationRepository;
 	private final LdapUserRepository ldapUserRepository;
@@ -91,10 +98,20 @@ public class LdapService {
 		this.ldapUserRepository.deleteByLdapIntegrationId(id);
 	}
 
-	public LdapUser getUserByLmsId(Long lmsUserId) {
+	// TODO use HQL equivalent of 'sql' to prevent second query (findOne)
+	// also do not use id! we should just use lmsUserId
+	public LdapUser getUserByLmsIdOrEmail(Long lmsUserId, String email) {
 		Assert.notNull(lmsUserId, "ID must not be null");
-		// TODO this should be LMS user id....
-		return this.ldapUserRepository.findById(lmsUserId);
+		String sql = "select u.id\n" + 
+				"from c_ldap_user u left outer join c_ldap_user_attribute a\n" + 
+				"    on (u.id = a.ldap_user_id and a.name in ('userPrincipalName', 'email', 'mail'))\n" + 
+				"where u.id = :lmsUserId or u.lms_user_id = :lmsUserId or a.value = :email\n" + 
+				"limit 0,1";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter("lmsUserId", lmsUserId);
+		query.setParameter("email", email);
+		Object result = query.getSingleResult();
+		return result == null ? null : this.ldapUserRepository.findOne(new Long(result.toString()));
 	}
 
 }

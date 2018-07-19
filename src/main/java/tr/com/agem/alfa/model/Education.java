@@ -85,7 +85,7 @@ public class Education extends BaseModel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((lmsEducationId == null) ? 0 : lmsEducationId.hashCode());
+		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		return result;
 	}
 
@@ -98,10 +98,10 @@ public class Education extends BaseModel {
 		if (getClass() != obj.getClass())
 			return false;
 		Education other = (Education) obj;
-		if (lmsEducationId == null) {
-			if (other.lmsEducationId != null)
+		if (label == null) {
+			if (other.label != null)
 				return false;
-		} else if (!lmsEducationId.equals(other.lmsEducationId))
+		} else if (!label.equals(other.label))
 			return false;
 		return true;
 	}

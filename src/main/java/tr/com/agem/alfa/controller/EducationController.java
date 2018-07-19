@@ -182,7 +182,6 @@ public class EducationController {
 		try {
 			CurrentUser user = (CurrentUser) authentication.getPrincipal();
 			checkNotNull(user, "Current user not found.");
-			// TODO real LMS integration instead of this bs
 			List<LmsUser> lmsUsers = new ObjectMapper().readValue(
 					this.getClass().getClassLoader().getResourceAsStream("lms-sync.json"),
 					new TypeReference<List<LmsUser>>() {
@@ -191,8 +190,22 @@ public class EducationController {
 				throw new AlfaException("LMS sunucuya erişilemedi.");
 			}
 			for (LmsUser lmsUser : lmsUsers) {
-				Education education = educationService.getEducationByLmsId(lmsUser.getId());
-				LdapUser ldapUser = ldapService.getUserByLmsId(lmsUser.getUserId());
+				// Try to find education
+				Education education = checkNotNull(educationService.getEducationByLmsIdOrLabel(lmsUser.getId(), lmsUser.getUrunAdi()), "Education not found.");
+				// Update/set LMS ID of the education record if necessary
+				if (!lmsUser.getId().equals(education.getLmsEducationId())) {
+					education.setLmsEducationId(lmsUser.getId());
+					this.educationService.saveEducation(education);
+				}
+				
+				// Try to find LDAP user
+				LdapUser ldapUser = checkNotNull(ldapService.getUserByLmsIdOrEmail(lmsUser.getUserId(), lmsUser.getEmail()), "LDAP user not found.");
+				// Update/set LMS ID of the LDAP user record if necessary
+				if (!lmsUser.getUserId().equals(ldapUser.getLmsUserId())) {
+					ldapUser.setLmsUserId(lmsUser.getUserId());
+					this.ldapService.save(ldapUser);
+				}
+				
 				EducationLdapUser elu = new EducationLdapUser(education, ldapUser,
 						EducationStatus.getTypeFromLabel(lmsUser.getDurumu()).getId(), lmsUser.getSure(),
 						lmsUser.getSinavPuani(), lmsUser.getSinavDurumu());

@@ -17,6 +17,4 @@ public interface LdapUserRepository extends JpaRepository<LdapUser, Long> {
 
 	void deleteByLdapIntegrationId(Long id);
 
-	LdapUser findById(Long id);
-
 }

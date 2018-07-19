@@ -102,4 +102,29 @@ public class AgentCpu implements Serializable {
 		this.cpu = cpu;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cpu == null) ? 0 : cpu.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AgentCpu other = (AgentCpu) obj;
+		if (cpu == null) {
+			if (other.cpu != null)
+				return false;
+		} else if (!cpu.equals(other.cpu))
+			return false;
+		return true;
+	}
+
 }

@@ -8,11 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "c_agent_cpu")
+@Table(name = "c_agent_cpu", uniqueConstraints = { @UniqueConstraint(columnNames = { "BRAND", "PROCESSOR" }) })
 public class Cpu extends BaseModel {
 
 	private static final long serialVersionUID = 7537194714323092263L;
@@ -203,6 +204,37 @@ public class Cpu extends BaseModel {
 
 	public void setAgentCpus(Set<AgentCpu> agentCpus) {
 		this.agentCpus = agentCpus;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((brand == null) ? 0 : brand.hashCode());
+		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cpu other = (Cpu) obj;
+		if (brand == null) {
+			if (other.brand != null)
+				return false;
+		} else if (!brand.equals(other.brand))
+			return false;
+		if (processor == null) {
+			if (other.processor != null)
+				return false;
+		} else if (!processor.equals(other.processor))
+			return false;
+		return true;
 	}
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,7 +21,7 @@ import tr.com.agem.alfa.model.enums.EducationStatus;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Entity
-@Table(name = "c_education_user_education")
+@Table(name = "c_education_user_education", uniqueConstraints = { @UniqueConstraint(columnNames = { "EDUCATION_ID", "LDAP_USER_ID" }) })
 public class EducationLdapUser implements Serializable {
 
 	private static final long serialVersionUID = 8653912712002079235L;

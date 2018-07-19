@@ -13,6 +13,6 @@ public interface EducationRepository extends JpaRepository<Education, Long> {
 
 	Page<Education> findByLabelContainingOrDescriptionContainingAllIgnoringCase(String search, Pageable pageable);
 
-	Education findById(Long id);
+	Education findOneByLmsEducationIdOrLabel(Long lmsEducationId, String label);
 
 }

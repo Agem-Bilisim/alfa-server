@@ -74,15 +74,14 @@ public class EducationService {
 		this.educationRepository.delete(id);
 	}
 
-	public Education getEducationByLmsId(Long lmsEducationId) {
-		Assert.notNull(lmsEducationId, "ID must not be null.");
-		// TODO this should be LMS id
-		return this.educationRepository.findById(lmsEducationId);
-	}
-
 	public List<EducationLdapUser> getEducationUsers(Long educationId) {
 		Assert.notNull(educationId, "ID must not be null.");
 		return this.educationLdapUserRepository.findByEducationId(educationId);
+	}
+
+	public Education getEducationByLmsIdOrLabel(Long lmsEducationId, String label) {
+		Assert.notNull(lmsEducationId, "ID must not be null.");
+		return this.educationRepository.findOneByLmsEducationIdOrLabel(lmsEducationId, label);
 	}
 
 }
