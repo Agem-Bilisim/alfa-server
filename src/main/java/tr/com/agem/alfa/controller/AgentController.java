@@ -401,20 +401,14 @@ public class AgentController {
 		// Processes
 		//
 		if (message.getProcesses() != null) {
-			if (agent.getAgentRunningProcesses() != null) {
-				Iterator<AgentRunningProcess> it = agent.getAgentRunningProcesses().iterator();
-				while (it.hasNext()) {
-					AgentRunningProcess _p = it.next();
-					if (_p.getId() != null) {
-						this.em.remove(_p);;
-//						this.em.createNativeQuery(
-//								"DELETE FROM c_agent_process_agent WHERE AGENT_PROCESS_AGENT_ID = :id")
-//								.setParameter("id", _p.getId()).executeUpdate();
-						this.em.flush();
-						it.remove();
-					} else {
-						this.em.merge(_p);
-					}
+			// Remove agent-processes
+			if (agent.getId() != null) {
+				this.em.createNativeQuery(
+						"DELETE FROM c_agent_process_agent WHERE agent_id = :id")
+						.setParameter("id", agent.getId()).executeUpdate();
+				this.em.flush();
+				if (agent.getAgentRunningProcesses() != null) {
+					agent.getAgentRunningProcesses().clear();
 				}
 			}
 			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
@@ -443,22 +437,18 @@ public class AgentController {
 		// CPU
 		//
 		if (message.getCpu() != null) {
-			// Remove CPUs
-			if (agent.getAgentCpus() != null) {
-				Iterator<AgentCpu> it = agent.getAgentCpus().iterator();
-				while (it.hasNext()) {
-					AgentCpu _c = it.next();
-					if (_c.getId() != null) {
-						this.em.remove(_c);
-						this.em.flush();
-						it.remove();
-					} else {
-						this.em.persist(_c);
-					}
+			// Remove agent-CPUs
+			if (agent.getId() != null) {
+				this.em.createNativeQuery(
+						"DELETE FROM c_agent_cpu_agent WHERE agent_id = :id")
+						.setParameter("id", agent.getId()).executeUpdate();
+				this.em.flush();
+				if (agent.getAgentCpus() != null) {
+					agent.getAgentCpus().clear();
 				}
 			}
-			if (isNullOrEmpty(message.getCpu().getHzAdvertised(), message.getCpu().getProcessor(), message.getCpu().getPyhsicalCoreCount(), message.getCpu().getLogicalCoreCount())) {
-				log.warn("CPU processor, hz, pyhsical and logical core counts cannot be null! Skipping...");
+			if (isNullOrEmpty(message.getCpu().getBrand(), message.getCpu().getHzAdvertised(), message.getCpu().getProcessor(), message.getCpu().getPyhsicalCoreCount(), message.getCpu().getLogicalCoreCount())) {
+				log.warn("CPU brand, processor, hz, pyhsical and logical core counts cannot be null! Skipping...");
 			} else {
 				Cpu cpu = new Cpu();
 				cpu.setArch(message.getCpu().getArch());
@@ -503,18 +493,14 @@ public class AgentController {
 		// Peripherals
 		//
 		if (message.getPeripheralDevices() != null) {
-			// Remove peripherals
-			if (agent.getAgentPeripheralDevices() != null) {
-				Iterator<AgentPeripheralDevice> it = agent.getAgentPeripheralDevices().iterator();
-				while (it.hasNext()) {
-					AgentPeripheralDevice _p = it.next();
-					if (_p.getId() != null) {
-						this.em.remove(_p);
-						this.em.flush();
-						it.remove();
-					} else {
-						this.em.persist(_p);
-					}
+			// Remove agent-peripherals
+			if (agent.getId() != null) {
+				this.em.createNativeQuery(
+						"DELETE FROM c_agent_peripheral_agent WHERE agent_id = :id")
+						.setParameter("id", agent.getId()).executeUpdate();
+				this.em.flush();
+				if (agent.getAgentPeripheralDevices() != null) {
+					agent.getAgentPeripheralDevices().clear();
 				}
 			}
 			for (tr.com.agem.alfa.agent.sysinfo.PeripheralDevice p : message.getPeripheralDevices()) {
