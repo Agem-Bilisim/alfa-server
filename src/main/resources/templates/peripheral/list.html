@@ -19,7 +19,8 @@
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#peripheral" aria-controls="peripheral" role="tab" data-toggle="tab">Çevresel Cihazlar</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
-			    	<li role="presentation"><a href="#compatiblePeripheral" aria-controls="problem" role="tab" data-toggle="tab">Uyumlu Cihazlar</a></li>
+			    	<li role="presentation"><a href="#compatiblePeripheral" aria-controls="compatiblePeripheral" role="tab" data-toggle="tab">Uyumlu Cihazlar</a></li>
+			    	<li role="presentation"><a href="#incompatiblePeripheral" aria-controls="incompatiblePeripheral" role="tab" data-toggle="tab">Uyumsuz Cihazlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -72,6 +73,26 @@
 							</div>
 							<div class="box-body">
 								<table id="compatiblePeripheralTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Cihaz adı</th>
+											<th>Ankete dahil edilebilir</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>				
+					</div>
+					<div role="tabpanel" class="tab-pane" id="incompatiblePeripheral">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Uyumsuz Cihaz listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="incompatiblePeripheralTable" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th>Cihaz adı</th>
@@ -219,13 +240,14 @@
 				{"data": fnActionBtnsCompatiblePeripheral, "searchable": false, "orderable": false }
 			];
 
-			
 			// Handle table init
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				if ($(e.target).attr('href') == "#problem") {
 					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceType=2", "problems", colsProblem, drawCallbackProblem);
 				} else if ($(e.target).attr('href') == "#compatiblePeripheral") {
 					tables.compatiblePeripheralTable = $('#compatiblePeripheralTable').paginatedTable("/alfa/peripheral-compatible/list-paginated?referenceType=2&compatible=E", "compatiblePeripherals", colsCompatiblePeripheral, drawCallbackCompatiblePeripheral);
+				} else if ($(e.target).attr('href') == "#incompatiblePeripheral") {
+					tables.incompatiblePeripheralTable = $('#incompatiblePeripheralTable').paginatedTable("/alfa/peripheral-compatible/list-paginated?referenceType=2&compatible=H", "compatiblePeripherals", colsCompatiblePeripheral, drawCallbackCompatiblePeripheral);
 				} 
 			});
 		});

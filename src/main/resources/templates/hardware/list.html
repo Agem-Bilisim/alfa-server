@@ -25,6 +25,7 @@
 			    	<li role="presentation"><a href="#networkInterface" aria-controls="networkInterface" role="tab" data-toggle="tab">Ağ</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
 			    	<li role="presentation"><a href="#compatibleHardware" aria-controls="compatibleHardware" role="tab" data-toggle="tab">Uyumlu Donanımlar</a></li>
+			    	<li role="presentation"><a href="#incompatibleHardware" aria-controls="incompatibleHardware" role="tab" data-toggle="tab">Uyumsuz Donanımlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -203,6 +204,27 @@
 							</div>
 						</div>
 					</div>
+					<div role="tabpanel" class="tab-pane" id="incompatibleHardware">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Uyumsuz Donanım Listesi</h3>
+							</div>
+							<div class="box-body">
+								<table id="incompatibleHardwareTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Ürün</th>
+											<th>Marka</th>
+											<th>Versiyon</th>
+											<th>Tür</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>					
 				</div>
 			</div>
 		</div>
@@ -420,7 +442,7 @@
 				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 
-			// Compatible Hardware
+			// Compatible/Incompatible Hardware
 			var drawCallbackCompatibleHardware = function(settings) {
 			};
 			const colsCompatibleHardware = [
@@ -447,6 +469,8 @@
 					tables.problemTable = $('#problemTable').paginatedTable("/alfa/problem/list-paginated?referenceTypes[]=6,8", "problems", colsProblem, drawCallbackProblem);
 				} else if ($(e.target).attr('href') == "#compatibleHardware") {
 					tables.compatibleHardwareTable = $('#compatibleHardwareTable').paginatedTable("/alfa/hardware/hardware-compatible/list-paginated?compatible=E", "compatibleHardwares", colsCompatibleHardware, drawCallbackCompatibleHardware);
+				} else if ($(e.target).attr('href') == "#incompatibleHardware") {
+					tables.incompatibleHardwareTable = $('#incompatibleHardwareTable').paginatedTable("/alfa/hardware/hardware-compatible/list-paginated?compatible=H", "compatibleHardwares", colsCompatibleHardware, drawCallbackCompatibleHardware);					
 				}
 			});
 		});

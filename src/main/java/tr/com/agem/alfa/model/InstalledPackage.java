@@ -111,4 +111,5 @@ public class InstalledPackage extends BaseModel {
 		this.compatible = compatible;
 	}
 
+	
 }

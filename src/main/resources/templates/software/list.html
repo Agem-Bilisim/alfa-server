@@ -21,6 +21,7 @@
 					<li role="presentation"><a href="#process" aria-controls="process" role="tab" data-toggle="tab">Hizmet</a></li>
 			    	<li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Sorunlar</a></li>
 			    	<li role="presentation"><a href="#compatiblePackage" aria-controls="compatiblePackage" role="tab" data-toggle="tab">Uyumlu Yazılımlar</a></li>
+			    	<li role="presentation"><a href="#incompatiblePackage" aria-controls="incompatiblePackage" role="tab" data-toggle="tab">Uyumsuz Yazılımlar</a></li>
 			  	</ul>
 			
 				<!-- Tab panes -->
@@ -104,7 +105,27 @@
 								</table>
 							</div>
 						</div>
-					</div>					
+					</div>
+					<div role="tabpanel" class="tab-pane" id="incompatiblePackage">
+						<div class="box">
+							<div class="box-header">
+								<h3 class="box-title">Uyumsuz Yazılımlar</h3>
+							</div>
+							<div class="box-body">
+								<table id="incompatiblePackageTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Yazılım Adı</th>
+											<th>Sürümü</th>
+											<th>İşlem</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -237,7 +258,7 @@
 				{"data": fnActionBtnsProblem, "searchable": false, "orderable": false }
 			];
 			
-			// Compatible Software
+			// Compatible(Incompatible Software
 			var fnActionBtnsCompatibleSoftware = function(row, type, val, meta) {
 				return "<div class=\"btn-group\" role=\"group\">" 
 					+ "<a class=\"btn btn-outline-primary\" href=\"/alfa/installed-package/" + row["id"] + "\"><i class=\"fa fa-edit\"></i> Düzenle</a>"
@@ -260,8 +281,11 @@
 				} else if ($(e.target).attr('href') == "#process") {
 					tables.processTable = $('#processTable').paginatedTable("/alfa/process/list-paginated", "processes", colsProcess, drawCallbackProcess);			
 				} else if ($(e.target).attr('href') == "#compatiblePackage") {
-					tables.compatiblePackageTable = $('#compatiblePackageTable').paginatedTable("/alfa/installed-compatible-package/list-paginated", "compatiblePackages", colsCompatibleSoftware, drawCallbackCompatibleSoftware);
+					tables.compatiblePackageTable = $('#compatiblePackageTable').paginatedTable("/alfa/installed-compatible-package/list-paginated?compatible=E", "compatiblePackages", colsCompatibleSoftware, drawCallbackCompatibleSoftware);
+				} else if ($(e.target).attr('href') == "#incompatiblePackage") {
+					tables.incompatiblePackageTable = $('#incompatiblePackageTable').paginatedTable("/alfa/installed-compatible-package/list-paginated?compatible=H", "compatiblePackages", colsCompatibleSoftware, drawCallbackCompatibleSoftware);
 				}
+				
 			});
 		});
 	</script>

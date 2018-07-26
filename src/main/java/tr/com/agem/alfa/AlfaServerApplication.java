@@ -12,6 +12,7 @@ public class AlfaServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AlfaServerApplication.class, args);
+		
 	}
 	
 }

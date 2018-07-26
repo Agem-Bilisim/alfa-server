@@ -305,7 +305,7 @@ public class HardwareService {
 	public Page<CompatibleHardware> getCompatibleHardware(Pageable pageable, String compatible, String search) 
 	{
 		
-		if (compatible != null && !compatible.isEmpty()) {
+		if (compatible == null || compatible.isEmpty()) {
 			compatible = "E";
 		}
 		if (search != null && !search.isEmpty()) {

@@ -213,10 +213,11 @@ public class SoftwareController {
 	}
 	
 	@GetMapping("/installed-compatible-package/list-paginated")
-	public ResponseEntity<?> handleCompatiblePackageList(@RequestParam(value = "search", required = false) String search, Pageable pageable) {
+	public ResponseEntity<?> handleCompatiblePackageList(@RequestParam(value = "compatible", required = false, defaultValue="E") String compatible, 
+					@RequestParam(value = "search", required = false) String search, Pageable pageable) {
 		RestResponseBody result = new RestResponseBody();
 		try {
-			Page<InstalledPackage> packages = softwareService.getCompatiblePackages(pageable, search);
+			Page<InstalledPackage> packages = softwareService.getCompatiblePackages(pageable, compatible, search);
 			result.add("compatiblePackages", checkNotNull(packages, "Packages not found."));
 		} catch (Exception e) {
 			log.error("Exception occurred when trying to find compatible packages, assuming invalid parameters", e);
