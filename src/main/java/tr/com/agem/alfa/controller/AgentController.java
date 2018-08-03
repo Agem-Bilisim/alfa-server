@@ -166,6 +166,7 @@ public class AgentController {
 			
 			if (AgentType.DEBIAN_BASED.equals(agent.getType()) && oldWindows) {
 				agent.setLastInstallationDate(new Date());
+				log.info("Linux agent found for previous windows system");
 			}
 			
 			agentService.saveOrUpdate(agent);
@@ -379,7 +380,7 @@ public class AgentController {
 		//
 		// Platform
 		//
-		Platform pl = agent.getPlatform() != null ? agent.getPlatform() : new Platform();
+		Platform pl = new Platform();
 		pl.setRelease(message.getPlatform().getRelease());
 		pl.setVersion(message.getPlatform().getVersion());
 		pl.setSystem(message.getPlatform().getSystem());

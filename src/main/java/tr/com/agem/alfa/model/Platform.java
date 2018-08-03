@@ -18,13 +18,13 @@ public class Platform extends BaseModel {
 
 	private static final long serialVersionUID = 4952577557714888266L;
 
-	@Column(name = "PL_RELEASE", nullable = false) // 'RELEASE' key word is reserved!
+	@Column(name = "PL_RELEASE", nullable = false, updatable=false) // 'RELEASE' key word is reserved!
 	private String release;
 
 	@Column(name = "VERSION", nullable = false)
 	private String version;
 
-	@Column(name = "SYSTEM", nullable = false)
+	@Column(name = "SYSTEM", nullable = false, updatable=false)
 	private String system;
 
 	@Column(name = "MACHINE", nullable = false)
