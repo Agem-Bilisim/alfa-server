@@ -11,8 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +39,7 @@ import tr.com.agem.alfa.agent.sysinfo.Device;
 import tr.com.agem.alfa.agent.sysinfo.GpuDevice;
 import tr.com.agem.alfa.agent.sysinfo.InstalledPackage;
 import tr.com.agem.alfa.agent.sysinfo.MemoryDevice;
+import tr.com.agem.alfa.exception.AlfaException;
 import tr.com.agem.alfa.form.AgentForm;
 import tr.com.agem.alfa.form.TagForm;
 import tr.com.agem.alfa.mapper.SysMapper;
@@ -66,9 +64,6 @@ import tr.com.agem.alfa.model.SurveyResult;
 import tr.com.agem.alfa.model.Tag;
 import tr.com.agem.alfa.model.enums.AgentType;
 import tr.com.agem.alfa.service.AgentService;
-import tr.com.agem.alfa.service.HardwareService;
-import tr.com.agem.alfa.service.PeripheralService;
-import tr.com.agem.alfa.service.SoftwareService;
 import tr.com.agem.alfa.service.SurveyService;
 import tr.com.agem.alfa.util.CommonUtils;
 
@@ -76,7 +71,6 @@ import tr.com.agem.alfa.util.CommonUtils;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Controller
-@Transactional(rollbackFor = Exception.class)
 public class AgentController {
 
 	private static final Logger log = LoggerFactory.getLogger(AgentController.class);
@@ -85,14 +79,8 @@ public class AgentController {
 	private final SurveyService surveyService;
 	private final MessagingService messagingService;
 	private final MessageSource messageSource;
-	private final HardwareService hardwareService;
-	private final SoftwareService softwareService;
-	private final PeripheralService peripheralService;
 	private final SysMapper sysMapper;
 	
-	@PersistenceContext
-	private EntityManager em;
-
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
 
@@ -101,14 +89,11 @@ public class AgentController {
 
 	@Autowired
 	public AgentController(AgentService agentService, SurveyService surveyService, MessagingService messagingService,
-			MessageSource messageSource, HardwareService hardwareService, SoftwareService softwareService, PeripheralService peripheralService, SysMapper sysMapper) {
+			MessageSource messageSource, SysMapper sysMapper) {
 		this.agentService = agentService;
 		this.surveyService = surveyService;
 		this.messagingService = messagingService;
 		this.messageSource = messageSource;
-		this.hardwareService = hardwareService;
-		this.softwareService = softwareService;
-		this.peripheralService = peripheralService;
 		this.sysMapper = sysMapper;
 	}
 
@@ -157,7 +142,6 @@ public class AgentController {
 		boolean oldWindows = false;
 		try {
 			Agent agent = agentService.getAgentByMessagingIdOrMacAddresses(message.getFrom(), excludeInvalid(message.getNetwork().getMacAddresses()));
-
 			if (agent != null && AgentType.WINDOWS_BASED.equals(agent.getType())) {
 				oldWindows= true;
 			}
@@ -275,6 +259,29 @@ public class AgentController {
 				.toArray(new String[message.getNetwork().getMacAddresses().size()])));
 		agent.setSysinfo(new ObjectMapper().writeValueAsBytes(message));
 		//
+		// BIOS
+		//
+		tr.com.agem.alfa.model.Bios bios = new tr.com.agem.alfa.model.Bios();
+		if (isNullOrEmpty(message.getBios().getVendor(), message.getBios().getVersion())) {
+			throw new AlfaException("BIOS vendor and version cannot be null!");
+		}
+		bios.setVendor(message.getBios().getVendor());
+		bios.setVersion(message.getBios().getVersion());
+		bios.setReleaseDate(message.getBios().getReleaseDate());
+		agent.setBios(bios);
+		//
+		// Platform
+		//
+		Platform pl = new Platform();
+		if (isNullOrEmpty(message.getPlatform().getRelease(), message.getPlatform().getSystem())) {
+			throw new AlfaException("Platform system and release cannot be null!");
+		}
+		pl.setRelease(message.getPlatform().getRelease());
+		pl.setVersion(message.getPlatform().getVersion());
+		pl.setSystem(message.getPlatform().getSystem());
+		pl.setMachine(message.getPlatform().getMachine());
+		agent.setPlatform(pl);
+		//
 		// Disk
 		//
 		if (message.getDisk() != null) {
@@ -289,8 +296,7 @@ public class AgentController {
 				disk.setVersion(d.getVersion());
 				disk.setProduct(d.getProduct());
 				disk.setSerial(d.getSerial());
-				Disk tmp = this.hardwareService.getDisk(disk.getProduct(), disk.getVersion());
-				agent.addDisk(tmp != null ? tmp : disk);
+				agent.addDisk(disk);
 			}
 		}
 		//
@@ -322,8 +328,7 @@ public class AgentController {
 				tr.com.agem.alfa.model.InstalledPackage mPackage = new tr.com.agem.alfa.model.InstalledPackage();
 				mPackage.setName(_package.getName());
 				mPackage.setVersion(_package.getVersion());
-				tr.com.agem.alfa.model.InstalledPackage tmp = this.softwareService.getPackage(mPackage.getName(), mPackage.getVersion());
-				agent.addInstalledPackage(tmp != null ? tmp : mPackage);
+				agent.addInstalledPackage(mPackage);
 			}
 		}
 		//
@@ -362,32 +367,6 @@ public class AgentController {
 			}
 		}
 		//
-		// BIOS
-		//
-		if (message.getBios() != null) {
-			if (isNullOrEmpty(message.getBios().getVendor(), message.getBios().getVersion())) {
-				log.warn("BIOS vendor, version cannot be null! Skipping...");
-			} else {
-				tr.com.agem.alfa.model.Bios bios = agent.getBios() != null ? agent.getBios()
-						: new tr.com.agem.alfa.model.Bios();
-				bios.setVendor(message.getBios().getVendor());
-				bios.setVersion(message.getBios().getVersion());
-				bios.setReleaseDate(message.getBios().getReleaseDate());
-				tr.com.agem.alfa.model.Bios _tmp = this.hardwareService.getBios(bios.getVersion(), bios.getVendor());
-				agent.setBios(_tmp != null ? _tmp : bios);
-			}
-		}
-		//
-		// Platform
-		//
-		Platform pl = new Platform();
-		pl.setRelease(message.getPlatform().getRelease());
-		pl.setVersion(message.getPlatform().getVersion());
-		pl.setSystem(message.getPlatform().getSystem());
-		pl.setMachine(message.getPlatform().getMachine());
-		Platform __tmp = this.hardwareService.getPlatform(pl.getSystem(), pl.getRelease());
-		agent.setPlatform(__tmp != null ? __tmp : pl);
-		//
 		// Users
 		//
 		if (message.getUsers() != null) {
@@ -402,16 +381,6 @@ public class AgentController {
 		// Processes
 		//
 		if (message.getProcesses() != null) {
-			// Remove agent-processes
-			if (agent.getId() != null) {
-				this.em.createNativeQuery(
-						"DELETE FROM c_agent_process_agent WHERE agent_id = :id")
-						.setParameter("id", agent.getId()).executeUpdate();
-				this.em.flush();
-				if (agent.getAgentRunningProcesses() != null) {
-					agent.getAgentRunningProcesses().clear();
-				}
-			}
 			for (tr.com.agem.alfa.agent.sysinfo.Process p : message.getProcesses()) {
 				if (isNullOrEmpty(p.getName(), p.getUsername(), (p.getPid() != null ? p.getPid().toString() : null))) {
 					log.warn("Process name, username, pid cannot be null. Skipping...");
@@ -419,9 +388,6 @@ public class AgentController {
 				}
 				RunningProcess process = new RunningProcess();
 				process.setName(p.getName());
-				RunningProcess tmp = this.softwareService.getProcess(process.getName());
-				process = tmp != null ? tmp : process;
-
 				AgentRunningProcess cross = new AgentRunningProcess();
 				cross.setCpuPercent(p.getCpuPercent() != null ? p.getCpuPercent().toString() : null);
 				cross.setCpuTimes(p.getCpuTimes() != null ? StringUtils.join(",", p.getCpuTimes()) : null);
@@ -430,7 +396,6 @@ public class AgentController {
 				cross.setUsername(p.getUsername() != null ? p.getUsername() : "SYSTEM");
 				cross.setAgent(agent);
 				cross.setRunningProcess(process);
-
 				agent.getAgentRunningProcesses().add(cross);
 			}
 		}
@@ -438,16 +403,6 @@ public class AgentController {
 		// CPU
 		//
 		if (message.getCpu() != null) {
-			// Remove agent-CPUs
-			if (agent.getId() != null) {
-				this.em.createNativeQuery(
-						"DELETE FROM c_agent_cpu_agent WHERE agent_id = :id")
-						.setParameter("id", agent.getId()).executeUpdate();
-				this.em.flush();
-				if (agent.getAgentCpus() != null) {
-					agent.getAgentCpus().clear();
-				}
-			}
 			if (isNullOrEmpty(message.getCpu().getBrand(), message.getCpu().getHzAdvertised(), message.getCpu().getProcessor(), message.getCpu().getPyhsicalCoreCount(), message.getCpu().getLogicalCoreCount())) {
 				log.warn("CPU brand, processor, hz, pyhsical and logical core counts cannot be null! Skipping...");
 			} else {
@@ -472,17 +427,15 @@ public class AgentController {
 				cpu.setPyhsicalCoreCount(message.getCpu().getPyhsicalCoreCount());
 				cpu.setRawArchString(message.getCpu().getRawArchString());
 				cpu.setVendorId(message.getCpu().getVendorId());
-				Cpu tmp = this.hardwareService.getCpu(cpu.getBrand(), cpu.getProcessor());
-				cpu = tmp != null ? tmp : cpu;
 				
 				AgentCpu cross = new AgentCpu();
 				cross.setCommaSeparatedCpuTimes(
-						message.getCpu().getCpuTimes() != null ? StringUtils.join(",", message.getCpu().getCpuTimes())
+						message.getCpu().getCpuTimes() != null ? StringUtils.join(",", message.getCpu().getCpuTimes()).replaceAll("\\[|\\(|\\)|\\]", "")
 								: null);
 				cross.setCommaSeparatedFlags(
-						message.getCpu().getFlags() != null ? StringUtils.join(",", message.getCpu().getFlags()) : null);
+						message.getCpu().getFlags() != null ? StringUtils.join(",", message.getCpu().getFlags()).replaceAll("\\[|\\(|\\)|\\]", "") : null);
 				cross.setCommaSeparatedStats(
-						message.getCpu().getStats() != null ? StringUtils.join(",", message.getCpu().getStats()) : null);
+						message.getCpu().getStats() != null ? StringUtils.join(",", message.getCpu().getStats()).replaceAll("\\[|\\(|\\)|\\]", "") : null);
 				cross.setHzActual(message.getCpu().getHzActual());
 				cross.setAgent(agent);
 				cross.setCpu(cpu);
@@ -494,16 +447,6 @@ public class AgentController {
 		// Peripherals
 		//
 		if (message.getPeripheralDevices() != null) {
-			// Remove agent-peripherals
-			if (agent.getId() != null) {
-				this.em.createNativeQuery(
-						"DELETE FROM c_agent_peripheral_agent WHERE agent_id = :id")
-						.setParameter("id", agent.getId()).executeUpdate();
-				this.em.flush();
-				if (agent.getAgentPeripheralDevices() != null) {
-					agent.getAgentPeripheralDevices().clear();
-				}
-			}
 			for (tr.com.agem.alfa.agent.sysinfo.PeripheralDevice p : message.getPeripheralDevices()) {
 				if (isNullOrEmpty(p.getTag())) {
 					log.warn("Peripheral device tag cannot be null! Skipping...");
@@ -512,9 +455,6 @@ public class AgentController {
 				PeripheralDevice peripheral = new PeripheralDevice();
 				peripheral.setShowInSurvey(false);
 				peripheral.setTag(p.getTag());
-				PeripheralDevice tmp = this.peripheralService.getPeripheral(peripheral.getTag());
-				peripheral = tmp != null ? tmp : peripheral;
-
 				AgentPeripheralDevice cross = new AgentPeripheralDevice();
 				cross.setDeviceId(p.getDevice());
 				cross.setDevicePath(p.getDevice());

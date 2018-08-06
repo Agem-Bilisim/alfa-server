@@ -322,4 +322,8 @@ public class HardwareService {
 		return this.cpuRepository.findOneByBrandAndProcessor(brand, processor);
 	}
 
+	public NetworkInterface getNetworkInterface(String vendor, String version, String product) {
+		return this.inetRepository.findByVendorAndVersionAndProduct(vendor, version, product);
+	}
+
 }

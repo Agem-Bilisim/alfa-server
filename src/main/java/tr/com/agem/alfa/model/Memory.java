@@ -8,11 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "c_agent_memory")
+@Table(name = "c_agent_memory", uniqueConstraints = { @UniqueConstraint(columnNames = { "SPEED", "SIZE", "TYPE", "MANUFACTURER" }) })
 public class Memory extends BaseModel {
 
 	private static final long serialVersionUID = -5117383050214392422L;

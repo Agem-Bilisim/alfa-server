@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  */
 @Entity
-@Table(name = "c_agent_gpu")
+@Table(name = "c_agent_gpu", uniqueConstraints = { @UniqueConstraint(columnNames = { "SUBSYSTEM", "KERNEL", "MEMORY" }) })
 public class Gpu extends BaseModel {
 
 	private static final long serialVersionUID = -5967722775213127483L;

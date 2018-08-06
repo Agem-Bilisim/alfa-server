@@ -9,16 +9,17 @@ import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "c_agent_inet")
+@Table(name = "c_agent_inet", uniqueConstraints = { @UniqueConstraint(columnNames = { "VENDOR", "VERSION", "PRODUCT" }) })
 public class NetworkInterface extends BaseModel {
 
 	private static final long serialVersionUID = 2290582206476792971L;
 
-	@Column(name = "VENDOR")
+	@Column(name = "VENDOR", nullable = false)
 	private String vendor;
 
 	@Column(name = "VERSION", nullable = false)

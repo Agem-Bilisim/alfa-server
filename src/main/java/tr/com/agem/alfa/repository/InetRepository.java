@@ -13,4 +13,6 @@ public interface InetRepository extends JpaRepository<NetworkInterface, Long> {
 
 	Page<NetworkInterface> findByVendorContainingAllIgnoringCase(String search, Pageable pageable);
 
+	NetworkInterface findByVendorAndVersionAndProduct(String vendor, String version, String product);
+
 }
