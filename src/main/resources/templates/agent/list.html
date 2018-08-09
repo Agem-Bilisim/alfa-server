@@ -298,7 +298,7 @@
 			var drawCallback = function(settings) {
 				if ($("#assignTagBtn").length == 0) {
 					$("#agentTable_filter").append("<button type=\"button\" class=\"btn btn-info\" id=\"assignTagBtn\">Seçilenlere etiket ata</button>");
-					$("#assignTagBtn").on("click", function() {
+					$("#assignTagBtn").off("click").on("click", function() {
 						if ($('input[type="checkbox"][name!="select_all"]:checked').length < 1) {
 							alertify.warning("Lütfen geçerli bir kayıt seçiniz.");
 							return;
@@ -325,7 +325,7 @@
 			var order = [ [1, 'desc'] ];
 			agentTable = $('#agentTable').paginatedTable("/alfa/agent/list-paginated", "agents", colsAgent, drawCallback, order);
 			
-			$("#editTagsModalBtn").on("click", function(){
+			$("#editTagsModalBtn").off("click").on("click", function(){
 				var tagArr = [];
 				for(var i = 0; i < $("#tags").val().length; i++) {
 					var tag = $("#tags").val()[i];

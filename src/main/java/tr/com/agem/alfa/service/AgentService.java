@@ -639,7 +639,7 @@ public class AgentService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public void saveTags(Agent agent, List<Tag> tags) {
+	public synchronized void saveTags(Agent agent, List<Tag> tags) {
 		Query query = this.em.createNativeQuery("DELETE FROM c_agent_tag_agent WHERE agent_id = :agentId");
 		query.setParameter("agentId", agent.getId());
 		query.executeUpdate();
