@@ -13,6 +13,13 @@ layout: default
 * LibreOffice yerelleştirme ve geliştirmeleri
 * LibreOffice bulut sürümü yerelleştirme ve geliştirme
 
+## Belgelendirme
+
+* [Alfa Göç Metodolojisi ve Yol Haritası](https://github.com/Agem-Bilisim/alfa-server/raw/master/docs/_reports/ALFA_Goc_Metodolojisi%26Yol%20Haritas%C4%B1_v1.0.pdf)
+* [Alfa Göç Bileşenleri Tanıtım Rehberi](https://github.com/Agem-Bilisim/alfa-server/raw/master/docs/_reports/ALFA_G%C3%B6%C3%A7_Bile%C5%9Fenleri_Tan%C4%B1t%C4%B1m_Rehberi_v1.0.pdf)
+* [Alfa Kullanıcı Rehberi](https://github.com/Agem-Bilisim/alfa-server/raw/master/docs/_reports/ALFA_Kullan%C4%B1c%C4%B1_Rehberi_v1.0.pdf)  
+
+
 # Göç bileşenleri tanıtım ve kullanım kılavuzu
 
 Alfa kullanıcı arayüzüne dair tanımlar ve görsellerden oluşan tanıtım ve kullanım kılavuzuna [buradan erişebilirsiniz](./manual.md).
