@@ -1,10 +1,21 @@
 package tr.com.agem.alfa.controller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import tr.com.agem.alfa.client.*;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -24,6 +35,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +44,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import tr.com.agem.alfa.exception.AlfaException;
 import tr.com.agem.alfa.form.EducationForm;
 import tr.com.agem.alfa.form.EducationLdapUserForm;
+import tr.com.agem.alfa.form.EducationReportForm;
+import tr.com.agem.alfa.form.EducationUserForm;
+import tr.com.agem.alfa.form.LdapUserForm;
 import tr.com.agem.alfa.lms.LmsUser;
 import tr.com.agem.alfa.locale.MessageSourceDecorator;
 import tr.com.agem.alfa.mapper.SysMapper;
@@ -60,6 +76,9 @@ public class EducationController {
 	private final MessagingService messagingService;
 	private final MessageSourceDecorator messageSourceDecorator;
 	private final SysMapper mapper;
+	
+	@PersistenceContext
+	private EntityManager em;
 
 	@Value("${sys.page-size}")
 	private Integer sysPageSize;
@@ -180,49 +199,214 @@ public class EducationController {
 		return ResponseEntity.ok(result);
 	}
 
+	@Transactional(noRollbackFor = Exception.class)
 	@GetMapping("/education/snyc")
 	public ResponseEntity<?> handleLmsSync(Authentication authentication) {
 		RestResponseBody result = new RestResponseBody();
+		//LMS User
+		List<EducationUserForm> userListLms = new ArrayList<EducationUserForm>();
+		List<EducationUserForm> userListAlfa = new ArrayList<EducationUserForm>();
 		try {
-			CurrentUser user = (CurrentUser) authentication.getPrincipal();
-			checkNotNull(user, "Current user not found.");
-			List<LmsUser> lmsUsers = new ObjectMapper().readValue(
-					this.getClass().getClassLoader().getResourceAsStream("lms-sync.json"),
-					new TypeReference<List<LmsUser>>() {
-					});
-			if (lmsUsers == null) {
-				throw new AlfaException("LMS sunucuya erişilemedi.");
-			}
-			for (LmsUser lmsUser : lmsUsers) {
-				// Try to find education
-				Education education = checkNotNull(educationService.getEducationByLmsIdOrLabel(lmsUser.getId(), lmsUser.getUrunAdi()), "Education not found.");
-				// Update/set LMS ID of the education record if necessary
-				if (!lmsUser.getId().equals(education.getLmsEducationId())) {
-					education.setLmsEducationId(lmsUser.getId());
-					this.educationService.saveEducation(education);
-				}
-				
-				// Try to find LDAP user
-				LdapUser ldapUser = checkNotNull(ldapService.getUserByLmsIdOrEmail(lmsUser.getUserId(), lmsUser.getEmail()), "LDAP user not found.");
-				// Update/set LMS ID of the LDAP user record if necessary
-				if (!lmsUser.getUserId().equals(ldapUser.getLmsUserId())) {
-					ldapUser.setLmsUserId(lmsUser.getUserId());
-					this.ldapService.save(ldapUser);
-				}
-				
-				EducationLdapUser elu = new EducationLdapUser(education, ldapUser,
-						EducationStatus.getTypeFromLabel(lmsUser.getDurumu()).getId(), lmsUser.getSure(),
-						lmsUser.getSinavPuani(), lmsUser.getSinavDurumu());
-				education.addEducationUser(elu);
-				educationService.saveEducation(education);
-			}
-			result.setMessage(String.format("LMS eğitim kayıtları başarıyla senkronize edildi."));
-		} catch (Exception e) {
-			log.error("Exception occurred when trying to sync LMS education records", e);
-			result.setMessage(e.getMessage());
-			return ResponseEntity.badRequest().body(result);
+			ObjectMapper mapper = new ObjectMapper();
+			userListLms = mapper.readValue(RestClient.getJsonData("http://localhost:8081/alfalms/apiusers", ""),
+																					new TypeReference<List<EducationUserForm>>() {});
+			if (userListLms == null) throw new AlfaException("LMS sunucuya erişilemedi.");
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		return ResponseEntity.ok(result);
+		//ALFA USER ATTRIBUTE
+		List<Object []> userAttribute = new ArrayList<Object []>();
+		try {
+			String userAttributeQuery = "select value, ldap_user_id from c_ldap_user_attribute where name in ('userPrincipalName', 'eposta', 'email', 'mail', 'posta')";
+			Query query = em.createNativeQuery(userAttributeQuery);
+			userAttribute = query.getResultList();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}		
+		//Education
+		List<EducationForm> educationListLms = new ArrayList<EducationForm>() ;
+		List<String> educationAlfa = new ArrayList<String>();
+		int statu = 0; // Aynı urun adına sahip ise statu = 1 --> UPDATE  -- status = 0 --> INSERT
+		int counter = 0;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			educationListLms = mapper.readValue(RestClient.getJsonData("http://localhost:8081/alfalms/apieducations", ""),
+																						new TypeReference<List<EducationForm>>() {});
+			if (educationListLms == null) throw new AlfaException("LMS sunucuya erişilemedi.");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}		
+		try {			
+			String educationAlfaQuery = "SELECT e.label FROM c_education e";
+			Query query = em.createNativeQuery(educationAlfaQuery);
+			@SuppressWarnings("unchecked")
+			List<Object> result1 = (List<Object>) query.getResultList(); 
+			for( Object r : result1) {
+				educationAlfa.add((String)r);
+			}
+		}catch ( Exception e) {
+			e.printStackTrace();
+		}
+		for(EducationForm educationLms : educationListLms) {
+			statu = 0;
+			counter = 0;
+			while(statu == 0 && counter<educationAlfa.size())
+			{
+				String label = educationLms.getLabel();
+				String baslik = educationAlfa.get(counter);
+				if(label.equalsIgnoreCase(baslik)) {
+					statu = 1;
+				}
+				else counter++;
+			}
+			if(statu == 1) {
+				try {			
+					String updateEducationSql = "UPDATE c_education "
+							+ "SET lms_education_id = :eId"
+							+ " WHERE label = :label "; 
+					Query query = em.createNativeQuery(updateEducationSql);
+					query.setParameter("eId",educationLms.getId());
+					query.setParameter("label", educationLms.getLabel());
+					query.executeUpdate();
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}	
+			}else {
+				try {
+					Date date = new Date();
+					DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+					String educationSql = "INSERT INTO c_education (label,description,url,lms_education_id,created_by,created_date)"
+							+ " VALUES (:label,' ',' ',:lmsId,'admin',:date)";
+					Query query = em.createNativeQuery(educationSql);
+					query.setParameter("label", educationLms.getLabel()); 
+					query.setParameter("lmsId", educationLms.getId());
+					query.setParameter("date",df.format(date));
+					query.executeUpdate();
+					
+				}catch(Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}				
+		//EducationReport 
+		
+		List<EducationReportForm> educationReportListLms = new ArrayList<EducationReportForm>() ;
+		List<Integer> educationReportAlfa = new ArrayList<Integer>();
+		
+		int statuReport = 0; // Aynı education_id 'ye sahip ise statu = 1 --> UPDATE  | status = 0 --> INSERT
+		int counterReport = 0;
+		
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			educationReportListLms =mapper.readValue(RestClient.getJsonData("http://localhost:8081/alfalms/apieducationreports", ""),
+					new TypeReference<List<EducationReportForm>>() {});
+			if ( educationReportListLms == null) throw new AlfaException("LMS Sunucuya erişilemedi.");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			String educationReportAlfaQuery = "SELECT e.education_user_education_id FROM c_education_user_education e";
+			Query query = em.createNativeQuery(educationReportAlfaQuery);
+			@SuppressWarnings("unchecked")
+			List<Integer> result1 = (List<Integer>) query.getResultList(); 
+			educationReportAlfa = result1 ;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		for(EducationReportForm educationReportLms : educationReportListLms) {			
+			statuReport = 0;
+			counterReport = 0;
+			long education_id = -1 ; //default
+			long ldap_user_id = -1 ; 
+			
+			//Foreign key educationId parametresini çekme 
+			try {
+				BigInteger bi ;
+				String eIdParamQuery = "SELECT ce.id FROM c_education ce where ce.lms_education_id = :erEducationId limit 1";
+				Query query = em.createNativeQuery(eIdParamQuery);
+				query.setParameter("erEducationId",educationReportLms.getEducationID());
+				bi =  new BigInteger(query.getSingleResult()+"");
+				education_id = (long)bi.longValue();
+				
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+				
+			
+			String emailLms = educationReportLms.getUserEmail();
+			String tempMail ;
+			BigInteger bi;
+			for (Object[] valueAndId : userAttribute) {
+				tempMail = valueAndId[0].toString();
+				if( tempMail.equals(emailLms)) {
+					bi = new BigInteger(valueAndId[1]+"");
+					ldap_user_id = (long)bi.longValue();
+					break;
+				}
+			}
+			
+			if(ldap_user_id != -1) {
+				
+				while(statuReport == 0 && counterReport<educationReportAlfa.size())
+				{ 
+					//bigint to long
+					BigInteger bi2 ;
+					bi2 = new BigInteger(educationReportAlfa.get(counterReport)+"");
+					long erIdAlfa = (long)bi2.longValue();				
+					long erId = educationReportLms.getID();	
+					if(erIdAlfa == erId) {
+						statuReport = 1;
+					}
+					else counterReport++;
+				}
+				if(statuReport == 1) {
+					try {					
+						String updateEducationReportSql = "UPDATE c_education_user_education "
+								+ "SET  status = :status, "
+								+ "duration = :duration, exam_score = :examScore, exam_status = :examStatus, education_id = :eId" + 
+								",ldap_user_id = :uId "
+								+ " WHERE education_user_education_id = :erId  ";
+						Query query1 = em.createNativeQuery(updateEducationReportSql);
+						query1.setParameter("erId", educationReportLms.getID());
+						query1.setParameter("eId", education_id);
+						query1.setParameter("uId", ldap_user_id);
+						query1.setParameter("status", educationReportLms.getDurumu());
+						query1.setParameter("duration", educationReportLms.getSure());
+						query1.setParameter("examScore", educationReportLms.getSinavPuani());
+						query1.setParameter("examStatus", educationReportLms.getSinavDurumu());
+						query1.executeUpdate();
+				}catch(Exception e1) {
+					e1.printStackTrace();
+				}	
+				}else {
+					try {
+						String educationReportSql = "INSERT INTO c_education_user_education (education_user_education_id,status,duration,exam_score,exam_status,education_id,ldap_user_id) "
+								+ "VALUES ( :erId, :status, :duration, :examScore, :examStatus , :eId, :uId)";
+						Query query1 = em.createNativeQuery(educationReportSql);
+						query1.setParameter("erId", educationReportLms.getID());
+						query1.setParameter("status", educationReportLms.getDurumu());
+						query1.setParameter("duration", educationReportLms.getSure());
+						query1.setParameter("examScore", educationReportLms.getSinavPuani());
+						query1.setParameter("examStatus", educationReportLms.getSinavDurumu());
+						query1.setParameter("eId", education_id);
+						query1.setParameter("uId",ldap_user_id);
+						query1.executeUpdate();
+						
+					}catch(Exception e1) {
+						e1.printStackTrace();
+					}
+				}				
+			}			
+		}		
+		
+		result.setMessage(String.format("LMS eğitim kayıtları başarıyla senkronize edildi."));
+		return ResponseEntity.ok(result);	
 	}
 
 	@GetMapping("/education/{educationId}/users")
