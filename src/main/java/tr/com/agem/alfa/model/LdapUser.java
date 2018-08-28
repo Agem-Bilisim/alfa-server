@@ -52,7 +52,7 @@ public class LdapUser extends BaseModel {
 	private Set<LdapUserAttribute> attributes = new HashSet<LdapUserAttribute>(0);
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ldapUser")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ldapUser", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<EducationLdapUser> educationUsers = new HashSet<EducationLdapUser>(0);
 
 	public String getDn() {
